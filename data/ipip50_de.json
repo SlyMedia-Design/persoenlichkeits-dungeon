@@ -1,0 +1,472 @@
+{
+  "title": "IPIP 50-Item Big-Five Factor Markers – deutsche Fassung",
+  "source": {
+    "url": "https://ipip.ori.org/German50-itemBigFiveFactorMarkers.htm",
+    "keyUrl": "https://ipip.ori.org/new_ipip-50-item-scale.htm",
+    "translators": "Alois Angleitner, Susanne Hempel, Rika Langert, Frank Spinath (Universität Bielefeld); bereitgestellt von Fritz Ostendorf",
+    "license": "Public Domain (International Personality Item Pool, https://ipip.ori.org/)",
+    "retrieved": "2026-10-13"
+  },
+  "notes": [
+    "Item-Texte wortgetreu aus der Quelle übernommen (inkl. fehlender Satzzeichen und Schreibweisen wie „grübel“).",
+    "Die Items sind Satzergänzungen zum Stamm „Ich …“ (Ich-Form laut IPIP-Übersetzungsseite).",
+    "ipipKey = Original-Schlüssel (Faktor + Polung). Faktor 4 ist im Original Emotionale Stabilität.",
+    "dimension/keyed = interne Auswertung nach OCEAN; N = Neurotizismus (im Spiel: „Feingefühl“), daher ist keyed bei Faktor 4 gegenüber dem Original umgedreht."
+  ],
+  "scale": {
+    "min": 1,
+    "max": 5
+  },
+  "items": [
+    {
+      "id": 1,
+      "code": "H34",
+      "ipipKey": "1+",
+      "dimension": "E",
+      "keyed": 1,
+      "text": "bringe eine Party in Schwung.",
+      "textEn": "Am the life of the party."
+    },
+    {
+      "id": 2,
+      "code": "X244",
+      "ipipKey": "2-",
+      "dimension": "A",
+      "keyed": -1,
+      "text": "empfinde wenig für andere.",
+      "textEn": "Feel little concern for others."
+    },
+    {
+      "id": 3,
+      "code": "X87",
+      "ipipKey": "3+",
+      "dimension": "C",
+      "keyed": 1,
+      "text": "bin immer vorbereitet.",
+      "textEn": "Am always prepared."
+    },
+    {
+      "id": 4,
+      "code": "X107",
+      "ipipKey": "4-",
+      "dimension": "N",
+      "keyed": 1,
+      "text": "gerate leicht in Stress.",
+      "textEn": "Get stressed out easily."
+    },
+    {
+      "id": 5,
+      "code": "H1276",
+      "ipipKey": "5+",
+      "dimension": "O",
+      "keyed": 1,
+      "text": "besitze einen großen Wortschatz.",
+      "textEn": "Have a rich vocabulary."
+    },
+    {
+      "id": 6,
+      "code": "X56",
+      "ipipKey": "1-",
+      "dimension": "E",
+      "keyed": -1,
+      "text": "spreche nicht viel.",
+      "textEn": "Don't talk a lot."
+    },
+    {
+      "id": 7,
+      "code": "H21",
+      "ipipKey": "2+",
+      "dimension": "A",
+      "keyed": 1,
+      "text": "bin interessiert an anderen Menschen.",
+      "textEn": "Am interested in people."
+    },
+    {
+      "id": 8,
+      "code": "H823",
+      "ipipKey": "3-",
+      "dimension": "C",
+      "keyed": -1,
+      "text": "lasse meine Sachen herumliegen.",
+      "textEn": "Leave my belongings around."
+    },
+    {
+      "id": 9,
+      "code": "E141",
+      "ipipKey": "4+",
+      "dimension": "N",
+      "keyed": -1,
+      "text": "bin die meiste Zeit entspannt.",
+      "textEn": "Am relaxed most of the time."
+    },
+    {
+      "id": 10,
+      "code": "X176",
+      "ipipKey": "5-",
+      "dimension": "O",
+      "keyed": -1,
+      "text": "habe Schwierigkeiten abstrakte Ideen zu verstehen.",
+      "textEn": "Have difficulty understanding abstract ideas."
+    },
+    {
+      "id": 11,
+      "code": "X112",
+      "ipipKey": "1+",
+      "dimension": "E",
+      "keyed": 1,
+      "text": "fühle mich wohl unter Menschen.",
+      "textEn": "Feel comfortable around people."
+    },
+    {
+      "id": 12,
+      "code": "H1103",
+      "ipipKey": "2-",
+      "dimension": "A",
+      "keyed": -1,
+      "text": "beleidige andere",
+      "textEn": "Insult people."
+    },
+    {
+      "id": 13,
+      "code": "H1362",
+      "ipipKey": "3+",
+      "dimension": "C",
+      "keyed": 1,
+      "text": "achte auf Details",
+      "textEn": "Pay attention to details."
+    },
+    {
+      "id": 14,
+      "code": "H1157",
+      "ipipKey": "4-",
+      "dimension": "N",
+      "keyed": 1,
+      "text": "grübel über Dinge",
+      "textEn": "Worry about things."
+    },
+    {
+      "id": 15,
+      "code": "X14",
+      "ipipKey": "5+",
+      "dimension": "O",
+      "keyed": 1,
+      "text": "habe eine lebhafte Vorstellungskraft.",
+      "textEn": "Have a vivid imagination."
+    },
+    {
+      "id": 16,
+      "code": "H154",
+      "ipipKey": "1-",
+      "dimension": "E",
+      "keyed": -1,
+      "text": "halte mich im Hintergrund.",
+      "textEn": "Keep in the background."
+    },
+    {
+      "id": 17,
+      "code": "H1130",
+      "ipipKey": "2+",
+      "dimension": "A",
+      "keyed": 1,
+      "text": "fühle mit anderen Menschen mit.",
+      "textEn": "Sympathize with others' feelings."
+    },
+    {
+      "id": 18,
+      "code": "H1467",
+      "ipipKey": "3-",
+      "dimension": "C",
+      "keyed": -1,
+      "text": "verursache großes Durcheinander.",
+      "textEn": "Make a mess of things."
+    },
+    {
+      "id": 19,
+      "code": "X156",
+      "ipipKey": "4+",
+      "dimension": "N",
+      "keyed": -1,
+      "text": "fühle mich selten deprimiert (bedrückt).",
+      "textEn": "Seldom feel blue."
+    },
+    {
+      "id": 20,
+      "code": "X228",
+      "ipipKey": "5-",
+      "dimension": "O",
+      "keyed": -1,
+      "text": "bin an abstrakten Ideen nicht interessiert.",
+      "textEn": "Am not interested in abstract ideas."
+    },
+    {
+      "id": 21,
+      "code": "H16",
+      "ipipKey": "1+",
+      "dimension": "E",
+      "keyed": 1,
+      "text": "beginne Gespräche.",
+      "textEn": "Start conversations."
+    },
+    {
+      "id": 22,
+      "code": "X227",
+      "ipipKey": "2-",
+      "dimension": "A",
+      "keyed": -1,
+      "text": "bin nicht interessiert an den Problemen anderer Leute.",
+      "textEn": "Am not interested in other people's problems."
+    },
+    {
+      "id": 23,
+      "code": "E119",
+      "ipipKey": "3+",
+      "dimension": "C",
+      "keyed": 1,
+      "text": "erledige Hausarbeiten unmittelbar.",
+      "textEn": "Get chores done right away."
+    },
+    {
+      "id": 24,
+      "code": "H927",
+      "ipipKey": "4-",
+      "dimension": "N",
+      "keyed": 1,
+      "text": "bin leicht beunruhigt.",
+      "textEn": "Am easily disturbed."
+    },
+    {
+      "id": 25,
+      "code": "H1313",
+      "ipipKey": "5+",
+      "dimension": "O",
+      "keyed": 1,
+      "text": "habe ausgezeichnete Ideen.",
+      "textEn": "Have excellent ideas."
+    },
+    {
+      "id": 26,
+      "code": "H1039",
+      "ipipKey": "1-",
+      "dimension": "E",
+      "keyed": -1,
+      "text": "habe wenig zu sagen.",
+      "textEn": "Have little to say."
+    },
+    {
+      "id": 27,
+      "code": "X177",
+      "ipipKey": "2+",
+      "dimension": "A",
+      "keyed": 1,
+      "text": "habe ein weiches Herz.",
+      "textEn": "Have a soft heart."
+    },
+    {
+      "id": 28,
+      "code": "X82",
+      "ipipKey": "3-",
+      "dimension": "C",
+      "keyed": -1,
+      "text": "vergesse oft, Dinge an ihren Platz zurückzulegen.",
+      "textEn": "Often forget to put things back in their proper place."
+    },
+    {
+      "id": 29,
+      "code": "X95",
+      "ipipKey": "4-",
+      "dimension": "N",
+      "keyed": 1,
+      "text": "rege mich leicht auf.",
+      "textEn": "Get upset easily."
+    },
+    {
+      "id": 30,
+      "code": "X272",
+      "ipipKey": "5-",
+      "dimension": "O",
+      "keyed": -1,
+      "text": "habe kein gutes Vorstellungsvermögen.",
+      "textEn": "Do not have a good imagination."
+    },
+    {
+      "id": 31,
+      "code": "X83",
+      "ipipKey": "1+",
+      "dimension": "E",
+      "keyed": 1,
+      "text": "spreche mit vielen verschiedenen Leuten auf Parties.",
+      "textEn": "Talk to a lot of different people at parties."
+    },
+    {
+      "id": 32,
+      "code": "X165",
+      "ipipKey": "2-",
+      "dimension": "A",
+      "keyed": -1,
+      "text": "bin nicht wirklich interessiert an anderen.",
+      "textEn": "Am not really interested in others."
+    },
+    {
+      "id": 33,
+      "code": "X118",
+      "ipipKey": "3+",
+      "dimension": "C",
+      "keyed": 1,
+      "text": "mag Ordnung.",
+      "textEn": "Like order."
+    },
+    {
+      "id": 34,
+      "code": "H926",
+      "ipipKey": "4-",
+      "dimension": "N",
+      "keyed": 1,
+      "text": "wechsel oft meine Stimmung.",
+      "textEn": "Change my mood a lot."
+    },
+    {
+      "id": 35,
+      "code": "X100",
+      "ipipKey": "5+",
+      "dimension": "O",
+      "keyed": 1,
+      "text": "verstehe Dinge schnell.",
+      "textEn": "Am quick to understand things."
+    },
+    {
+      "id": 36,
+      "code": "X68",
+      "ipipKey": "1-",
+      "dimension": "E",
+      "keyed": -1,
+      "text": "mag es nicht, Aufmerksamkeit auf mich zu ziehen",
+      "textEn": "Don't like to draw attention to myself."
+    },
+    {
+      "id": 37,
+      "code": "H160",
+      "ipipKey": "2+",
+      "dimension": "A",
+      "keyed": 1,
+      "text": "nehme mir Zeit für andere.",
+      "textEn": "Take time out for others."
+    },
+    {
+      "id": 38,
+      "code": "H1140",
+      "ipipKey": "3-",
+      "dimension": "C",
+      "keyed": -1,
+      "text": "drücke mich vor meinen Pflichten.",
+      "textEn": "Shirk my duties."
+    },
+    {
+      "id": 39,
+      "code": "E92",
+      "ipipKey": "4-",
+      "dimension": "N",
+      "keyed": 1,
+      "text": "habe häufig Stimmungsschwankungen.",
+      "textEn": "Have frequent mood swings."
+    },
+    {
+      "id": 40,
+      "code": "H1272",
+      "ipipKey": "5+",
+      "dimension": "O",
+      "keyed": 1,
+      "text": "gebrauche schwierige Wörter.",
+      "textEn": "Use difficult words."
+    },
+    {
+      "id": 41,
+      "code": "X78",
+      "ipipKey": "1+",
+      "dimension": "E",
+      "keyed": 1,
+      "text": "es macht mir nichts aus im Zentrum der Aufmerksamkeit zu stehen.",
+      "textEn": "Don't mind being the center of attention."
+    },
+    {
+      "id": 42,
+      "code": "E136",
+      "ipipKey": "2+",
+      "dimension": "A",
+      "keyed": 1,
+      "text": "fühle die Gefühle anderer.",
+      "textEn": "Feel others' emotions."
+    },
+    {
+      "id": 43,
+      "code": "X179",
+      "ipipKey": "3+",
+      "dimension": "C",
+      "keyed": 1,
+      "text": "folge einem Plan.",
+      "textEn": "Follow a schedule."
+    },
+    {
+      "id": 44,
+      "code": "H761",
+      "ipipKey": "4-",
+      "dimension": "N",
+      "keyed": 1,
+      "text": "bin leicht gereizt.",
+      "textEn": "Get irritated easily."
+    },
+    {
+      "id": 45,
+      "code": "X114",
+      "ipipKey": "5+",
+      "dimension": "O",
+      "keyed": 1,
+      "text": "verbringe Zeit damit über Dinge nachzudenken.",
+      "textEn": "Spend time reflecting on things."
+    },
+    {
+      "id": 46,
+      "code": "H661",
+      "ipipKey": "1-",
+      "dimension": "E",
+      "keyed": -1,
+      "text": "bin still unter Fremden.",
+      "textEn": "Am quiet around strangers."
+    },
+    {
+      "id": 47,
+      "code": "H107",
+      "ipipKey": "2+",
+      "dimension": "A",
+      "keyed": 1,
+      "text": "kann andere beruhigen.",
+      "textEn": "Make people feel at ease."
+    },
+    {
+      "id": 48,
+      "code": "X163",
+      "ipipKey": "3+",
+      "dimension": "C",
+      "keyed": 1,
+      "text": "bin anspruchsvoll in meiner Arbeit.",
+      "textEn": "Am exacting in my work."
+    },
+    {
+      "id": 49,
+      "code": "X74",
+      "ipipKey": "4-",
+      "dimension": "N",
+      "keyed": 1,
+      "text": "fühle mich oft deprimiert (bedrückt).",
+      "textEn": "Often feel blue."
+    },
+    {
+      "id": 50,
+      "code": "H53",
+      "ipipKey": "5+",
+      "dimension": "O",
+      "keyed": 1,
+      "text": "bin voller Ideen.",
+      "textEn": "Am full of ideas."
+    }
+  ]
+}

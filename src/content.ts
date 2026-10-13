@@ -1,0 +1,27 @@
+// Bündelt alle JSON-Inhalte an einer Stelle, damit Szenen nicht direkt Dateien importieren.
+import archetypesJson from '../data/archetypes.json';
+import de from '../data/i18n/de.json';
+import bankJson from '../data/ipip50_de.json';
+import normsJson from '../data/norms.json';
+import { createTranslator, type Dictionary } from './core/i18n';
+import type { Archetype, ItemBank, Norms } from './core/types';
+
+export const bank = bankJson as ItemBank;
+export const norms = normsJson as unknown as Norms;
+export const archetypes = archetypesJson.archetypes as unknown as Archetype[];
+export const t = createTranslator(de as Dictionary);
+
+export function archetypeById(id: string): Archetype {
+  const a = archetypes.find((x) => x.id === id);
+  if (!a) throw new Error(`Unbekanntes Wesen: ${id}`);
+  return a;
+}
+
+/** Texte eines Wesens, z. B. creatureText('otter', 'species') */
+export function creatureText(id: string, key: 'species' | 'article' | 'tagline' | 'description'): string {
+  return t(`creatures.${id}.${key}`);
+}
+
+export function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}

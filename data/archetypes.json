@@ -1,0 +1,151 @@
+{
+  "description": "Prototyp-Wesen. profile = Ziel-z-Profil (hoch = +1, niedrig = −1), N = Neurotizismus/Feingefühl. Texte stehen in data/i18n/de.json unter creatures.<id>. Sprites: 16×16 Pixel, jedes Zeichen ist ein Eintrag der Palette, '.' ist durchsichtig.",
+  "archetypes": [
+    {
+      "id": "otter",
+      "profile": { "O": 1, "C": -1, "E": 1, "A": 1, "N": -1 },
+      "color": "#e08a3c",
+      "aura": "#8fdcff",
+      "sprite": {
+        "palette": {
+          "o": "#4a2a18",
+          "b": "#e08a3c",
+          "l": "#f7d6a8",
+          "s": "#f9c4d2",
+          "S": "#d8789a",
+          "c": "#8fdcff",
+          "k": "#1a1010",
+          "w": "#ffffff",
+          "n": "#3a2020",
+          "p": "#f49a8a"
+        },
+        "rows": [
+          "......ssss......",
+          "..c..sSsSsS.....",
+          "...oooooooooo...",
+          "c.obbbbbbbbbbo..",
+          ".obbbbbbbbbbbbo.",
+          ".obwkbbbbbbwkbo.",
+          ".obkkbbbbbbkkbo.",
+          ".obpbllnnllbpbo.",
+          ".obbbllllllbbbo.",
+          "..obbbbbbbbbbo.c",
+          "...oobbbbbboo...",
+          "..obblllllllbbo.",
+          ".obbblllllllbbbo",
+          ".obbbllllllbbbo.",
+          "..obbbbbbbbbbo..",
+          "...obbo..obbo..."
+        ]
+      }
+    },
+    {
+      "id": "eule",
+      "profile": { "O": 1, "C": 1, "E": -1, "A": -1, "N": 1 },
+      "color": "#4f5f95",
+      "aura": "#9ff6ff",
+      "sprite": {
+        "palette": {
+          "o": "#1c2038",
+          "b": "#4f5f95",
+          "l": "#c8d0ec",
+          "g": "#9ff6ff",
+          "y": "#e8b84a",
+          "k": "#101018",
+          "w": "#ffffff"
+        },
+        "rows": [
+          "..o..........o..",
+          "..oo........oo..",
+          "..obo......obo..",
+          "..obboooooobbo..",
+          ".obbbbbbbbbbbbo.",
+          ".obwwkbbbbwwkbo.",
+          ".obwkkbbbbwkkbo.",
+          ".obbbbbyybbbbbo.",
+          ".obgbbbyybbbgbo.",
+          "..obbbbbbbbbbo..",
+          "..oblgllllglbo..",
+          ".obllllllllllbo.",
+          ".obglllggllllgbo",
+          "..obllllllllbo..",
+          "...oobbbbbboo...",
+          "....oyo..oyo...."
+        ]
+      }
+    },
+    {
+      "id": "dachs",
+      "profile": { "O": -1, "C": 1, "E": 1, "A": -1, "N": 1 },
+      "color": "#8a7a70",
+      "aura": "#ffb060",
+      "sprite": {
+        "palette": {
+          "o": "#2a2220",
+          "b": "#8a7a70",
+          "d": "#3a302c",
+          "v": "#f2ece4",
+          "r": "#e07a30",
+          "s": "#9aa8b8",
+          "n": "#1a1414",
+          "k": "#101010",
+          "w": "#ffffff"
+        },
+        "rows": [
+          "................",
+          "..oo........oo..",
+          ".obbo......obbo.",
+          ".obboooooooobbo.",
+          ".obbbbbvvbbbbbo.",
+          ".odwkdbvvbdwkdo.",
+          ".oddkdbvvbdkddo.",
+          ".obbbbvvvvbbbbo.",
+          "..obbbvnnvbbbo..",
+          "...obbbbbbbbo...",
+          "..obbbbbbbbbbo..",
+          ".obrbbbbbbbbrbo.",
+          ".obbbbrbbrbbbbo.",
+          ".obbbbbbbbbbbbo.",
+          "..obbbbbbbbbbo..",
+          "..osso....osso.."
+        ]
+      }
+    },
+    {
+      "id": "capybara",
+      "profile": { "O": -1, "C": -1, "E": -1, "A": 1, "N": -1 },
+      "color": "#b89a72",
+      "aura": "#b8e890",
+      "sprite": {
+        "palette": {
+          "o": "#3e3020",
+          "b": "#b89a72",
+          "l": "#dcc6a4",
+          "m": "#6aa850",
+          "f": "#f6a0c0",
+          "y": "#f6e070",
+          "n": "#3e3020",
+          "k": "#1a1410"
+        },
+        "rows": [
+          "....f.....mf....",
+          "...fymm.mmmfm...",
+          "..ommmmmmmmmmo..",
+          ".obmmbbbbbmmmbo.",
+          ".obbbbbbbbbbbbo.",
+          ".obbkbbbbbbkbbo.",
+          ".obbbbbbbbbbbbo.",
+          ".obbbllllllbbbo.",
+          ".obbblnllnlbbbo.",
+          ".obbbllllllbbbo.",
+          "..obbbbbbbbbbo..",
+          ".obbbbbbbbbbbbo.",
+          ".obbbbbbbbbbbbo.",
+          ".obbbbbbbbbbbbo.",
+          "..obbbbbbbbbbo..",
+          "..obo......obo.."
+        ]
+      }
+    }
+  ]
+}

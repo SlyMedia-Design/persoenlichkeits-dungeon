@@ -1,0 +1,85 @@
+import { DIMENSIONS, type Answers, type Profile, type ScoreResult } from './types';
+
+export const SAVE_KEY = 'persoenlichkeits-dungeon.save';
+export const SAVE_VERSION = 1;
+
+export interface SaveData {
+  version: number;
+  /** Antworten, auch während der Test noch läuft */
+  answers: Answers;
+  /** Index der aktuellen Frage */
+  current: number;
+  result?: ScoreResult;
+  archetypeId?: string;
+  partnerId?: string;
+  playerName?: string;
+  partnerName?: string;
+  completedAt?: string;
+}
+
+/** Minimale Schnittstelle, damit localStorage in Tests ersetzt werden kann. */
+export interface StorageLike {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
+export function newSave(): SaveData {
+  return { version: SAVE_VERSION, answers: {}, current: 0 };
+}
+
+function isSaveData(value: unknown): value is SaveData {
+  if (!value || typeof value !== 'object') return false;
+  const v = value as Partial<SaveData>;
+  return v.version === SAVE_VERSION && typeof v.answers === 'object' && v.answers !== null && typeof v.current === 'number';
+}
+
+/** Lädt den Spielstand. Kaputte oder fremde Daten und blockierter Speicher ergeben null. */
+export function loadSave(storage: StorageLike | undefined): SaveData | null {
+  if (!storage) return null;
+  try {
+    const raw = storage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    return isSaveData(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Speichert den Spielstand. Gibt false zurück, wenn der Browser das Speichern verhindert. */
+export function writeSave(storage: StorageLike | undefined, data: SaveData): boolean {
+  if (!storage) return false;
+  try {
+    storage.setItem(SAVE_KEY, JSON.stringify(data));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function clearSave(storage: StorageLike | undefined): void {
+  try {
+    storage?.removeItem(SAVE_KEY);
+  } catch {
+    // Speicher blockiert: nichts zu löschen
+  }
+}
+
+/** localStorage, falls verfügbar (kann in privaten Fenstern o. Ä. werfen). */
+export function browserStorage(): StorageLike | undefined {
+  try {
+    return typeof localStorage === 'undefined' ? undefined : localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Text für „Ergebnis teilen“: die fünf Mittelwerte (1–5) für die spätere Norm-Justierung.
+ * Enthält bewusst keine Namen und keine Einzelantworten.
+ */
+export function shareText(means: Profile, labels: Record<keyof Profile, string>, header: string): string {
+  const parts = DIMENSIONS.map((d) => `${labels[d]} ${means[d].toFixed(2)}`);
+  return `${header}\n${parts.join(' | ')}\nIPIP-50 (1–5), v${SAVE_VERSION}`;
+}

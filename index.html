@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a1830" />
+    <title>Persönlichkeits-Dungeon</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #1a1830;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: manipulation;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      #game {
+        position: fixed;
+        inset: 0;
+      }
+      .name-input {
+        font-family: 'Pixelify Sans', sans-serif;
+        font-size: 22px;
+        padding: 10px 14px;
+        border: 3px solid #f2e3c6;
+        border-radius: 6px;
+        background: #2b2745;
+        color: #fff8ea;
+        outline: none;
+        text-align: center;
+        width: 240px;
+        box-sizing: border-box;
+        -webkit-user-select: text;
+        user-select: text;
+      }
+      .name-input:focus {
+        border-color: #ffd27a;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,168 @@
+{
+  "meta": {
+    "title": "Persönlichkeits-Dungeon",
+    "subtitle": "Prolog: Wer wirst du sein?"
+  },
+  "common": {
+    "continue": "Weiter",
+    "tapToContinue": "Antippen zum Fortfahren",
+    "back": "Zurück",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "soundOn": "♪ an",
+    "soundOff": "♪ aus"
+  },
+  "title": {
+    "start": "Neu beginnen",
+    "resume": "Fortsetzen",
+    "profile": "Mein Profil",
+    "privacy": "Deine Antworten bleiben nur auf diesem Gerät.",
+    "restartConfirm": "Wirklich von vorn beginnen? Dein bisheriger Spielstand wird gelöscht."
+  },
+  "intro": {
+    "lines": [
+      "Dunkelheit. Und dann … ein leises Rauschen, wie Wind in hohen Gräsern.",
+      "Deinen Namen hast du vergessen. Nur ein Gefühl ist geblieben: Du warst einmal ein Mensch.",
+      "Etwas hat sich verändert. Dein Körper fühlt sich fremd an. Kleiner. Weicher.",
+      "Eine Stimme, warm wie ein Kaminfeuer, spricht zu dir:",
+      "„Hab keine Angst. Bevor du die Augen öffnest, möchte ich dich kennenlernen.“",
+      "„Ich zeige dir Sätze. Sag mir ehrlich, wie gut sie zu dir passen – so, wie du gerade bist, nicht so, wie du gern wärst.“",
+      "„Es gibt keine falschen Antworten. Jede Antwort ist ein Stück von dir.“"
+    ],
+    "info": "50 kurze Sätze · etwa 10 Minuten",
+    "begin": "Ich bin bereit"
+  },
+  "test": {
+    "stem": "Ich …",
+    "progress": "{n} von {total}",
+    "answers": [
+      "trifft gar nicht zu",
+      "trifft eher nicht zu",
+      "teils, teils",
+      "trifft eher zu",
+      "trifft voll zu"
+    ],
+    "interludes": {
+      "10": "„Ich sehe schon erste Umrisse … Erzähl mir mehr.“",
+      "20": "„Der Nebel wird dünner. Irgendwo in der Ferne plätschert Wasser.“",
+      "30": "„Dein Herzschlag wird ruhiger. Du bist fast hier.“",
+      "40": "„Nur noch ein kleines Stück. Ich kann dich schon beinahe sehen.“",
+      "50": "„Danke. Jetzt weiß ich, wer du bist. Öffne die Augen …“"
+    }
+  },
+  "reveal": {
+    "wake": "Du öffnest die Augen. Morgentau glitzert im Gras. Vorsichtig blickst du an dir herunter …",
+    "youAre": "Du bist {article} {species}!",
+    "voice": "„Willkommen in deinem neuen Leben. Ich glaube, es passt zu dir.“"
+  },
+  "partner": {
+    "intro": "Hinter dir raschelt es im Gebüsch. Jemand hat dich gefunden – und schaut dich neugierig an.",
+    "suggest": "Die Stimme flüstert: „{article} {species} würde dich gut ergänzen. Ihr seid verschieden – und gerade deshalb stark zusammen.“",
+    "choose": "Wer soll an deiner Seite sein?",
+    "suggested": "Vorschlag",
+    "pick": "Wählen"
+  },
+  "names": {
+    "player": "Wie möchtest du heißen?",
+    "partner": "Und wie heißt dein neuer Freund, {article} {species}?",
+    "placeholder": "Name",
+    "empty": "Bitte gib einen Namen ein."
+  },
+  "ending": {
+    "lines": [
+      "{partner} streckt dir eine Pfote entgegen. „Du siehst aus, als wärst du von weit her gekommen.“",
+      "Gemeinsam lauft ihr den Hügel hinunter. Unten im Tal steigt Rauch aus kleinen Schornsteinen.",
+      "„Da unten ist mein Dorf“, sagt {partner}. „Komm, {player}. Ich zeige dir alles.“",
+      "Zum ersten Mal, seit du aufgewacht bist, fühlst du dich nicht mehr allein."
+    ],
+    "end": "Ende des Prologs",
+    "next": "Fortsetzung folgt …",
+    "profile": "Mein Profil ansehen",
+    "share": "Ergebnis teilen",
+    "shared": "Kopiert! Danke fürs Teilen.",
+    "shareFailed": "Kopieren ging nicht – hier zum Abschreiben:",
+    "shareHeader": "Mein Persönlichkeits-Dungeon-Ergebnis",
+    "restart": "Von vorn beginnen"
+  },
+  "profile": {
+    "title": "Dein Profil",
+    "creature": "{player}, {article} {species}",
+    "partnerLine": "Partner: {partner}, {article} {species}",
+    "percentile": "Höher als bei etwa {pct} % der Vergleichsgruppe",
+    "disclaimer": "Hinweis: Dies ist ein Spiel. Der Test beruht auf einem wissenschaftlichen Fragebogen (IPIP Big Five), ist aber kein klinischer oder diagnostischer Test. Die Vergleichswerte sind vorläufig.",
+    "close": "Schließen"
+  },
+  "dimensions": {
+    "O": {
+      "name": "Offenheit",
+      "about": "Wie sehr du Neues, Ideen und Fantasie suchst.",
+      "high": "Neugierig und fantasievoll: Du liebst neue Ideen, Gedankenspiele und Ungewöhnliches.",
+      "mid": "Du verbindest Neugier mit Sinn fürs Praktische – je nachdem, was die Lage braucht.",
+      "low": "Bodenständig und praktisch: Du schätzt Bewährtes und behältst den Boden unter den Füßen."
+    },
+    "C": {
+      "name": "Gewissenhaftigkeit",
+      "about": "Wie gern du planst, ordnest und Dinge gründlich zu Ende bringst.",
+      "high": "Gründlich und verlässlich: Auf dich ist Verlass, du planst voraus und bleibst dran.",
+      "mid": "Du kannst planen, wenn es zählt, und lässt auch mal Fünfe gerade sein.",
+      "low": "Spontan und flexibel: Du gehst unbeschwert an Dinge heran und passt dich schnell an."
+    },
+    "E": {
+      "name": "Extraversion",
+      "about": "Woher du deine Energie nimmst: aus Gesellschaft oder aus Ruhe.",
+      "high": "Gesellig und tatkräftig: Unter Menschen blühst du auf und bringst Schwung mit.",
+      "mid": "Du genießt Gesellschaft ebenso wie ruhige Zeit für dich.",
+      "low": "Ruhig und bedacht: Du tankst Kraft in der Stille und hörst genau zu."
+    },
+    "A": {
+      "name": "Verträglichkeit",
+      "about": "Wie du anderen begegnest: eher mitfühlend-harmonisch oder eher eigenständig-direkt.",
+      "high": "Herzlich und hilfsbereit: Du fühlst mit anderen und sorgst für ein gutes Miteinander.",
+      "mid": "Du bist freundlich und hilfsbereit, kannst aber auch klar Grenzen ziehen.",
+      "low": "Eigenständig und direkt: Du sagst ehrlich, was Sache ist, und lässt dich nicht leicht verbiegen."
+    },
+    "N": {
+      "name": "Feingefühl",
+      "about": "Wie stark du Stimmungen, Sorgen und Spannungen wahrnimmst. (In der Psychologie: Neurotizismus.)",
+      "high": "Feinfühlig und wachsam: Du spürst Stimmungen und Gefahren früh und nimmst das Leben intensiv wahr.",
+      "mid": "Du nimmst Stimmungen wahr, ohne dich davon umwerfen zu lassen.",
+      "low": "Gelassen und ausgeglichen: Dich bringt so schnell nichts aus der Ruhe, auch nicht unter Druck."
+    }
+  },
+  "creatures": {
+    "otter": {
+      "species": "Otter",
+      "article": "ein",
+      "tagline": "der gesellige Abenteurer",
+      "description": "Dein Fell glänzt warm in der Sonne, auf deinem Kopf sitzt ein kleiner Muschelpanzer, und um dich herum tanzen schimmernde Wasserblasen. Du bist neugierig, herzlich und immer bereit für das nächste Abenteuer – am liebsten mit Freunden."
+    },
+    "eule": {
+      "species": "Eule",
+      "article": "eine",
+      "tagline": "die stille Denkerin",
+      "description": "Deine Federn sind tiefblau, und manche von ihnen leuchten sanft, als hätten sie das Sternenlicht gespeichert. Du beobachtest genau, denkst gründlich nach und spürst Dinge, die anderen entgehen."
+    },
+    "dachs": {
+      "species": "Dachs",
+      "article": "ein",
+      "tagline": "der verlässliche Beschützer",
+      "description": "Deine Krallen sind hart wie Stein, und in deinem Fell funkeln kupferne Erzflecken. Du packst an, hältst Wort und hast ein wachsames Auge auf alles, was deinen Freunden gefährlich werden könnte."
+    },
+    "capybara": {
+      "species": "Capybara",
+      "article": "ein",
+      "tagline": "die ruhende Mitte",
+      "description": "Auf deinem Rücken wächst weiches Moos, und kleine Blüten wiegen sich darin im Wind. Du ruhst in dir selbst, und wer in deiner Nähe ist, wird ganz von allein ein bisschen ruhiger."
+    }
+  },
+  "credits": {
+    "title": "Quellen & Dank",
+    "lines": [
+      "Fragebogen: IPIP 50-Item Big-Five Factor Markers (Goldberg; ipip.ori.org, Public Domain)",
+      "Deutsche Fassung: A. Angleitner, S. Hempel, R. Langert, F. Spinath (Universität Bielefeld)",
+      "Vergleichswerte: Open-Source Psychometrics Project (openpsychometrics.org)",
+      "Geplante Platzhaltergrafik: Ninja Adventure Asset Pack von pixel-boy (CC0)",
+      "Schrift: Pixelify Sans (SIL Open Font License)"
+    ]
+  }
+}

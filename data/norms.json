@@ -1,0 +1,86 @@
+{
+  "description": "Vergleichswerte (Mittelwert und Standardabweichung der Skalen-Mittelwerte, Antwortskala 1–5) für die Berechnung der z-Werte. N = Neurotizismus (im Spiel „Feingefühl“).",
+  "source": {
+    "dataset": "Open-Source Psychometrics Project: „Answers to the IPIP Big Five Factor Markers“ (BIG5.zip, erhoben ca. 2012 über einen Online-Test)",
+    "url": "https://openpsychometrics.org/_rawdata/",
+    "file": "https://openpsychometrics.org/_rawdata/BIG5.zip",
+    "instrument": "IPIP 50-Item Big-Five Factor Markers (englisches Original, Goldberg 1992), Ich-Form, Skala 1 = Disagree … 5 = Agree",
+    "filter": "Englisch als Muttersprache, Land ∈ {US, GB, CA, AU, NZ, IE}, Alter 16–80, alle 50 Items beantwortet",
+    "n": 10039,
+    "nTotal": 19719,
+    "computedWith": "scripts/compute-norms.ts",
+    "computed": "2026-10-13"
+  },
+  "caveats": [
+    "Selbstselektierte Online-Stichprobe, keine repräsentative Bevölkerungsnorm.",
+    "Englischsprachige Personen und englische Items; das Spiel nutzt die deutsche Übersetzung.",
+    "Antwortanker im Datensatz: Disagree/Agree statt „trifft zu“. Die Skala ist in beiden Fällen 1–5.",
+    "Vorläufige Werte: Sie sollen später mit freiwillig geteilten Ergebnissen aus dem Freundeskreis nachjustiert werden."
+  ],
+  "dimensions": {
+    "O": {
+      "mean": 3.964,
+      "sd": 0.613
+    },
+    "C": {
+      "mean": 3.394,
+      "sd": 0.743
+    },
+    "E": {
+      "mean": 3.06,
+      "sd": 0.953
+    },
+    "A": {
+      "mean": 3.923,
+      "sd": 0.733
+    },
+    "N": {
+      "mean": 3.037,
+      "sd": 0.887
+    }
+  },
+  "correlationOrder": [
+    "O",
+    "C",
+    "E",
+    "A",
+    "N"
+  ],
+  "correlations": [
+    [
+      1,
+      0.044,
+      0.154,
+      0.085,
+      -0.095
+    ],
+    [
+      0.044,
+      1,
+      0.087,
+      0.158,
+      -0.255
+    ],
+    [
+      0.154,
+      0.087,
+      1,
+      0.327,
+      -0.264
+    ],
+    [
+      0.085,
+      0.158,
+      0.327,
+      1,
+      -0.102
+    ],
+    [
+      -0.095,
+      -0.255,
+      -0.264,
+      -0.102,
+      1
+    ]
+  ]
+}
