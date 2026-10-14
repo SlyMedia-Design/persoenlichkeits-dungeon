@@ -11,8 +11,19 @@ import { shareResult } from './EndingScene';
 
 /** Volles Big-Five-Profil mit Erklärungen. Scrollbar per Wischen, Mausrad oder Pfeiltasten. */
 export class ProfileScene extends BaseScene {
+  /** Woher das Profil geöffnet wurde: aus dem Dorf geht es dorthin zurück, sonst zum Titel */
+  private from?: string;
+
   constructor() {
     super('Profile');
+  }
+
+  init(data: { from?: string }) {
+    this.from = data.from;
+  }
+
+  protected restartData() {
+    return { from: this.from };
   }
 
   protected mood() {
@@ -96,7 +107,7 @@ export class ProfileScene extends BaseScene {
       .setScrollFactor(0)
       .setDepth(100)
       .setInteractive({ useHandCursor: true })
-      .on('pointerup', () => this.goTo('Title'));
+      .on('pointerup', () => this.goTo(this.from === 'Village' ? 'Village' : 'Title'));
 
     this.enableScrolling(height);
   }

@@ -4,15 +4,18 @@ import de from '../data/i18n/de.json';
 import bankJson from '../data/ipip50_de.json';
 import shortFormJson from '../data/mini_ipip20.json';
 import normsJson from '../data/norms.json';
+import villageJson from '../data/village.json';
 import { createTranslator, type Dictionary } from './core/i18n';
 import { selectItems } from './core/scoring';
 import type { Archetype, ItemBank, Norms } from './core/types';
+import { parseVillage, type VillageDef } from './core/village';
 
 /** Im Spiel gestellte Fragen: Mini-IPIP (20 Items aus der IPIP-50) */
 export const bank = selectItems(bankJson as ItemBank, shortFormJson.itemIds);
 export const norms = normsJson as unknown as Norms;
 export const archetypes = archetypesJson.archetypes as unknown as Archetype[];
 export const t = createTranslator(de as Dictionary);
+export const village = parseVillage(villageJson as unknown as VillageDef);
 
 export function archetypeById(id: string): Archetype {
   const a = archetypes.find((x) => x.id === id);
@@ -27,4 +30,9 @@ export function creatureText(id: string, key: 'species' | 'article' | 'tagline' 
 
 export function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/** Setzt die Namen von Spieler und Partner in einen Text ein. */
+export function withNames(text: string, names: { player?: string; partner?: string }): string {
+  return text.replace(/\{player\}/g, names.player ?? '').replace(/\{partner\}/g, names.partner ?? '');
 }

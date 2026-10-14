@@ -41,6 +41,7 @@ public/assets/          # Platzhalter-Grafiken und Sounds
 
 - **Stil:** Pixel-Art von schräg oben, **16×16-Kacheln**, wie Mystery Dungeon auf GBA/DS
 - **Platzhalter:** [Ninja Adventure Asset Pack von pixel-boy](https://pixel-boy.itch.io/ninja-adventure-asset-pack) (CC0). Wo es kein passendes Wesen gibt: einfache Farbkreise mit Augen, ein Farbcode pro Wesen. Den Credit für pixel-boy trotzdem in den Credits nennen.
+- **Stand Meilenstein 2:** Das Pack ist noch nicht eingebunden (itch.io lässt sich nicht automatisch herunterladen; Julian stellt die Datei bereit). Bis dahin zeichnet `src/ui/tiles.ts` eigene Platzhalter-Kacheln; die Karte nutzt nur Bedeutungsnamen (grass, tree, roof …), damit der Austausch an einer Stelle passiert.
 - **Farben:** Das Dorf warm und pastellig. Jeder Dungeon bekommt eine eigene, kräftigere Farbwelt (Wald grün, Höhle violett …).
 - **Wesen:** Tierähnlich mit Fantasy-Note, rund, großer Kopf, kurze Beine
 - **Formsprache für die Big Five** (gilt für alle Wesen):
@@ -89,7 +90,7 @@ Werte als Ziel-z-Profil: hoch = +1, niedrig = −1.
 | Fantasy-Note | Muschelpanzer, Wasserblasen | nachts leuchtende Federn | Steinkrallen, Erzflecken | Moos und Blüten auf dem Rücken |
 | Kurz | der gesellige Abenteurer | die stille Denkerin | der verlässliche Beschützer | die ruhende Mitte |
 
-Jede Dimension hat zwei hohe und zwei niedrige Wesen. Die Artnamen sind Platzhalter, bis Julian eigene festlegt.
+Jede Dimension hat zwei hohe und zwei niedrige Wesen. Die Artnamen sind Platzhalter, bis Julian eigene festlegt – sie bleiben es während des gesamten Prototyps (Entscheidung vom 14.10.2026). Ebenso Platzhalter: Dorfname „Morgentau“ und die Dorfbewohner „Oma Wurzel“ und „Fips“.
 
 ## 6. Gameplay
 

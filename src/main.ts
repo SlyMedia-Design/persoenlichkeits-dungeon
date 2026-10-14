@@ -8,6 +8,8 @@ import { ProfileScene } from './scenes/ProfileScene';
 import { QuestionScene } from './scenes/QuestionScene';
 import { RevealScene } from './scenes/RevealScene';
 import { TitleScene } from './scenes/TitleScene';
+import { VillageHudScene } from './scenes/VillageHudScene';
+import { VillageScene } from './scenes/VillageScene';
 import { COLORS } from './ui/theme';
 
 async function start() {
@@ -25,7 +27,7 @@ async function start() {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
-  new Phaser.Game({
+  const game = new Phaser.Game({
     type: Phaser.AUTO,
     parent: 'game',
     backgroundColor: COLORS.night,
@@ -38,8 +40,10 @@ async function start() {
       height: window.innerHeight,
     },
     input: { activePointers: 2 },
-    scene: [TitleScene, IntroScene, QuestionScene, RevealScene, PartnerScene, NameScene, EndingScene, ProfileScene],
+    scene: [TitleScene, IntroScene, QuestionScene, RevealScene, PartnerScene, NameScene, EndingScene, ProfileScene, VillageScene, VillageHudScene],
   });
+  // Nur in der Entwicklung: Zugriff für Tests im Browser
+  if (import.meta.env.DEV) (window as unknown as { game: Phaser.Game }).game = game;
 }
 
 void start();

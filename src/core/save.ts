@@ -1,4 +1,6 @@
+import type { Pos } from './grid';
 import { DIMENSIONS, type Answers, type Profile, type ScoreResult } from './types';
+import type { Placement, QuestLog } from './village';
 
 export const SAVE_KEY = 'persoenlichkeits-dungeon.save';
 /** 1 = Test mit 50 Fragen, 2 = Mini-IPIP mit 20 Fragen */
@@ -16,6 +18,12 @@ export interface SaveData {
   playerName?: string;
   partnerName?: string;
   completedAt?: string;
+  /** Dorf (Meilenstein 2): Positionen von Spieler und Partner */
+  village?: { player: Placement; partner: Pos };
+  /** Stand der Aufträge vom Schwarzen Brett */
+  quests?: QuestLog;
+  /** Begrüßung beim ersten Betreten des Dorfs schon gesehen */
+  villageIntroSeen?: boolean;
 }
 
 /** Minimale Schnittstelle, damit localStorage in Tests ersetzt werden kann. */

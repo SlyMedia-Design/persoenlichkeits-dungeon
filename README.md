@@ -2,7 +2,7 @@
 
 Hobby-Browserspiel im Geist von *Mystery Dungeon* mit eigener Welt. Am Anfang steht ein echter Big-Five-Persönlichkeitstest; das Ergebnis bestimmt, welches Wesen man wird.
 
-**Stand: Meilenstein 1** – der Test als eigenständig spielbares Stück (Intro, 20 Fragen, Enthüllung, Partnerwahl, Namen, Profilseite).
+**Stand: Meilenstein 2** – der Test (Intro, 20 Fragen, Enthüllung, Partnerwahl, Namen, Profilseite) und das begehbare Dorf Morgentau mit 2 Dorfbewohnern und einem Schwarzen Brett mit 2 Aufträgen.
 
 ## Entwickeln
 
@@ -20,8 +20,8 @@ npm run build      # Typprüfung + Produktions-Build nach dist/
 
 | Ordner | Inhalt |
 |---|---|
-| `data/` | Alle Inhalte als JSON: Items, Vergleichswerte, Wesen (inkl. 16×16-Pixel-Sprites), Texte (`i18n/de.json`) |
-| `src/core/` | Reine Logik ohne Phaser: Scoring, Zuordnung, Partnervorschlag, Simulation, Spielstand |
+| `data/` | Alle Inhalte als JSON: Items, Vergleichswerte, Wesen (inkl. 16×16-Pixel-Sprites), Dorfkarte (`village.json`), Texte (`i18n/de.json`) |
+| `src/core/` | Reine Logik ohne Phaser: Scoring, Zuordnung, Partnervorschlag, Simulation, Spielstand, Rasterbewegung und Wegsuche, Dorf (Karte, Interaktionen, Aufträge) |
 | `src/scenes/` | Phaser-Szenen |
 | `src/ui/` | Darstellung: Knöpfe, Hintergrund, Sprites, Musik (prozedural per WebAudio) |
 | `scripts/` | Werkzeuge: Item-Extraktion, Normberechnung, Verteilungssimulation, Schrift- und Porträt-Generator |
@@ -39,6 +39,12 @@ npm run build      # Typprüfung + Produktions-Build nach dist/
 - **Zuordnung:** nächstes Wesen per euklidischer Distanz im z-Raum; der Partnervorschlag ist das fernste andere Wesen.
 - **Kein klinischer oder diagnostischer Test.**
 
+## Das Dorf
+
+Die Karte steht als Textraster in `data/village.json`: Jedes Zeichen ist ein 16×16-Feld, die Legende sagt, was es ist (Gras, Weg, Baum, Dach, Brett …), ob man darauf laufen kann und welcher Text beim Untersuchen erscheint. Dorfbewohner, ihre Dialoge (abhängig vom Stand der Aufträge) und die Aufträge selbst stehen ebenfalls dort, die Texte in `data/i18n/de.json` unter `village`. Die Tests prüfen, dass alle Bewohner, das Brett und alle Untersuchungsfelder vom Startpunkt aus erreichbar sind.
+
+Steuerung: am Handy auf ein Feld oder eine Figur tippen, am Rechner Pfeiltasten/WASD und Leertaste. Die Kacheln sind vorerst per Code gezeichnete Platzhalter (`src/ui/tiles.ts`), die Dorfbewohner einfache Farbkreise mit Augen.
+
 ## Datenschutz
 
 Antworten und Spielstand liegen nur im `localStorage` des Browsers. Es gibt keinen Server, kein Tracking und keine externen Anfragen (die Schrift ist mitgebündelt). „Ergebnis teilen“ kopiert nur die fünf Mittelwerte in die Zwischenablage.
@@ -52,6 +58,6 @@ Jeder Push auf `main` testet, baut und veröffentlicht über `.github/workflows/
 - Fragebogen: International Personality Item Pool (Goldberg), Public Domain
 - Deutsche Übersetzung: A. Angleitner, S. Hempel, R. Langert, F. Spinath (Universität Bielefeld)
 - Vergleichsdaten: Open-Source Psychometrics Project
-- Geplante Platzhaltergrafik: [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) von pixel-boy (CC0) – im Meilenstein 1 noch nicht eingebunden. Die Wesen sind eigene Pixel-Sprites aus `data/archetypes.json`: 16×16 fürs Spielfeld, 32×32-Porträts für Menüs (erzeugt mit `scripts/draw-creatures.ts`)
+- Geplante Platzhaltergrafik: [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) von pixel-boy (CC0) – noch nicht eingebunden; die Dorfkacheln sind bis dahin eigene Platzhalter. Die Wesen sind eigene Pixel-Sprites aus `data/archetypes.json`: 16×16 fürs Spielfeld, 32×32-Porträts für Menüs (erzeugt mit `scripts/draw-creatures.ts`)
 - Schrift: „Dorfschrift“, abgeleitet von [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) (SIL Open Font License) – kräftiger, höhere Kleinbuchstaben, mehr Buchstabenabstand. Erzeugt mit `scripts/build-font.ts`, Dateien und Lizenz in `src/ui/fonts/`
 - Engine: [Phaser 3](https://phaser.io/)

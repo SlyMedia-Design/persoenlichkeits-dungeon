@@ -64,6 +64,7 @@ export class EndingScene extends NarrationScene {
       y += b.buttonHeight + gap;
       buttons.push(b.setAlpha(0));
     };
+    add(t('ending.village'), () => this.goTo('Village'));
     add(t('ending.profile'), () => this.goTo('Profile', { from: 'Ending' }));
     add(t('ending.share'), () => void shareResult(status));
     add(t('ending.restart'), () => this.goTo('Title', { confirming: true }));

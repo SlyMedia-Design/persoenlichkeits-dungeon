@@ -32,7 +32,7 @@ export abstract class BaseScene extends Phaser.Scene {
     this.backdrop = new Backdrop(this, this.mood());
     ambient.setBrightness(this.mood());
     this.build();
-    this.addSoundToggle();
+    addSoundToggle(this, this.m);
     this.cameras.main.fadeIn(400, 26, 24, 48);
 
     this.input.on('pointerdown', () => ambient.unlock());
@@ -51,20 +51,22 @@ export abstract class BaseScene extends Phaser.Scene {
     this.cameras.main.fadeOut(350, 26, 24, 48);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(key, data));
   }
+}
 
-  private addSoundToggle() {
-    const label = () => (ambient.muted ? t('common.soundOff') : t('common.soundOn'));
-    const text = this.add
-      .text(this.m.width - 12, 10, label(), textStyle(this.m.small, COLORS.textDim))
-      .setOrigin(1, 0)
-      .setScrollFactor(0)
-      .setDepth(100)
-      .setPadding(8, 6, 8, 6)
-      .setInteractive({ useHandCursor: true });
-    text.on('pointerup', (_p: Phaser.Input.Pointer, _x: number, _y: number, event: Phaser.Types.Input.EventData) => {
-      event.stopPropagation();
-      ambient.toggle();
-      text.setText(label());
-    });
-  }
+/** Musik-Schalter oben rechts; gibt den Text zurück, damit Szenen ihn als Bedienelement erkennen. */
+export function addSoundToggle(scene: Phaser.Scene, m: Metrics): Phaser.GameObjects.Text {
+  const label = () => (ambient.muted ? t('common.soundOff') : t('common.soundOn'));
+  const text = scene.add
+    .text(m.width - 12, 10, label(), textStyle(m.small, COLORS.textDim))
+    .setOrigin(1, 0)
+    .setScrollFactor(0)
+    .setDepth(100)
+    .setPadding(8, 6, 8, 6)
+    .setInteractive({ useHandCursor: true });
+  text.on('pointerup', (_p: Phaser.Input.Pointer, _x: number, _y: number, event: Phaser.Types.Input.EventData) => {
+    event.stopPropagation();
+    ambient.toggle();
+    text.setText(label());
+  });
+  return text;
 }

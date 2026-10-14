@@ -17,7 +17,8 @@
     "resume": "Fortsetzen",
     "profile": "Mein Profil",
     "privacy": "Deine Antworten bleiben nur auf diesem Gerät.",
-    "restartConfirm": "Wirklich von vorn beginnen? Dein bisheriger Spielstand wird gelöscht."
+    "restartConfirm": "Wirklich von vorn beginnen? Dein bisheriger Spielstand wird gelöscht.",
+    "village": "Ins Dorf"
   },
   "intro": {
     "lines": [
@@ -75,13 +76,14 @@
       "Zum ersten Mal, seit du aufgewacht bist, fühlst du dich nicht mehr allein."
     ],
     "end": "Ende des Prologs",
-    "next": "Fortsetzung folgt …",
+    "next": "Das Dorf wartet schon auf euch.",
     "profile": "Mein Profil ansehen",
     "share": "Ergebnis teilen",
     "shared": "Kopiert! Danke fürs Teilen.",
     "shareFailed": "Kopieren ging nicht – hier zum Abschreiben:",
     "shareHeader": "Mein Persönlichkeits-Dungeon-Ergebnis",
-    "restart": "Von vorn beginnen"
+    "restart": "Von vorn beginnen",
+    "village": "Ins Dorf"
   },
   "profile": {
     "title": "Dein Profil",
@@ -152,6 +154,86 @@
       "article": "ein",
       "tagline": "die ruhende Mitte",
       "description": "Auf deinem Rücken wächst weiches Moos, und kleine Blüten wiegen sich darin im Wind. Du ruhst in dir selbst, und wer in deiner Nähe ist, wird ganz von allein ein bisschen ruhiger."
+    }
+  },
+  "village": {
+    "name": "Morgentau",
+    "arrival": [
+      "„Willkommen in Morgentau! Hier wohne ich.“",
+      "„Auf dem Dorfplatz hängt das Schwarze Brett. Dort bitten die Leute um Hilfe.“",
+      "„Und Oma Wurzel weiß alles über unser Dorf. Komm, sag ihr Hallo!“"
+    ],
+    "hintTouch": "Tippe auf ein Feld, um dorthin zu laufen. Tippe auf jemanden, um zu reden.",
+    "hintKeys": "Pfeiltasten oder WASD zum Laufen, Leertaste zum Reden und Untersuchen.",
+    "menu": {
+      "open": "Menü",
+      "title": "Menü",
+      "profile": "Mein Profil",
+      "share": "Ergebnis teilen",
+      "toTitle": "Zum Titelbild",
+      "close": "Weiterspielen"
+    },
+    "examine": {
+      "pond": "Im Teich flitzen kleine silberne Fische davon.",
+      "window": "Durchs Fenster siehst du ein warmes Licht flackern.",
+      "door": "Die Tür ist verschlossen.",
+      "wurzelDoor": "Oma Wurzels Haus. Es duftet nach Kräutertee.",
+      "innDoor": "Das Gasthaus „Zum Kupferkessel“. Heute ist noch geschlossen.",
+      "sign": "Nach Norden: Flüsterwald. Bitte nicht allein gehen!",
+      "well": "Ein alter Brunnen. Ganz unten glitzert etwas.",
+      "gate": "Hinter dem Tor beginnt der Flüsterwald. Noch ist der Weg versperrt – bald brecht ihr auf."
+    },
+    "npcs": {
+      "wurzel": {
+        "name": "Oma Wurzel",
+        "default": [
+          "Ein neues Gesicht in Morgentau! Willkommen, {player}.",
+          "Du bist mit {partner} gekommen? Dann bist du hier zu Hause. Wem {partner} vertraut, dem vertrauen wir auch.",
+          "Wenn du helfen möchtest: Am Schwarzen Brett auf dem Dorfplatz hängen die Bitten der Dorfleute. Eine davon ist von mir."
+        ],
+        "questAccepted": [
+          "Du hilfst mir mit dem Leuchtmoos? Wie lieb von dir!",
+          "Es wächst an den feuchten Steinen im Flüsterwald. Nachts leuchtet es wie kleine Sterne.",
+          "Passt gut aufeinander auf, ihr zwei."
+        ]
+      },
+      "fips": {
+        "name": "Fips",
+        "default": [
+          "Hey, hey! Ich bin Fips. Ich kümmere mich um das Schwarze Brett!",
+          "Jeder im Dorf kann dort einen Zettel aufhängen. Und wer helfen will, nimmt ihn einfach an.",
+          "Schau doch mal rein – gleich hier neben mir!"
+        ],
+        "questAccepted": [
+          "Du suchst den kleinen Stups? Danke, danke, danke!",
+          "Er wollte nur Beeren sammeln und ist nicht zurückgekommen. Seine Mama macht sich große Sorgen.",
+          "Wenn ihr ihn findet, bringt ihn sicher zum Ausgang. Kämpfen kann er noch nicht."
+        ]
+      }
+    },
+    "board": {
+      "title": "Schwarzes Brett",
+      "from": "von {from}",
+      "reward": "Belohnung: {reward}",
+      "accept": "Annehmen",
+      "accepted": "Angenommen ✓",
+      "done": "Erledigt ✓",
+      "close": "Schließen",
+      "acceptedNote": "Der Weg in den Flüsterwald beginnt am Nordtor."
+    },
+    "quests": {
+      "verirrt": {
+        "title": "Vermisst: der kleine Stups",
+        "text": "Stups ist beim Beerensammeln im Flüsterwald verschwunden. Bitte findet ihn und bringt ihn sicher nach Hause!",
+        "from": "Stups’ Mama",
+        "reward": "ein Glas Waldhonig"
+      },
+      "leuchtmoos": {
+        "title": "Gesucht: Leuchtmoos",
+        "text": "Für meine Laternen brauche ich drei Büschel Leuchtmoos aus dem Flüsterwald.",
+        "from": "Oma Wurzel",
+        "reward": "Kräutertee und ein altes Rezept"
+      }
     }
   },
   "credits": {
