@@ -12,9 +12,12 @@ export interface TileDef {
   examine?: string;
   /** Feld ist das Schwarze Brett */
   board?: boolean;
+  /** Eingang zu diesem Dungeon */
+  dungeon?: string;
 }
 
-export type QuestStatus = 'accepted' | 'done';
+/** accepted = angenommen, ready = erfüllt (Belohnung beim Auftraggeber abholen), done = abgeschlossen */
+export type QuestStatus = 'accepted' | 'ready' | 'done';
 export type QuestLog = Record<string, QuestStatus>;
 
 export interface DialogRule {
@@ -22,6 +25,8 @@ export interface DialogRule {
   when?: { quest: string; status: QuestStatus | 'open' };
   /** i18n-Schlüssel einer Liste von Sätzen */
   lines: string;
+  /** Nach dem Gespräch ist dieser Auftrag abgeschlossen (Belohnung übergeben) */
+  complete?: string;
 }
 
 export interface NpcDef {
@@ -54,6 +59,9 @@ export interface VillageDef {
   /** Untersuchungstexte für einzelne Felder (überschreiben die Legende) */
   examine: (Pos & { text: string })[];
   quests: { id: string }[];
+  /** Wo das Team nach der Rückkehr aus dem Dungeon steht */
+  gateExit: Placement;
+  gatePartner: Pos;
 }
 
 export interface VillageMap {
@@ -67,6 +75,7 @@ export interface VillageMap {
 export type Interaction =
   | { kind: 'npc'; npc: NpcDef }
   | { kind: 'board' }
+  | { kind: 'dungeon'; id: string }
   | { kind: 'examine'; text: string };
 
 /** Prüft die Textkarte und gibt sie zurück; Fehler in den Daten werfen sofort. */
@@ -108,6 +117,7 @@ export function interactionAt(map: VillageMap, p: Pos): Interaction | null {
   const tile = tileAt(map, p);
   if (!tile) return null;
   if (tile.board) return { kind: 'board' };
+  if (tile.dungeon) return { kind: 'dungeon', id: tile.dungeon };
   const special = map.def.examine.find((e) => e.x === p.x && e.y === p.y);
   if (special) return { kind: 'examine', text: special.text };
   return tile.examine ? { kind: 'examine', text: tile.examine } : null;
@@ -122,11 +132,16 @@ export function questStatus(log: QuestLog, id: string): QuestStatus | 'open' {
   return log[id] ?? 'open';
 }
 
-/** i18n-Schlüssel der Sätze, die ein NPC gerade sagt. */
-export function pickDialog(npc: NpcDef, log: QuestLog): string {
+/** Was ein NPC gerade sagt (erste passende Regel). */
+export function pickDialog(npc: NpcDef, log: QuestLog): DialogRule {
   const rule = npc.dialogs.find((r) => !r.when || questStatus(log, r.when.quest) === r.when.status);
   if (!rule) throw new Error(`NPC ${npc.id} hat keinen passenden Dialog`);
-  return rule.lines;
+  return rule;
+}
+
+/** Schließt einen erfüllten Auftrag ab (nur aus dem Status ready). */
+export function completeQuest(log: QuestLog, id: string): QuestLog {
+  return log[id] === 'ready' ? { ...log, [id]: 'done' } : log;
 }
 
 /** Nimmt einen Auftrag an (bereits angenommene oder erledigte bleiben unverändert). */

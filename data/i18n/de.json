@@ -18,7 +18,8 @@
     "profile": "Mein Profil",
     "privacy": "Deine Antworten bleiben nur auf diesem Gerät.",
     "restartConfirm": "Wirklich von vorn beginnen? Dein bisheriger Spielstand wird gelöscht.",
-    "village": "Ins Dorf"
+    "village": "Ins Dorf",
+    "dungeon": "Weiter im Flüsterwald"
   },
   "intro": {
     "lines": [
@@ -179,8 +180,7 @@
       "wurzelDoor": "Oma Wurzels Haus. Es duftet nach Kräutertee.",
       "innDoor": "Das Gasthaus „Zum Kupferkessel“. Heute ist noch geschlossen.",
       "sign": "Nach Norden: Flüsterwald. Bitte nicht allein gehen!",
-      "well": "Ein alter Brunnen. Ganz unten glitzert etwas.",
-      "gate": "Hinter dem Tor beginnt der Flüsterwald. Noch ist der Weg versperrt – bald brecht ihr auf."
+      "well": "Ein alter Brunnen. Ganz unten glitzert etwas."
     },
     "npcs": {
       "wurzel": {
@@ -194,6 +194,15 @@
           "Du hilfst mir mit dem Leuchtmoos? Wie lieb von dir!",
           "Es wächst an den feuchten Steinen im Flüsterwald. Nachts leuchtet es wie kleine Sterne.",
           "Passt gut aufeinander auf, ihr zwei."
+        ],
+        "questReady": [
+          "Oh! Ist das … Leuchtmoos? Drei ganze Büschel!",
+          "Jetzt werden meine Laternen wieder leuchten. Hier, nimm meinen Kräutertee und das alte Rezept.",
+          "Du bist ein Schatz, {player}."
+        ],
+        "questDone": [
+          "Siehst du die Laternen? Sie leuchten so schön wie lange nicht mehr.",
+          "Komm jederzeit auf einen Tee vorbei, {player}."
         ]
       },
       "fips": {
@@ -207,6 +216,15 @@
           "Du suchst den kleinen Stups? Danke, danke, danke!",
           "Er wollte nur Beeren sammeln und ist nicht zurückgekommen. Seine Mama macht sich große Sorgen.",
           "Wenn ihr ihn findet, bringt ihn sicher zum Ausgang. Kämpfen kann er noch nicht."
+        ],
+        "questReady": [
+          "Stups ist wieder da! Er hat allen erzählt, wie mutig ihr wart!",
+          "Seine Mama hat mir das hier für euch gegeben: ein Glas Waldhonig.",
+          "Ihr seid echte Helden, {player} und {partner}!"
+        ],
+        "questDone": [
+          "Stups will jetzt auch Abenteurer werden. Oje …",
+          "Schau ruhig wieder am Schwarzen Brett vorbei!"
         ]
       }
     },
@@ -218,7 +236,8 @@
       "accepted": "Angenommen ✓",
       "done": "Erledigt ✓",
       "close": "Schließen",
-      "acceptedNote": "Der Weg in den Flüsterwald beginnt am Nordtor."
+      "acceptedNote": "Der Weg in den Flüsterwald beginnt am Nordtor.",
+      "ready": "Erledigt – Belohnung abholen ✓"
     },
     "quests": {
       "verirrt": {
@@ -233,6 +252,264 @@
         "from": "Oma Wurzel",
         "reward": "Kräutertee und ein altes Rezept"
       }
+    },
+    "gate": {
+      "prompt": "In den Flüsterwald aufbrechen?",
+      "go": "Aufbrechen",
+      "stay": "Noch nicht"
+    },
+    "afterDungeon": {
+      "mossMissing": "Leuchtmoos im Beutel: {n} von {needed}."
+    }
+  },
+  "moves": {
+    "attack": {
+      "name": "Angriff",
+      "info": "Ein normaler Angriff auf das Feld vor dir."
+    },
+    "kopfnuss": {
+      "name": "Kopfnuss",
+      "info": "Ein kräftiger Stoß mit dem Kopf."
+    },
+    "wasserblase": {
+      "name": "Wasserblase",
+      "info": "Eine Blase fliegt geradeaus und trifft den ersten Gegner."
+    },
+    "muschelschild": {
+      "name": "Muschelschild",
+      "info": "Der Muschelpanzer schützt dich einige Züge vor Schaden."
+    },
+    "planschwelle": {
+      "name": "Planschwelle",
+      "info": "Eine Welle trifft alle Gegner um dich herum."
+    },
+    "schnabelhieb": {
+      "name": "Schnabelhieb",
+      "info": "Ein schneller Hieb mit dem Schnabel."
+    },
+    "leuchtfeder": {
+      "name": "Leuchtfeder",
+      "info": "Eine leuchtende Feder fliegt geradeaus und kann blenden."
+    },
+    "eulenblick": {
+      "name": "Eulenblick",
+      "info": "Du konzentrierst dich: Du triffst besser und öfter kritisch."
+    },
+    "federsturm": {
+      "name": "Federsturm",
+      "info": "Ein Sturm aus Federn trifft geradeaus mit voller Wucht."
+    },
+    "kratzer": {
+      "name": "Kratzer",
+      "info": "Ein Hieb mit den Krallen."
+    },
+    "steinkralle": {
+      "name": "Steinkralle",
+      "info": "Ein harter Schlag mit den steinernen Krallen."
+    },
+    "erzpanzer": {
+      "name": "Erzpanzer",
+      "info": "Erzflecken härten dein Fell: weniger Schaden für einige Züge."
+    },
+    "erdstoss": {
+      "name": "Erdstoß",
+      "info": "Du stampfst auf: Alle Gegner um dich herum werden getroffen."
+    },
+    "rempler": {
+      "name": "Rempler",
+      "info": "Ein gemütlicher, aber kräftiger Schubs."
+    },
+    "moospolster": {
+      "name": "Moospolster",
+      "info": "Weiches Moos heilt dich und Verbündete direkt neben dir."
+    },
+    "bluetenduft": {
+      "name": "Blütenduft",
+      "info": "Ein süßer Duft lässt den Gegner vor dir einschlafen."
+    },
+    "wurzelgriff": {
+      "name": "Wurzelgriff",
+      "info": "Wurzeln schießen geradeaus und halten den Gegner fest."
+    },
+    "schleimspritzer": {
+      "name": "Schleimspritzer",
+      "info": ""
+    },
+    "biss": {
+      "name": "Biss",
+      "info": ""
+    },
+    "giftbiss": {
+      "name": "Giftbiss",
+      "info": ""
+    },
+    "schuppenstaub": {
+      "name": "Schuppenstaub",
+      "info": ""
+    },
+    "netz": {
+      "name": "Netz",
+      "info": ""
+    },
+    "peitschen": {
+      "name": "Bambuspeitsche",
+      "info": ""
+    },
+    "flackern": {
+      "name": "Flackern",
+      "info": ""
+    },
+    "irrlichtfeuer": {
+      "name": "Irrlichtfeuer",
+      "info": ""
+    },
+    "fluesterwind": {
+      "name": "Flüsterwind",
+      "info": ""
+    }
+  },
+  "dungeon": {
+    "name": "Flüsterwald",
+    "floor": "Flüsterwald · Etage {n}",
+    "floorShort": "E{n}",
+    "bossFloor": "Lichtung des Waldgeists",
+    "level": "St. {level}",
+    "hp": "KP",
+    "enemies": {
+      "schleim": "Schleim",
+      "larve": "Larve",
+      "falter": "Falter",
+      "schlange": "Schlange",
+      "spinne": "Spinne",
+      "bambus": "Bambusling",
+      "irrlicht": "Irrlicht",
+      "waldgeist": "Waldgeist",
+      "stups": "Stups"
+    },
+    "items": {
+      "heilbeere": {
+        "name": "Heilbeere",
+        "info": "Heilt Lebenspunkte (KP)."
+      },
+      "sternbeere": {
+        "name": "Sternbeere",
+        "info": "Gibt allen Fähigkeiten etwas Energie zurück."
+      },
+      "wurfstein": {
+        "name": "Wurfstein",
+        "info": "Wird geradeaus geworfen und trifft den ersten Gegner."
+      },
+      "leuchtmoos": {
+        "name": "Leuchtmoos",
+        "info": "Für Oma Wurzels Laternen. Leuchtet sanft im Dunkeln."
+      }
+    },
+    "status": {
+      "blind": "geblendet",
+      "sleep": "schläft",
+      "root": "festgehalten",
+      "guard": "geschützt",
+      "focus": "konzentriert"
+    },
+    "ui": {
+      "skills": "Fähigkeiten",
+      "bag": "Beutel",
+      "wait": "Warten",
+      "menu": "Menü",
+      "attack": "Angriff",
+      "close": "Schließen",
+      "pp": "Energie {pp}/{max}",
+      "bagEmpty": "Der Beutel ist leer.",
+      "bagCount": "Beutel ({n}/{max})",
+      "useSelf": "Selbst benutzen",
+      "usePartner": "An {partner} geben",
+      "throw": "Werfen",
+      "questItem": "Wird für einen Auftrag gebraucht.",
+      "giveUp": "Aufgeben und heimkehren",
+      "giveUpConfirm": "Wirklich aufgeben? Ihr kehrt ins Dorf zurück, gefundene Gegenstände gehen verloren.",
+      "resume": "Weiter erkunden",
+      "stairsPrompt": "Hier führt ein Pfad tiefer in den Wald. Weitergehen?",
+      "stairsGo": "Weitergehen",
+      "stairsStay": "Noch nicht",
+      "hintTouch": "Tippe neben dich, um zu laufen oder anzugreifen. Unten findest du Fähigkeiten und Beutel.",
+      "hintKeys": "WASD/Pfeiltasten: laufen und angreifen · Leertaste: Angriff · 1–4: Fähigkeiten · B: Beutel · Q: warten",
+      "profile": "Mein Profil"
+    },
+    "log": {
+      "attack": "{name} greift an!",
+      "use": "{name} setzt {move} ein!",
+      "hit": "{name} verliert {amount} KP.",
+      "crit": "Volltreffer!",
+      "miss": "Daneben!",
+      "missAir": "{name} trifft nur Luft.",
+      "heal": "{name} erholt sich um {amount} KP.",
+      "ppRestored": "{name} fühlt sich wieder voller Energie.",
+      "statusOn": {
+        "blind": "{name} ist geblendet!",
+        "sleep": "{name} schläft ein!",
+        "root": "{name} ist festgehalten!",
+        "guard": "{name} schützt sich!",
+        "focus": "{name} konzentriert sich!"
+      },
+      "statusOff": {
+        "blind": "{name} sieht wieder klar.",
+        "sleep": "{name} wacht auf.",
+        "root": "{name} kann sich wieder bewegen.",
+        "guard": "Der Schutz von {name} lässt nach.",
+        "focus": "{name} ist nicht mehr konzentriert."
+      },
+      "asleep": "{name} schläft tief und fest.",
+      "noPp": "Für diese Fähigkeit fehlt die Energie.",
+      "faintEnemy": "{name} ist besiegt!",
+      "faintTeam": "{name} kann nicht mehr …",
+      "xp": "{name} erhält {amount} Erfahrung.",
+      "levelUp": "{name} erreicht Stufe {level}!",
+      "learned": "{name} lernt {move}!",
+      "forgot": "{name} vergisst dafür {move}.",
+      "pickup": "{item} eingesteckt.",
+      "bagFull": "Der Beutel ist voll – {item} bleibt liegen.",
+      "itemSelf": "{name} benutzt {item}.",
+      "itemGive": "{name} gibt {target} {item}.",
+      "itemThrow": "{name} wirft einen {item}!",
+      "trap": "Autsch, eine Dornenfalle! {name} verliert {amount} KP.",
+      "summon": "Der Waldgeist ruft Irrlichter herbei!",
+      "escortLost": "Stups bekommt Angst und rennt davon …",
+      "rooted": "{name} ist festgehalten und kommt nicht vom Fleck."
+    },
+    "stups": {
+      "found": [
+        "„Hilfe! Ach, ihr seid gar nicht gruselig … Ich bin Stups.“",
+        "„Ich hab mich verlaufen und traue mich nicht weiter. Bringt ihr mich zum Ausgang?“",
+        "„Ich bleibe ganz dicht hinter euch, versprochen!“"
+      ],
+      "rescued": [
+        "„Hier kenne ich mich aus! Ab hier finde ich allein nach Hause. Danke, danke!“"
+      ]
+    },
+    "boss": {
+      "intro": [
+        "Mitten auf der Lichtung flackert ein bläuliches Licht. Es flüstert – erst leise, dann immer lauter.",
+        "„Wer stört meine Ruhe? Seit so vielen Jahren ist niemand mehr hierhergekommen …“",
+        "„Geht! Sonst puste ich euch hinaus wie Kerzenflammen!“"
+      ],
+      "calm": [
+        "Das Flackern wird ruhiger. Der Waldgeist sinkt leise zu Boden.",
+        "„Ihr … habt nicht aufgegeben. Und ihr habt aufeinander aufgepasst.“",
+        "„Ich war so lange allein, dass ich vergessen hatte, wie sich Freundschaft anfühlt.“",
+        "„Geht in Frieden. Der Flüsterwald wird euch nichts mehr tun.“"
+      ]
+    },
+    "defeated": [
+      "Alles wird dunkel …",
+      "Als ihr die Augen öffnet, liegt ihr im weichen Gras vor dem Nordtor. Jemand hat euch nach Hause gebracht.",
+      "Die gefundenen Gegenstände sind verloren. Aber ihr seid zusammen – und könnt es jederzeit erneut versuchen."
+    ],
+    "cleared": [
+      "Der Weg aus dem Wald ist plötzlich ganz leicht zu finden.",
+      "Müde, aber glücklich kehrt ihr nach Morgentau zurück."
+    ],
+    "floorIntro": {
+      "first": "Der Flüsterwald. Zwischen den Bäumen raschelt und wispert es."
     }
   },
   "credits": {

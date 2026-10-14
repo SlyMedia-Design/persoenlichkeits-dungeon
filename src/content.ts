@@ -5,6 +5,12 @@ import bankJson from '../data/ipip50_de.json';
 import shortFormJson from '../data/mini_ipip20.json';
 import normsJson from '../data/norms.json';
 import villageJson from '../data/village.json';
+import battleJson from '../data/battle.json';
+import bonusesJson from '../data/bonuses.json';
+import dungeonJson from '../data/dungeon.json';
+import movesJson from '../data/moves.json';
+import type { BonusDef } from './core/dungeon/stats';
+import type { Content } from './core/dungeon/types';
 import { createTranslator, type Dictionary } from './core/i18n';
 import { selectItems } from './core/scoring';
 import type { Archetype, ItemBank, Norms } from './core/types';
@@ -16,6 +22,8 @@ export const norms = normsJson as unknown as Norms;
 export const archetypes = archetypesJson.archetypes as unknown as Archetype[];
 export const t = createTranslator(de as Dictionary);
 export const village = parseVillage(villageJson as unknown as VillageDef);
+export const dungeonContent = { dungeon: dungeonJson, battle: battleJson, moves: movesJson } as unknown as Content;
+export const bonusDefs = bonusesJson as unknown as Record<string, BonusDef>;
 
 export function archetypeById(id: string): Archetype {
   const a = archetypes.find((x) => x.id === id);

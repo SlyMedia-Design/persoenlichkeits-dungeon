@@ -1,5 +1,5 @@
 {
-  "description": "Welche Kachel aus dem Ninja Adventure Asset Pack (Pixel-boy & AAA, CC0) für welche Bedeutung der Dorfkarte steht. x/y/w/h zählen in 16×16-Kacheln. Autotiles folgen dem Aufbau des Packs: 3×3-Block ab (x, y), senkrechter Streifen in Spalte x+3, waagerechter Streifen in Zeile y+3, Innenecken ab (x+5, y+1).",
+  "description": "Welche Kachel aus dem Ninja Adventure Asset Pack (Pixel-boy & AAA, CC0) für welche Bedeutung der Dorfkarte steht. x/y/w/h zählen in 16×16-Kacheln. Autotiles folgen dem Aufbau des Packs: 3×3-Block ab (x, y), senkrechter Streifen in Spalte x+3, waagerechter Streifen in Zeile y+3, Innenecken ab (x+5, y+1). actors: Spritesheets mit 16×16-Bildern (Spalten = Blickrichtung unten/oben/links/rechts, Zeilen = Laufbilder), außer frameWidth/frames ist angegeben (Boss: Bilder nebeneinander). fx: Effekt-Animationen (Einzelbildgröße und Anzahl). dungeon: Kacheln des Flüsterwalds.",
   "sheets": {
     "floor": "assets/ninja/tilesets/TilesetFloor.png",
     "water": "assets/ninja/tilesets/TilesetWater.png",
@@ -16,10 +16,7 @@
       { "sheet": "floor", "x": 3, "y": 12 },
       { "sheet": "floor", "x": 4, "y": 12 }
     ],
-    "details": [
-      { "sheet": "detail", "x": 0, "y": 2 },
-      { "sheet": "detail", "x": 3, "y": 2 }
-    ]
+    "details": [{ "sheet": "detail", "x": 0, "y": 2 }, { "sheet": "detail", "x": 3, "y": 2 }]
   },
   "autotiles": {
     "path": { "sheet": "floor", "x": 0, "y": 7, "innerCorners": true },
@@ -31,10 +28,7 @@
       { "sheet": "detail", "x": 2, "y": 0 },
       { "sheet": "detail", "x": 3, "y": 0 }
     ],
-    "bush": [
-      { "sheet": "nature", "x": 1, "y": 10 },
-      { "sheet": "nature", "x": 6, "y": 10 }
-    ],
+    "bush": [{ "sheet": "nature", "x": 1, "y": 10 }, { "sheet": "nature", "x": 6, "y": 10 }],
     "hedge": [{ "sheet": "nature", "x": 10, "y": 8 }],
     "board": [{ "sheet": "element", "x": 1, "y": 2 }],
     "sign": [{ "sheet": "element", "x": 0, "y": 2 }],
@@ -52,6 +46,54 @@
   },
   "actors": {
     "mouse": { "sheet": "assets/ninja/actors/Mouse.png", "face": "assets/ninja/actors/MouseFace.png" },
-    "mushroom": { "sheet": "assets/ninja/actors/Mushroom.png", "face": "assets/ninja/actors/MushroomFace.png" }
+    "mushroom": { "sheet": "assets/ninja/actors/Mushroom.png", "face": "assets/ninja/actors/MushroomFace.png" },
+    "slime": { "sheet": "assets/ninja/actors/slime.png" },
+    "larva": { "sheet": "assets/ninja/actors/larva.png" },
+    "butterfly": { "sheet": "assets/ninja/actors/butterfly.png" },
+    "snake": { "sheet": "assets/ninja/actors/snake.png" },
+    "spider": { "sheet": "assets/ninja/actors/spider.png" },
+    "bamboo": { "sheet": "assets/ninja/actors/bamboo.png" },
+    "spirit": { "sheet": "assets/ninja/actors/spirit.png" },
+    "axolotl": { "sheet": "assets/ninja/actors/axolotl.png", "face": "assets/ninja/actors/axolotlFace.png" },
+    "forestSpirit": {
+      "sheet": "assets/ninja/actors/forestSpirit.png",
+      "face": "assets/ninja/actors/forestSpiritFace.png",
+      "frameWidth": 50,
+      "frameHeight": 50,
+      "frames": 5
+    }
+  },
+  "items": {
+    "berryRed": "assets/ninja/items/berryRed.png",
+    "berryOrange": "assets/ninja/items/berryOrange.png",
+    "rock": "assets/ninja/items/rock.png",
+    "moss": "assets/ninja/items/moss.png",
+    "spikes": "assets/ninja/items/spikes.png"
+  },
+  "fx": {
+    "cut": { "sheet": "assets/ninja/fx/cut.png", "frameWidth": 32, "frameHeight": 32, "frames": 4 },
+    "claw": { "sheet": "assets/ninja/fx/claw.png", "frameWidth": 32, "frameHeight": 32, "frames": 4 },
+    "water": { "sheet": "assets/ninja/fx/water.png", "frameWidth": 40, "frameHeight": 33, "frames": 11 },
+    "rock": { "sheet": "assets/ninja/fx/rock.png", "frameWidth": 30, "frameHeight": 30, "frames": 14 },
+    "plant": { "sheet": "assets/ninja/fx/plant.png", "frameWidth": 30, "frameHeight": 28, "frames": 8 },
+    "spark": { "sheet": "assets/ninja/fx/spark.png", "frameWidth": 30, "frameHeight": 35, "frames": 9 },
+    "shield": { "sheet": "assets/ninja/fx/shield.png", "frameWidth": 24, "frameHeight": 26, "frames": 6 },
+    "boost": { "sheet": "assets/ninja/fx/boost.png", "frameWidth": 53, "frameHeight": 35, "frames": 8 }
+  },
+  "dungeon": {
+    "grass": { "sheet": "floor", "x": 11, "y": 12 },
+    "grassVariants": [
+      { "sheet": "floor", "x": 12, "y": 12 },
+      { "sheet": "floor", "x": 13, "y": 12 },
+      { "sheet": "floor", "x": 14, "y": 12 }
+    ],
+    "path": { "sheet": "floor", "x": 11, "y": 7, "innerCorners": true },
+    "trees": [
+      { "sheet": "nature", "x": 2, "y": 0, "w": 2, "h": 2 },
+      { "sheet": "nature", "x": 2, "y": 0, "w": 2, "h": 2 },
+      { "sheet": "nature", "x": 0, "y": 0, "w": 2, "h": 2 }
+    ],
+    "bush": [{ "sheet": "nature", "x": 1, "y": 10 }, { "sheet": "nature", "x": 6, "y": 10 }],
+    "stairs": { "sheet": "element", "x": 8, "y": 11 }
   }
 }

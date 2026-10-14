@@ -2,7 +2,7 @@
 
 Hobby-Browserspiel im Geist von *Mystery Dungeon* mit eigener Welt. Am Anfang steht ein echter Big-Five-Persönlichkeitstest; das Ergebnis bestimmt, welches Wesen man wird.
 
-**Stand: Meilenstein 2** – der Test (Intro, 20 Fragen, Enthüllung, Partnerwahl, Namen, Profilseite) und das begehbare Dorf Morgentau mit 2 Dorfbewohnern und einem Schwarzen Brett mit 2 Aufträgen.
+**Stand: Meilenstein 3** – der Test (Intro, 20 Fragen, Enthüllung, Partnerwahl, Namen, Profilseite), das begehbare Dorf Morgentau mit 2 Dorfbewohnern und einem Schwarzen Brett mit 2 Aufträgen sowie der Flüsterwald: 3 zufällige Etagen, rundenbasierter Kampf und der Waldgeist als Boss.
 
 ## Entwickeln
 
@@ -11,6 +11,7 @@ npm install
 npm run dev        # lokaler Server auf http://localhost:5173
 npm test           # Unit-Tests (Vitest)
 npm run simulate   # Verteilungstest der Wesen
+npm run balance    # Schwierigkeits-Check des Dungeons (ein Bot spielt 200 Durchgänge)
 npm run build      # Typprüfung + Produktions-Build nach dist/
 ```
 
@@ -46,6 +47,20 @@ Die Karte steht als Textraster in `data/village.json`: Jedes Zeichen ist ein 16�
 Steuerung: am Handy auf ein Feld oder eine Figur tippen, am Rechner Pfeiltasten/WASD und Leertaste. Bewegt wird in 8 Richtungen: zwei Tasten zusammen (z. B. W + A) ergeben einen Schrägschritt, die Wegsuche nutzt ebenfalls Schrägschritte, schneidet aber keine Ecken. Unsere Wesen laufen mit zwei Laufbildern (abwechselnd ein Fuß angehoben), die aus ihrem 16×16-Sprite erzeugt werden.
 
 Grafik: `data/tileset.json` ordnet jeder Bedeutung (Gras, Weg, Wasser, Hecke, Haus …) eine Kachel aus dem Ninja Adventure Pack zu. Wege und Wasser bekommen automatisch passende Ränder und Ecken (`src/core/autotile.ts`), Baumflächen werden mit großen 2×2-Bäumen gefüllt (`src/core/tileset.ts`). Die verwendeten Bilder liegen in `public/assets/ninja/` (nur die nötigen Dateien, samt Lizenz). Unsere vier Wesen bleiben eigene Pixel-Sprites.
+
+## Der Flüsterwald (Dungeon)
+
+Aufbruch am Nordtor des Dorfs. Rundenbasiert wie bei *Mystery Dungeon*: Jeder Schritt oder Angriff ist ein Zug, danach handeln Partner, Begleiter und Gegner.
+
+- **Etagen:** 3 zufällig erzeugte Etagen (Räume und Gänge, `src/core/dungeon/generate.ts`), danach die handgebaute Lichtung des Waldgeists (Textraster in `data/dungeon.json`).
+- **Kampf:** Jedes Wesen kennt bis zu 4 Fähigkeiten mit Energie (`data/moves.json`), sammelt Erfahrung und steigt Stufen auf; mit Stufe 8 lernt es eine vierte Fähigkeit (`data/battle.json`). Statuseffekte: geblendet, schläft, festgehalten, geschützt, konzentriert.
+- **Persönlichkeit:** Die z-Werte des Tests geben passive Boni; jeder Pol einer Dimension hat einen eigenen Vorteil (`data/bonuses.json`).
+- **Aufträge:** Stups wartet auf Etage 2 und folgt euch bis zur Treppe; Leuchtmoos liegt auf jeder Etage. Belohnungen gibt es danach bei Fips bzw. Oma Wurzel.
+- **Niederlage:** zurück ins Dorf; Stufen bleiben, der Beutel ist wieder wie vor dem Aufbruch.
+- **Speichern:** Der Durchgang wird nach jedem Zug gesichert und lässt sich über das Titelbild fortsetzen.
+- **Steuerung:** am Handy neben die Figur tippen (laufen/angreifen) oder auf ein bekanntes Feld (hinlaufen), Knöpfe für Fähigkeiten, Beutel, Warten und Menü; am Rechner WASD/Pfeiltasten (zwei Tasten für schräg), Leertaste Angriff, 1–4 Fähigkeiten, B Beutel, Q Warten, Enter Treppe.
+
+Die gesamte Logik liegt Phaser-frei in `src/core/dungeon/` und ist getestet, darunter ein Härtetest mit 400 Zufallszügen. Die Werte lassen sich in den JSON-Dateien anpassen; `npm run balance` zeigt danach, wie oft ein einfacher Bot den Waldgeist besänftigt (derzeit etwa ein Drittel; echte Spieler schneiden besser ab).
 
 ## Datenschutz
 

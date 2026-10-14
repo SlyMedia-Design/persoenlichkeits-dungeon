@@ -1,0 +1,8 @@
+{
+  "description": "Passive Boni aus dem Persönlichkeitsprofil des Spielers (z-Werte, begrenzt auf ±2). Jeder Pol bringt einen Vorteil: s = Stärke des hohen bzw. niedrigen Pols (0 … 2). Kein Profil ist schwächer. N = Neurotizismus (im Spiel Feingefühl).",
+  "O": { "high": { "kind": "extraPp", "perS": 2, "info": "Fähigkeiten haben mehr Energie" }, "low": { "kind": "attackPower", "perS": 2, "info": "Normalangriff ist stärker" } },
+  "C": { "high": { "kind": "accuracy", "perS": 6, "info": "Treffsicherheit höher (Prozentpunkte)" }, "low": { "kind": "extraItems", "perS": 1.5, "info": "Mehr Gegenstände pro Etage" } },
+  "E": { "high": { "kind": "teamPower", "perS": 0.15, "info": "Partner richtet mehr Schaden an, wenn er neben dir steht" }, "low": { "kind": "stealth", "perS": 1.5, "info": "Gegner bemerken euch erst aus kürzerer Entfernung" } },
+  "A": { "high": { "kind": "healing", "perS": 0.3, "info": "Beeren heilen mehr, das Team erholt sich schneller" }, "low": { "kind": "crit", "perS": 6, "info": "Öfter kritische Treffer (Prozentpunkte)" } },
+  "N": { "high": { "kind": "sense", "perS": 3, "info": "Gegner und Fallen in der Nähe sind auf der Karte zu sehen (Felder)" }, "low": { "kind": "toughness", "perS": 0.12, "info": "Weniger Schaden durch Treffer" } }
+}

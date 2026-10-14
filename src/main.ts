@@ -1,5 +1,7 @@
 import './ui/fonts/dorfschrift.css';
 import Phaser from 'phaser';
+import { DungeonHudScene } from './scenes/DungeonHudScene';
+import { DungeonScene } from './scenes/DungeonScene';
 import { EndingScene } from './scenes/EndingScene';
 import { IntroScene } from './scenes/IntroScene';
 import { NameScene } from './scenes/NameScene';
@@ -40,7 +42,7 @@ async function start() {
       height: window.innerHeight,
     },
     input: { activePointers: 2 },
-    scene: [TitleScene, IntroScene, QuestionScene, RevealScene, PartnerScene, NameScene, EndingScene, ProfileScene, VillageScene, VillageHudScene],
+    scene: [TitleScene, IntroScene, QuestionScene, RevealScene, PartnerScene, NameScene, EndingScene, ProfileScene, VillageScene, VillageHudScene, DungeonScene, DungeonHudScene],
   });
   // Nur in der Entwicklung: Zugriff für Tests im Browser
   if (import.meta.env.DEV) (window as unknown as { game: Phaser.Game }).game = game;

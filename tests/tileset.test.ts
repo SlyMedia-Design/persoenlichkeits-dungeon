@@ -45,7 +45,12 @@ describe('Baumplanung', () => {
 
 describe('Grafikzuordnung', () => {
   it('alle Bilddateien liegen in public/', () => {
-    const paths = [...Object.values(tileset.sheets), ...Object.values(tileset.actors).flatMap((a) => [a.sheet, a.face])];
+    const paths = [
+      ...Object.values(tileset.sheets),
+      ...Object.values(tileset.actors).flatMap((a) => (a.face ? [a.sheet, a.face] : [a.sheet])),
+      ...Object.values(tileset.items),
+      ...Object.values(tileset.fx).map((f) => f.sheet),
+    ];
     for (const p of paths) expect(existsSync(resolve(import.meta.dirname, '../public', p)), p).toBe(true);
   });
 

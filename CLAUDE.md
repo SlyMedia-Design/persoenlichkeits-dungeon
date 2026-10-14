@@ -102,6 +102,7 @@ Jede Dimension hat zwei hohe und zwei niedrige Wesen. Die Artnamen sind Platzhal
 - **Freundschaft mit NPCs:** Wächst durch gemeinsame Abenteuer und Persönlichkeits-Passung (passende Profile mögen dich schneller). Freundschafts-Szenen gibt es ab bestimmten Stufen.
 - **Hohe Freundschaft** schaltet frei: besondere Items in der Stadt und den **Partnertausch**
 - **Partnertausch:** Erst **nach Ende der Hauptgeschichte**. Der alte Partner bleibt als NPC im Dorf, und man kann jederzeit zurücktauschen.
+- **Stand Meilenstein 3 (mit Julian abgestimmt, 14.10.2026):** Kampf Mystery-Dungeon-artig (4 Fähigkeiten mit Energie, Stufen und Erfahrung); Niederlage = zurück ins Dorf (Stufen bleiben, Beutel wie vor dem Aufbruch); Boss ist der Waldgeist (wird besänftigt, nicht vernichtet); Persönlichkeits-Boni wie in `data/bonuses.json`. Stups (Axolotl) ist der gerettete NPC auf Etage 2.
 - **Struktur:** Hauptgeschichte plus Aufträge vom Schwarzen Brett. Nach dem Ende der Hauptgeschichte folgt ein Endlos-Modus.
 
 ## 7. Prototyp-Umfang (nicht mehr!)

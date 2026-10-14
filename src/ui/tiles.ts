@@ -3,6 +3,7 @@ import tilesetJson from '../../data/tileset.json';
 import { autotileOffset } from '../core/autotile';
 import type { Pos } from '../core/grid';
 import { planTrees, type TileRef, type TilesetDef } from '../core/tileset';
+import type { Floor } from '../core/dungeon/types';
 import { tileAt, type VillageMap } from '../core/village';
 
 /**
@@ -18,6 +19,8 @@ export const tileset = tilesetJson as unknown as TilesetDef;
 const sheetKey = (name: string) => `tiles-${name}`;
 export const actorKey = (id: string) => `actor-${id}`;
 export const faceKey = (id: string) => `face-${id}`;
+export const itemKey = (sprite: string) => `item-${sprite}`;
+export const fxKey = (id: string) => `fx-${id}`;
 
 /** Lädt alle Kachelbilder und Figuren (nur, was noch nicht geladen ist). */
 export function preloadTileset(scene: Phaser.Scene) {
@@ -26,8 +29,15 @@ export function preloadTileset(scene: Phaser.Scene) {
     if (!scene.textures.exists(sheetKey(name))) scene.load.image(sheetKey(name), base + path);
   }
   for (const [id, actor] of Object.entries(tileset.actors)) {
-    if (!scene.textures.exists(actorKey(id))) scene.load.spritesheet(actorKey(id), base + actor.sheet, { frameWidth: TILE, frameHeight: TILE });
-    if (!scene.textures.exists(faceKey(id))) scene.load.image(faceKey(id), base + actor.face);
+    const frame = { frameWidth: actor.frameWidth ?? TILE, frameHeight: actor.frameHeight ?? TILE };
+    if (!scene.textures.exists(actorKey(id))) scene.load.spritesheet(actorKey(id), base + actor.sheet, frame);
+    if (actor.face && !scene.textures.exists(faceKey(id))) scene.load.image(faceKey(id), base + actor.face);
+  }
+  for (const [id, path] of Object.entries(tileset.items)) {
+    if (!scene.textures.exists(itemKey(id))) scene.load.image(itemKey(id), base + path);
+  }
+  for (const [id, fx] of Object.entries(tileset.fx)) {
+    if (!scene.textures.exists(fxKey(id))) scene.load.spritesheet(fxKey(id), base + fx.sheet, { frameWidth: fx.frameWidth, frameHeight: fx.frameHeight });
   }
 }
 
@@ -113,6 +123,45 @@ export function villageMapTexture(scene: Phaser.Scene, map: VillageMap): string 
   for (const p of trees.small) blit(pick(tileset.objects.bush, p.x, p.y, 5), p);
   for (const p of trees.big) blit(pick(tileset.trees, p.x, p.y, 6), p);
 
+  canvas.refresh();
+  return key;
+}
+
+/**
+ * Malt eine Dungeon-Etage: dunkles Waldgras, Erdboden für Räume und Gänge, Bäume als Wände, die Treppe.
+ * Jede Etage bekommt eine eigene Textur; die vorige wird entfernt.
+ */
+export function dungeonFloorTexture(scene: Phaser.Scene, floor: Floor, id: string): string {
+  const key = `dungeon-${id}`;
+  if (scene.textures.exists(key)) return key;
+  for (const old of scene.textures.getTextureKeys().filter((k) => k.startsWith('dungeon-'))) scene.textures.remove(old);
+  const d = tileset.dungeon;
+  const canvas = scene.textures.createCanvas(key, (floor.width + 2 * BORDER) * TILE, (floor.height + 2 * BORDER) * TILE);
+  if (!canvas) throw new Error('Etage konnte nicht erstellt werden');
+  const ctx = canvas.getContext();
+  ctx.imageSmoothingEnabled = false;
+  const blit = (ref: TileRef, at: Pos, offset: Pos = { x: 0, y: 0 }) => {
+    const img = scene.textures.get(sheetKey(ref.sheet)).getSourceImage() as CanvasImageSource;
+    const w = (ref.w ?? 1) * TILE;
+    const h = (ref.h ?? 1) * TILE;
+    ctx.drawImage(img, (ref.x + offset.x) * TILE, (ref.y + offset.y) * TILE, w, h, (at.x + BORDER) * TILE, (at.y + BORDER) * TILE, w, h);
+  };
+  const open = (p: Pos) => p.y >= 0 && p.y < floor.height && p.x >= 0 && p.x < floor.width && floor.tiles[p.y][p.x] === '.';
+  const from = { x: -BORDER, y: -BORDER };
+  const to = { x: floor.width + BORDER - 1, y: floor.height + BORDER - 1 };
+  for (let y = from.y; y <= to.y; y++) {
+    for (let x = from.x; x <= to.x; x++) {
+      blit(hash(x, y, 11) < 0.2 ? pick(d.grassVariants, x, y, 12) : d.grass, { x, y });
+      if (!open({ x, y })) continue;
+      const same = (dx: number, dy: number) => open({ x: x + dx, y: y + dy });
+      const nb = { n: same(0, -1), s: same(0, 1), w: same(-1, 0), e: same(1, 0), nw: same(-1, -1), ne: same(1, -1), sw: same(-1, 1), se: same(1, 1) };
+      blit(d.path, { x, y }, autotileOffset(nb, d.path.innerCorners));
+    }
+  }
+  const trees = planTrees((p) => !open(p), from, to);
+  for (const p of trees.small) blit(pick(d.bush, p.x, p.y, 13), p);
+  for (const p of trees.big) blit(pick(d.trees, p.x, p.y, 14), p);
+  if (floor.stairs) blit(d.stairs, floor.stairs);
   canvas.refresh();
   return key;
 }

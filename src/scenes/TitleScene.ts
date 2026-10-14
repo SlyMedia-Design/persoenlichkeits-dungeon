@@ -61,7 +61,9 @@ export class TitleScene extends BaseScene {
       });
       add(t('common.cancel'), () => this.scene.restart({ confirming: false }));
     } else if (save.result && save.playerName) {
-      add(t('title.village'), () => this.goTo('Village'));
+      // Ein angefangener Ausflug wird fortgesetzt
+      if (save.dungeon) add(t('title.dungeon'), () => this.goTo('Dungeon'));
+      else add(t('title.village'), () => this.goTo('Village'));
       add(t('title.profile'), () => this.goTo('Profile', { from: 'Title' }));
       add(t('title.start'), () => this.scene.restart({ confirming: true }));
     } else if (started) {

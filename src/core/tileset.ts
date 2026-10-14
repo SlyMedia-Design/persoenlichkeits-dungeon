@@ -16,7 +16,33 @@ export interface TilesetDef {
   objects: Record<string, TileRef[]>;
   trees: TileRef[];
   buildings: Record<string, TileRef & { w: number; h: number; door: Pos }>;
-  actors: Record<string, { sheet: string; face: string }>;
+  actors: Record<string, ActorDef>;
+  items: Record<string, string>;
+  fx: Record<string, FxDef>;
+  dungeon: {
+    grass: TileRef;
+    grassVariants: TileRef[];
+    path: TileRef & { innerCorners: boolean };
+    trees: TileRef[];
+    bush: TileRef[];
+    stairs: TileRef;
+  };
+}
+
+export interface ActorDef {
+  sheet: string;
+  face?: string;
+  /** Nur bei Figuren, die nicht dem 16×16-Raster mit 4 Blickrichtungen folgen */
+  frameWidth?: number;
+  frameHeight?: number;
+  frames?: number;
+}
+
+export interface FxDef {
+  sheet: string;
+  frameWidth: number;
+  frameHeight: number;
+  frames: number;
 }
 
 /**

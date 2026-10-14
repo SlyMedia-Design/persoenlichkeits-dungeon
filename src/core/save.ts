@@ -1,3 +1,4 @@
+import type { DungeonState } from './dungeon/types';
 import type { Pos } from './grid';
 import { DIMENSIONS, type Answers, type Profile, type ScoreResult } from './types';
 import type { Placement, QuestLog } from './village';
@@ -24,6 +25,14 @@ export interface SaveData {
   quests?: QuestLog;
   /** Begrüßung beim ersten Betreten des Dorfs schon gesehen */
   villageIntroSeen?: boolean;
+  /** Meilenstein 3: Stufe und Erfahrung von Spieler und Partner */
+  team?: { player: { level: number; xp: number }; partner: { level: number; xp: number } };
+  /** Beutel zwischen den Ausflügen */
+  bag?: string[];
+  /** Laufender Dungeon-Durchgang (wird nach jedem Zug gesichert) */
+  dungeon?: DungeonState;
+  /** Der Waldgeist wurde besänftigt */
+  dungeonCleared?: boolean;
 }
 
 /** Minimale Schnittstelle, damit localStorage in Tests ersetzt werden kann. */

@@ -1,66 +1,18 @@
 {
   "description": "Das Dorf als Textraster. Jedes Zeichen in map ist ein Feld (16×16 Pixel), seine Bedeutung steht in legend. x zählt von links, y von oben, beide ab 0. Texte (examine, lines) sind i18n-Schlüssel aus data/i18n/de.json. buildings setzt fertige Häuser aus data/tileset.json auf die H/D-Felder; die Tür muss auf einem D liegen. sprite verweist auf actors in data/tileset.json.",
   "legend": {
-    ".": {
-      "ground": "grass"
-    },
-    ",": {
-      "ground": "grass",
-      "object": "flowers"
-    },
-    ":": {
-      "ground": "path"
-    },
-    "T": {
-      "ground": "grass",
-      "object": "tree",
-      "solid": true
-    },
-    "~": {
-      "ground": "water",
-      "solid": true,
-      "examine": "village.examine.pond"
-    },
-    "D": {
-      "ground": "grass",
-      "object": "building",
-      "solid": true,
-      "examine": "village.examine.door"
-    },
-    "f": {
-      "ground": "grass",
-      "object": "hedge",
-      "solid": true
-    },
-    "B": {
-      "ground": "path",
-      "object": "board",
-      "solid": true,
-      "board": true
-    },
-    "S": {
-      "ground": "grass",
-      "object": "sign",
-      "solid": true,
-      "examine": "village.examine.sign"
-    },
-    "w": {
-      "ground": "path",
-      "object": "well",
-      "solid": true,
-      "examine": "village.examine.well"
-    },
-    "G": {
-      "ground": "path",
-      "object": "gate",
-      "solid": true,
-      "examine": "village.examine.gate"
-    },
-    "H": {
-      "ground": "grass",
-      "object": "building",
-      "solid": true
-    }
+    ".": { "ground": "grass" },
+    ",": { "ground": "grass", "object": "flowers" },
+    ":": { "ground": "path" },
+    "T": { "ground": "grass", "object": "tree", "solid": true },
+    "~": { "ground": "water", "solid": true, "examine": "village.examine.pond" },
+    "D": { "ground": "grass", "object": "building", "solid": true, "examine": "village.examine.door" },
+    "f": { "ground": "grass", "object": "hedge", "solid": true },
+    "B": { "ground": "path", "object": "board", "solid": true, "board": true },
+    "S": { "ground": "grass", "object": "sign", "solid": true, "examine": "village.examine.sign" },
+    "w": { "ground": "path", "object": "well", "solid": true, "examine": "village.examine.well" },
+    "G": { "ground": "path", "object": "gate", "solid": true, "dungeon": "fluesterwald" },
+    "H": { "ground": "grass", "object": "building", "solid": true }
   },
   "map": [
     "TTTTTTTTTTTTTGGTTTTTTTTTTTTT",
@@ -84,27 +36,9 @@
     "TT...,.......::.......,...TT",
     "TTTTTTTTTTTTT::TTTTTTTTTTTTT"
   ],
-  "buildings": [
-    {
-      "x": 3,
-      "y": 2,
-      "style": "houseOrange"
-    },
-    {
-      "x": 20,
-      "y": 3,
-      "style": "houseRed"
-    }
-  ],
-  "spawn": {
-    "x": 13,
-    "y": 17,
-    "facing": "up"
-  },
-  "partnerSpawn": {
-    "x": 13,
-    "y": 18
-  },
+  "buildings": [{ "x": 3, "y": 2, "style": "houseOrange" }, { "x": 20, "y": 3, "style": "houseRed" }],
+  "spawn": { "x": 13, "y": 17, "facing": "up" },
+  "partnerSpawn": { "x": 13, "y": 18 },
   "npcs": [
     {
       "id": "wurzel",
@@ -113,15 +47,16 @@
       "facing": "down",
       "dialogs": [
         {
-          "when": {
-            "quest": "leuchtmoos",
-            "status": "accepted"
-          },
-          "lines": "village.npcs.wurzel.questAccepted"
+          "when": { "quest": "leuchtmoos", "status": "ready" },
+          "lines": "village.npcs.wurzel.questReady",
+          "complete": "leuchtmoos"
         },
         {
-          "lines": "village.npcs.wurzel.default"
-        }
+          "when": { "quest": "leuchtmoos", "status": "accepted" },
+          "lines": "village.npcs.wurzel.questAccepted"
+        },
+        { "when": { "quest": "leuchtmoos", "status": "done" }, "lines": "village.npcs.wurzel.questDone" },
+        { "lines": "village.npcs.wurzel.default" }
       ],
       "sprite": "mushroom"
     },
@@ -132,37 +67,22 @@
       "facing": "right",
       "dialogs": [
         {
-          "when": {
-            "quest": "verirrt",
-            "status": "accepted"
-          },
-          "lines": "village.npcs.fips.questAccepted"
+          "when": { "quest": "verirrt", "status": "ready" },
+          "lines": "village.npcs.fips.questReady",
+          "complete": "verirrt"
         },
-        {
-          "lines": "village.npcs.fips.default"
-        }
+        { "when": { "quest": "verirrt", "status": "accepted" }, "lines": "village.npcs.fips.questAccepted" },
+        { "when": { "quest": "verirrt", "status": "done" }, "lines": "village.npcs.fips.questDone" },
+        { "lines": "village.npcs.fips.default" }
       ],
       "sprite": "mouse"
     }
   ],
   "examine": [
-    {
-      "x": 4,
-      "y": 4,
-      "text": "village.examine.wurzelDoor"
-    },
-    {
-      "x": 21,
-      "y": 5,
-      "text": "village.examine.innDoor"
-    }
+    { "x": 4, "y": 4, "text": "village.examine.wurzelDoor" },
+    { "x": 21, "y": 5, "text": "village.examine.innDoor" }
   ],
-  "quests": [
-    {
-      "id": "verirrt"
-    },
-    {
-      "id": "leuchtmoos"
-    }
-  ]
+  "quests": [{ "id": "verirrt" }, { "id": "leuchtmoos" }],
+  "gateExit": { "x": 13, "y": 1, "facing": "down" },
+  "gatePartner": { "x": 14, "y": 1 }
 }

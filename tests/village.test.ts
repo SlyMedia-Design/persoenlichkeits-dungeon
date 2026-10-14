@@ -6,6 +6,7 @@ import { canStep, combineDirs, dirTo, findPath, step, type Pos } from '../src/co
 import {
   acceptQuest,
   approachTiles,
+  completeQuest,
   interactionAt,
   isWalkable,
   parseVillage,
@@ -106,8 +107,12 @@ describe('Dialoge und Aufträge', () => {
   const wurzel = def.npcs.find((n) => n.id === 'wurzel')!;
 
   it('NPCs reagieren auf angenommene Aufträge', () => {
-    expect(pickDialog(wurzel, {})).toBe('village.npcs.wurzel.default');
-    expect(pickDialog(wurzel, { leuchtmoos: 'accepted' })).toBe('village.npcs.wurzel.questAccepted');
+    expect(pickDialog(wurzel, {}).lines).toBe('village.npcs.wurzel.default');
+    expect(pickDialog(wurzel, { leuchtmoos: 'accepted' }).lines).toBe('village.npcs.wurzel.questAccepted');
+    const ready = pickDialog(wurzel, { leuchtmoos: 'ready' });
+    expect(ready.complete).toBe('leuchtmoos');
+    expect(completeQuest({ leuchtmoos: 'ready' }, 'leuchtmoos')).toEqual({ leuchtmoos: 'done' });
+    expect(completeQuest({ leuchtmoos: 'accepted' }, 'leuchtmoos')).toEqual({ leuchtmoos: 'accepted' });
   });
 
   it('acceptQuest nimmt an, überschreibt aber keinen erledigten Auftrag', () => {

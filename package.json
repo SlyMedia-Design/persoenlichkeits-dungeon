@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "simulate": "tsx scripts/simulate.ts",
-    "norms": "tsx scripts/compute-norms.ts"
+    "norms": "tsx scripts/compute-norms.ts",
+    "balance": "tsx scripts/balance.ts"
   },
   "dependencies": {
     "phaser": "3.90.0"

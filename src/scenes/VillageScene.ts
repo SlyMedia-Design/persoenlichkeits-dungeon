@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
-import { archetypeById, t, village, withNames } from '../content';
+import { archetypeById, bonusDefs, dungeonContent, t, village, withNames } from '../content';
+import { startRun } from '../core/dungeon/engine';
 import { canStep, combineDirs, dirTo, findPath, horizontalOf, samePos, step, type Dir, type Pos } from '../core/grid';
-import { approachTiles, interactionAt, isWalkable, pickDialog, type Placement } from '../core/village';
+import { approachTiles, completeQuest, interactionAt, isWalkable, pickDialog, type Placement } from '../core/village';
 import { getSave, updateSave } from '../state';
 import { ambient } from '../ui/ambient';
 import { creatureTexture, fieldTexture, shadowTexture } from '../ui/sprites';
@@ -336,13 +337,42 @@ export class VillageScene extends Phaser.Scene {
       const npc = this.npcs.get(interaction.npc.id);
       const back = dirTo(tile, this.player.pos);
       if (npc && back) this.face(npc, back);
-      const lines = t.list(pickDialog(interaction.npc, save.quests ?? {})).map((l) => withNames(l, names));
-      this.hud.say(t(`village.npcs.${interaction.npc.id}.name`), lines, undefined, faceKey(interaction.npc.sprite));
+      const rule = pickDialog(interaction.npc, save.quests ?? {});
+      const lines = t.list(rule.lines).map((l) => withNames(l, names));
+      // Erfüllter Auftrag: Nach dem Gespräch ist die Belohnung übergeben
+      const onDone = rule.complete ? () => updateSave({ quests: completeQuest(getSave().quests ?? {}, rule.complete!) }) : undefined;
+      this.hud.say(t(`village.npcs.${interaction.npc.id}.name`), lines, onDone, faceKey(interaction.npc.sprite));
     } else if (interaction.kind === 'board') {
       this.hud.openBoard();
+    } else if (interaction.kind === 'dungeon') {
+      this.hud.choose(t('village.gate.prompt'), [
+        { label: t('village.gate.go'), onPick: () => this.enterDungeon() },
+        { label: t('village.gate.stay'), onPick: () => {} },
+      ]);
     } else {
       this.hud.say(undefined, [withNames(t(interaction.text), names)]);
     }
+  }
+
+  /** Neuer Durchgang durch den Flüsterwald: Stufen, Beutel und Aufträge kommen aus dem Spielstand. */
+  private enterDungeon() {
+    const save = getSave();
+    if (!save.result || !save.archetypeId || !save.partnerId) return;
+    const start = { level: dungeonContent.battle.startLevel, xp: 0 };
+    const quests = save.quests ?? {};
+    const dungeon = startRun(dungeonContent, {
+      seed: Math.floor(Math.random() * 2 ** 31),
+      player: { species: save.archetypeId, ...(save.team?.player ?? start) },
+      partner: { species: save.partnerId, ...(save.team?.partner ?? start) },
+      z: save.result.z,
+      bonusDefs,
+      // Für den allerersten Ausflug gibt Oma Wurzel zwei Heilbeeren mit
+      bag: save.bag ?? ['heilbeere', 'heilbeere'],
+      escort: quests.verirrt === 'accepted',
+      moss: quests.leuchtmoos === 'accepted',
+    });
+    updateSave({ dungeon });
+    this.leave('Dungeon');
   }
 
   private leave(key: string, data?: object) {

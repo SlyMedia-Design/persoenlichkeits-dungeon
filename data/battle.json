@@ -1,0 +1,89 @@
+{
+  "description": "Kampfwerte. Wert auf Stufe L = base + growth × (L − 1), abgerundet. learn: Stufe → Fähigkeit (ein Wesen kennt höchstens 4, die zuletzt gelernten). xp = Erfahrung, die das Besiegen auf Stufe 1 bringt (plus 3 je Stufe). sprite verweist auf actors in data/tileset.json.",
+  "startLevel": 5,
+  "maxMoves": 4,
+  "xpToNext": { "base": 10, "perLevel": 8 },
+  "team": {
+    "otter": {
+      "base": { "hp": 22, "atk": 6, "def": 4 },
+      "growth": { "hp": 3, "atk": 1.1, "def": 0.7 },
+      "learn": { "1": "kopfnuss", "2": "wasserblase", "5": "muschelschild", "8": "planschwelle" }
+    },
+    "eule": {
+      "base": { "hp": 20, "atk": 6, "def": 4 },
+      "growth": { "hp": 2.7, "atk": 1.2, "def": 0.7 },
+      "learn": { "1": "schnabelhieb", "2": "leuchtfeder", "5": "eulenblick", "8": "federsturm" }
+    },
+    "dachs": {
+      "base": { "hp": 24, "atk": 6, "def": 5 },
+      "growth": { "hp": 3.2, "atk": 1, "def": 0.9 },
+      "learn": { "1": "kratzer", "2": "steinkralle", "5": "erzpanzer", "8": "erdstoss" }
+    },
+    "capybara": {
+      "base": { "hp": 26, "atk": 5, "def": 5 },
+      "growth": { "hp": 3.4, "atk": 0.9, "def": 0.9 },
+      "learn": { "1": "rempler", "2": "moospolster", "5": "bluetenduft", "8": "wurzelgriff" }
+    }
+  },
+  "enemies": {
+    "schleim": {
+      "sprite": "slime",
+      "base": { "hp": 9, "atk": 4, "def": 2 },
+      "growth": { "hp": 2.2, "atk": 0.9, "def": 0.5 },
+      "xp": 4,
+      "moves": ["schleimspritzer"]
+    },
+    "larve": {
+      "sprite": "larva",
+      "base": { "hp": 8, "atk": 5, "def": 1 },
+      "growth": { "hp": 2, "atk": 1, "def": 0.4 },
+      "xp": 4,
+      "moves": ["biss"]
+    },
+    "falter": {
+      "sprite": "butterfly",
+      "base": { "hp": 7, "atk": 4, "def": 1 },
+      "growth": { "hp": 1.8, "atk": 0.9, "def": 0.4 },
+      "xp": 6,
+      "moves": ["schuppenstaub"]
+    },
+    "schlange": {
+      "sprite": "snake",
+      "base": { "hp": 10, "atk": 5, "def": 2 },
+      "growth": { "hp": 2.3, "atk": 1.1, "def": 0.5 },
+      "xp": 6,
+      "moves": ["giftbiss"]
+    },
+    "spinne": {
+      "sprite": "spider",
+      "base": { "hp": 10, "atk": 5, "def": 3 },
+      "growth": { "hp": 2.4, "atk": 1, "def": 0.6 },
+      "xp": 7,
+      "moves": ["netz", "biss"]
+    },
+    "bambus": {
+      "sprite": "bamboo",
+      "base": { "hp": 13, "atk": 6, "def": 3 },
+      "growth": { "hp": 2.8, "atk": 1.1, "def": 0.7 },
+      "xp": 9,
+      "moves": ["peitschen"]
+    },
+    "irrlicht": {
+      "sprite": "spirit",
+      "base": { "hp": 8, "atk": 5, "def": 2 },
+      "growth": { "hp": 1.6, "atk": 0.8, "def": 0.4 },
+      "xp": 5,
+      "moves": ["flackern"]
+    }
+  },
+  "boss": {
+    "waldgeist": {
+      "sprite": "forestSpirit",
+      "base": { "hp": 56, "atk": 5, "def": 3 },
+      "growth": { "hp": 3, "atk": 0.5, "def": 0.3 },
+      "xp": 40,
+      "moves": ["irrlichtfeuer", "fluesterwind"],
+      "summon": { "species": "irrlicht", "count": 2, "belowHp": 0.5 }
+    }
+  }
+}
