@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import de from '../data/i18n/de.json';
 import villageJson from '../data/village.json';
 import { createTranslator, type Dictionary } from '../src/core/i18n';
-import { dirTo, findPath, step, type Pos } from '../src/core/grid';
+import { canStep, combineDirs, dirTo, findPath, step, type Pos } from '../src/core/grid';
 import {
   acceptQuest,
   approachTiles,
@@ -21,11 +21,27 @@ const walkable = (p: Pos) => isWalkable(map, p);
 describe('Wegsuche', () => {
   const open = (p: Pos) => p.x >= 0 && p.y >= 0 && p.x < 5 && p.y < 5 && !(p.x === 2 && p.y < 4);
 
-  it('findet den kürzesten Weg um ein Hindernis herum', () => {
+  it('findet den kürzesten Weg um ein Hindernis herum, auch schräg', () => {
     const path = findPath({ x: 0, y: 0 }, [{ x: 4, y: 0 }], open)!;
-    expect(path).toHaveLength(12);
-    const end = path.reduce((p, d) => step(p, d), { x: 0, y: 0 });
-    expect(end).toEqual({ x: 4, y: 0 });
+    // gerade wären es 12 Schritte; schräg 10, weil man an der Mauerecke nicht schräg vorbeikommt
+    expect(path).toHaveLength(10);
+    let p = { x: 0, y: 0 };
+    for (const d of path) {
+      expect(canStep(p, d, open)).toBe(true);
+      p = step(p, d);
+    }
+    expect(p).toEqual({ x: 4, y: 0 });
+  });
+
+  it('schneidet keine Ecken', () => {
+    expect(canStep({ x: 1, y: 3 }, 'down-right', open)).toBe(false);
+    expect(canStep({ x: 1, y: 3 }, 'down-left', open)).toBe(true);
+  });
+
+  it('zwei Tasten ergeben eine Schrägrichtung', () => {
+    expect(combineDirs('up', 'left')).toBe('up-left');
+    expect(combineDirs(undefined, 'right')).toBe('right');
+    expect(combineDirs(undefined, undefined)).toBeUndefined();
   });
 
   it('gibt [] zurück, wenn man schon am Ziel ist, und null ohne Weg', () => {
@@ -33,9 +49,10 @@ describe('Wegsuche', () => {
     expect(findPath({ x: 0, y: 0 }, [{ x: 9, y: 9 }], open)).toBeNull();
   });
 
-  it('dirTo erkennt nur direkte Nachbarn', () => {
+  it('dirTo erkennt nur direkte Nachbarn (auch schräg)', () => {
     expect(dirTo({ x: 1, y: 1 }, { x: 1, y: 0 })).toBe('up');
-    expect(dirTo({ x: 1, y: 1 }, { x: 2, y: 2 })).toBeUndefined();
+    expect(dirTo({ x: 1, y: 1 }, { x: 2, y: 2 })).toBe('down-right');
+    expect(dirTo({ x: 1, y: 1 }, { x: 3, y: 1 })).toBeUndefined();
   });
 });
 

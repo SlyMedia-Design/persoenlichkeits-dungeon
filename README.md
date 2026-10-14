@@ -43,7 +43,7 @@ npm run build      # Typprüfung + Produktions-Build nach dist/
 
 Die Karte steht als Textraster in `data/village.json`: Jedes Zeichen ist ein 16×16-Feld, die Legende sagt, was es ist (Gras, Weg, Baum, Dach, Brett …), ob man darauf laufen kann und welcher Text beim Untersuchen erscheint. Dorfbewohner, ihre Dialoge (abhängig vom Stand der Aufträge) und die Aufträge selbst stehen ebenfalls dort, die Texte in `data/i18n/de.json` unter `village`. Die Tests prüfen, dass alle Bewohner, das Brett und alle Untersuchungsfelder vom Startpunkt aus erreichbar sind.
 
-Steuerung: am Handy auf ein Feld oder eine Figur tippen, am Rechner Pfeiltasten/WASD und Leertaste.
+Steuerung: am Handy auf ein Feld oder eine Figur tippen, am Rechner Pfeiltasten/WASD und Leertaste. Bewegt wird in 8 Richtungen: zwei Tasten zusammen (z. B. W + A) ergeben einen Schrägschritt, die Wegsuche nutzt ebenfalls Schrägschritte, schneidet aber keine Ecken. Unsere Wesen laufen mit zwei Laufbildern (abwechselnd ein Fuß angehoben), die aus ihrem 16×16-Sprite erzeugt werden.
 
 Grafik: `data/tileset.json` ordnet jeder Bedeutung (Gras, Weg, Wasser, Hecke, Haus …) eine Kachel aus dem Ninja Adventure Pack zu. Wege und Wasser bekommen automatisch passende Ränder und Ecken (`src/core/autotile.ts`), Baumflächen werden mit großen 2×2-Bäumen gefüllt (`src/core/tileset.ts`). Die verwendeten Bilder liegen in `public/assets/ninja/` (nur die nötigen Dateien, samt Lizenz). Unsere vier Wesen bleiben eigene Pixel-Sprites.
 

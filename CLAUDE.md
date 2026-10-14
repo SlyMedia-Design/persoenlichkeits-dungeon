@@ -98,7 +98,7 @@ Jede Dimension hat zwei hohe und zwei niedrige Wesen. Die Artnamen sind Platzhal
 - **Dungeons:** Rundenbasiert auf dem Raster. Jeder Schritt ist ein Zug, danach ziehen die Gegner.
 - **Aufbau:** Zufällig generierte Etagen, handgebaute Boss-Räume
 - **Im Kampf:** Spieler + Partner. **Gerettete NPCs** werden zum Ausgang eskortiert und **kämpfen nicht**.
-- **Dorf:** Frei begehbar, Bewegung auf dem Raster, flüssig animiert und ohne Züge
+- **Dorf:** Frei begehbar, Bewegung auf dem Raster in 8 Richtungen (auch schräg, ohne Eckenschneiden), flüssig animiert (laufen, nicht hüpfen) und ohne Züge
 - **Freundschaft mit NPCs:** Wächst durch gemeinsame Abenteuer und Persönlichkeits-Passung (passende Profile mögen dich schneller). Freundschafts-Szenen gibt es ab bestimmten Stufen.
 - **Hohe Freundschaft** schaltet frei: besondere Items in der Stadt und den **Partnertausch**
 - **Partnertausch:** Erst **nach Ende der Hauptgeschichte**. Der alte Partner bleibt als NPC im Dorf, und man kann jederzeit zurücktauschen.

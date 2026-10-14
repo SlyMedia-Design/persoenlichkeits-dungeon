@@ -64,9 +64,17 @@ export function idleBob(scene: Phaser.Scene, target: Phaser.GameObjects.Image, a
   });
 }
 
-/** 16×16-Sprite eines Wesens fürs Spielfeld */
-export function fieldTexture(scene: Phaser.Scene, archetype: Archetype): string {
-  return pixelTexture(scene, `sprite-${archetype.id}`, archetype.sprite);
+/**
+ * 16×16-Sprite eines Wesens fürs Spielfeld.
+ * Laufbilder: 1 = linker Fuß angehoben, 2 = rechter Fuß angehoben (die Füße stehen in der untersten Pixelreihe).
+ */
+export function fieldTexture(scene: Phaser.Scene, archetype: Archetype, walk: 0 | 1 | 2 = 0): string {
+  if (walk === 0) return pixelTexture(scene, `sprite-${archetype.id}`, archetype.sprite);
+  const rows = [...archetype.sprite.rows];
+  const feet = rows[rows.length - 1];
+  const half = Math.floor(feet.length / 2);
+  rows[rows.length - 1] = walk === 1 ? '.'.repeat(half) + feet.slice(half) : feet.slice(0, half) + '.'.repeat(feet.length - half);
+  return pixelTexture(scene, `sprite-${archetype.id}-walk${walk}`, { ...archetype.sprite, rows });
 }
 
 /** Weicher ovaler Schatten unter Figuren */

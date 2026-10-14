@@ -57,7 +57,10 @@ export class VillageHudScene extends Phaser.Scene {
     this.events.once('shutdown', () => this.scale.off('resize', onResize));
     this.input.keyboard?.on('keydown', (e: KeyboardEvent) => {
       if (e.code === 'Space' || e.code === 'Enter' || e.code === 'KeyE') this.advance();
-      if (e.code === 'Escape') this.setMode(this.busy ? { kind: 'none' } : { kind: 'menu' });
+      if (e.code === 'Escape') {
+        if (this.mode.kind === 'dialog') this.endDialog(this.mode.dialog);
+        else this.setMode(this.busy ? { kind: 'none' } : { kind: 'menu' });
+      }
     });
   }
 
@@ -78,7 +81,8 @@ export class VillageHudScene extends Phaser.Scene {
     }
     this.hintUntil = this.time.now + HINT_MS;
     this.render();
-    this.time.delayedCall(HINT_MS + 50, () => this.render());
+    // Nur neu zeichnen, wenn nichts anderes offen ist (sonst würde ein Dialog neu getippt)
+    this.time.delayedCall(HINT_MS + 50, () => !this.busy && this.render());
   }
 
   private setMode(mode: Mode) {
@@ -108,18 +112,21 @@ export class VillageHudScene extends Phaser.Scene {
     }
     dialog.index++;
     dialog.typed = false;
-    if (dialog.index >= dialog.lines.length) {
-      this.setMode({ kind: 'none' });
-      dialog.onDone?.();
-    } else {
-      this.render();
-    }
+    if (dialog.index >= dialog.lines.length) this.endDialog(dialog);
+    else this.render();
+  }
+
+  private endDialog(dialog: Dialog) {
+    this.setMode({ kind: 'none' });
+    dialog.onDone?.();
   }
 
   /** Baut die ganze Oberfläche neu auf (auch nach Größenänderung). */
   private render() {
     this.typewriter?.destroy();
     this.typewriter = undefined;
+    // Endlos-Animationen (Pfeil im Dialog) gehören zu den alten Elementen
+    this.tweens.killAll();
     this.layer?.destroy(true);
     this.m = metrics(this);
     this.layer = this.add.container();
@@ -239,7 +246,6 @@ export class VillageHudScene extends Phaser.Scene {
     const parts: Phaser.GameObjects.GameObject[] = [this.overlay()];
     const pad = Math.round(font * 0.8);
     const innerW = contentWidth - pad * 2;
-    const cardText = small;
     const panel = this.add.container((width - contentWidth) / 2, 0);
     const items: Phaser.GameObjects.GameObject[] = [];
     let y = pad;
@@ -262,7 +268,7 @@ export class VillageHudScene extends Phaser.Scene {
       });
       y = qTitle.y + qTitle.height + 4;
       const body = this.add.text(tx, y, t(`village.quests.${id}.text`), {
-        ...textStyle(cardText),
+        ...textStyle(small),
         wordWrap: { width: tw, useAdvancedWrap: true },
         lineSpacing: 3,
       });
@@ -271,7 +277,7 @@ export class VillageHudScene extends Phaser.Scene {
         tx,
         y,
         `${t('village.board.from', { from: t(`village.quests.${id}.from`) })}\n${t('village.board.reward', { reward: t(`village.quests.${id}.reward`) })}`,
-        { ...textStyle(cardText, COLORS.textDim), wordWrap: { width: tw, useAdvancedWrap: true }, lineSpacing: 3 },
+        { ...textStyle(small, COLORS.textDim), wordWrap: { width: tw, useAdvancedWrap: true }, lineSpacing: 3 },
       );
       y = meta.y + meta.height + gap * 0.7;
       items.push(qTitle, body, meta);

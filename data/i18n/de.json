@@ -164,7 +164,7 @@
       "„Und Oma Wurzel weiß alles über unser Dorf. Komm, sag ihr Hallo!“"
     ],
     "hintTouch": "Tippe auf ein Feld, um dorthin zu laufen. Tippe auf jemanden, um zu reden.",
-    "hintKeys": "Pfeiltasten oder WASD zum Laufen, Leertaste zum Reden und Untersuchen.",
+    "hintKeys": "Pfeiltasten oder WASD zum Laufen (zwei Tasten zusammen für schräg), Leertaste zum Reden und Untersuchen.",
     "menu": {
       "open": "Menü",
       "title": "Menü",
