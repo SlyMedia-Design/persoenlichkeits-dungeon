@@ -43,7 +43,9 @@ npm run build      # Typprüfung + Produktions-Build nach dist/
 
 Die Karte steht als Textraster in `data/village.json`: Jedes Zeichen ist ein 16×16-Feld, die Legende sagt, was es ist (Gras, Weg, Baum, Dach, Brett …), ob man darauf laufen kann und welcher Text beim Untersuchen erscheint. Dorfbewohner, ihre Dialoge (abhängig vom Stand der Aufträge) und die Aufträge selbst stehen ebenfalls dort, die Texte in `data/i18n/de.json` unter `village`. Die Tests prüfen, dass alle Bewohner, das Brett und alle Untersuchungsfelder vom Startpunkt aus erreichbar sind.
 
-Steuerung: am Handy auf ein Feld oder eine Figur tippen, am Rechner Pfeiltasten/WASD und Leertaste. Die Kacheln sind vorerst per Code gezeichnete Platzhalter (`src/ui/tiles.ts`), die Dorfbewohner einfache Farbkreise mit Augen.
+Steuerung: am Handy auf ein Feld oder eine Figur tippen, am Rechner Pfeiltasten/WASD und Leertaste.
+
+Grafik: `data/tileset.json` ordnet jeder Bedeutung (Gras, Weg, Wasser, Hecke, Haus …) eine Kachel aus dem Ninja Adventure Pack zu. Wege und Wasser bekommen automatisch passende Ränder und Ecken (`src/core/autotile.ts`), Baumflächen werden mit großen 2×2-Bäumen gefüllt (`src/core/tileset.ts`). Die verwendeten Bilder liegen in `public/assets/ninja/` (nur die nötigen Dateien, samt Lizenz). Unsere vier Wesen bleiben eigene Pixel-Sprites.
 
 ## Datenschutz
 
@@ -58,6 +60,6 @@ Jeder Push auf `main` testet, baut und veröffentlicht über `.github/workflows/
 - Fragebogen: International Personality Item Pool (Goldberg), Public Domain
 - Deutsche Übersetzung: A. Angleitner, S. Hempel, R. Langert, F. Spinath (Universität Bielefeld)
 - Vergleichsdaten: Open-Source Psychometrics Project
-- Geplante Platzhaltergrafik: [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) von pixel-boy (CC0) – noch nicht eingebunden; die Dorfkacheln sind bis dahin eigene Platzhalter. Die Wesen sind eigene Pixel-Sprites aus `data/archetypes.json`: 16×16 fürs Spielfeld, 32×32-Porträts für Menüs (erzeugt mit `scripts/draw-creatures.ts`)
+- Grafik im Dorf: [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) von Pixel-boy und AAA (CC0). Die Wesen sind eigene Pixel-Sprites aus `data/archetypes.json`: 16×16 fürs Spielfeld, 32×32-Porträts für Menüs (erzeugt mit `scripts/draw-creatures.ts`)
 - Schrift: „Dorfschrift“, abgeleitet von [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) (SIL Open Font License) – kräftiger, höhere Kleinbuchstaben, mehr Buchstabenabstand. Erzeugt mit `scripts/build-font.ts`, Dateien und Lizenz in `src/ui/fonts/`
 - Engine: [Phaser 3](https://phaser.io/)

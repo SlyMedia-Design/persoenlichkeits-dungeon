@@ -4,8 +4,8 @@ import { dirTo, findPath, samePos, step, type Dir, type Pos } from '../core/grid
 import { approachTiles, interactionAt, isWalkable, pickDialog, type Placement } from '../core/village';
 import { getSave, updateSave } from '../state';
 import { ambient } from '../ui/ambient';
-import { fieldTexture, npcTexture, shadowTexture } from '../ui/sprites';
-import { TILE, forestTexture, villageMapTexture } from '../ui/tiles';
+import { creatureTexture, fieldTexture, shadowTexture } from '../ui/sprites';
+import { BORDER, TILE, actorFrame, actorKey, faceKey, preloadTileset, villageMapTexture } from '../ui/tiles';
 import { COLORS } from '../ui/theme';
 import type { VillageHudScene } from './VillageHudScene';
 
@@ -13,14 +13,14 @@ import type { VillageHudScene } from './VillageHudScene';
 const STEP_MS = 170;
 /** Fußpunkt der Figuren relativ zur Feldmitte */
 const FEET_Y = 7;
-/** Waldrand um die Karte (in Feldern), damit die Figuren am Rand nicht hinter dem Dialog verschwinden */
-const BORDER = 4;
 
 interface Actor {
   pos: Pos;
   facing: Dir;
   body: Phaser.GameObjects.Container;
   sprite: Phaser.GameObjects.Image;
+  /** Figur aus dem Pack mit eigenem Bild je Blickrichtung (sonst wird gespiegelt) */
+  directional: boolean;
 }
 
 /**
@@ -45,6 +45,10 @@ export class VillageScene extends Phaser.Scene {
     super('Village');
   }
 
+  preload() {
+    preloadTileset(this);
+  }
+
   create() {
     const save = getSave();
     if (!save.archetypeId || !save.partnerId || !save.playerName || !save.partnerName) {
@@ -60,18 +64,14 @@ export class VillageScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(COLORS.night);
 
     const b = BORDER * TILE;
-    this.add
-      .tileSprite(-b, -b, village.width * TILE + 2 * b, village.height * TILE + 2 * b, forestTexture(this))
-      .setOrigin(0)
-      .setDepth(-2);
-    this.add.image(0, 0, villageMapTexture(this, village)).setOrigin(0).setDepth(-1);
+    this.add.image(-b, -b, villageMapTexture(this, village)).setOrigin(0).setDepth(-1);
 
     const def = village.def;
     const start: Placement = save.village?.player ?? def.spawn;
     const partnerStart = save.village?.partner ?? def.partnerSpawn;
     this.player = this.addActor(start, start.facing, fieldTexture(this, archetypeById(save.archetypeId)));
     this.partner = this.addActor(partnerStart, start.facing, fieldTexture(this, archetypeById(save.partnerId)));
-    for (const npc of def.npcs) this.npcs.set(npc.id, this.addActor(npc, npc.facing, npcTexture(this, npc.id, npc.color)));
+    for (const npc of def.npcs) this.npcs.set(npc.id, this.addActor(npc, npc.facing, actorKey(npc.sprite), true));
     this.idle(this.partner, 300);
     let delay = 600;
     for (const npc of this.npcs.values()) this.idle(npc, (delay += 350));
@@ -102,7 +102,7 @@ export class VillageScene extends Phaser.Scene {
   private greet() {
     const save = getSave();
     if (!save.villageIntroSeen) {
-      this.hud.say(save.partnerName, t.list('village.arrival'), () => updateSave({ villageIntroSeen: true }));
+      this.hud.say(save.partnerName, t.list('village.arrival'), () => updateSave({ villageIntroSeen: true }), creatureTexture(this, archetypeById(save.partnerId!)));
     }
     this.hud.showHint();
   }
@@ -115,12 +115,12 @@ export class VillageScene extends Phaser.Scene {
     this.cameras.main.centerOn(this.player.body.x, this.player.body.y);
   }
 
-  private addActor(pos: Pos, facing: Dir, texture: string): Actor {
+  private addActor(pos: Pos, facing: Dir, texture: string, directional = false): Actor {
     const shadow = this.add.image(0, 6, shadowTexture(this));
     // Füße auf der unteren Feldkante, damit das Atmen von unten nach oben wirkt
     const sprite = this.add.image(0, FEET_Y, texture).setOrigin(0.5, 1);
     const body = this.add.container(0, 0, [shadow, sprite]);
-    const actor: Actor = { pos: { x: pos.x, y: pos.y }, facing, body, sprite };
+    const actor: Actor = { pos: { x: pos.x, y: pos.y }, facing, body, sprite, directional };
     this.place(actor);
     this.face(actor, facing);
     return actor;
@@ -133,6 +133,10 @@ export class VillageScene extends Phaser.Scene {
 
   private face(actor: Actor, dir: Dir) {
     actor.facing = dir;
+    if (actor.directional) {
+      actor.sprite.setFrame(actorFrame(dir));
+      return;
+    }
     if (dir === 'left') actor.sprite.setFlipX(true);
     if (dir === 'right') actor.sprite.setFlipX(false);
   }
@@ -308,7 +312,7 @@ export class VillageScene extends Phaser.Scene {
       const back = dirTo(tile, this.player.pos);
       if (npc && back) this.face(npc, back);
       const lines = t.list(pickDialog(interaction.npc, save.quests ?? {})).map((l) => withNames(l, names));
-      this.hud.say(t(`village.npcs.${interaction.npc.id}.name`), lines);
+      this.hud.say(t(`village.npcs.${interaction.npc.id}.name`), lines, undefined, faceKey(interaction.npc.sprite));
     } else if (interaction.kind === 'board') {
       this.hud.openBoard();
     } else {

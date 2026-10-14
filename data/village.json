@@ -1,72 +1,168 @@
 {
-  "description": "Das Dorf als Textraster. Jedes Zeichen in map ist ein Feld (16×16 Pixel), seine Bedeutung steht in legend. x zählt von links, y von oben, beide ab 0. Texte (examine, lines) sind i18n-Schlüssel aus data/i18n/de.json.",
+  "description": "Das Dorf als Textraster. Jedes Zeichen in map ist ein Feld (16×16 Pixel), seine Bedeutung steht in legend. x zählt von links, y von oben, beide ab 0. Texte (examine, lines) sind i18n-Schlüssel aus data/i18n/de.json. buildings setzt fertige Häuser aus data/tileset.json auf die H/D-Felder; die Tür muss auf einem D liegen. sprite verweist auf actors in data/tileset.json.",
   "legend": {
-    ".": { "ground": "grass" },
-    ",": { "ground": "grass", "object": "flowers" },
-    ":": { "ground": "path" },
-    "T": { "ground": "grass", "object": "tree", "solid": true },
-    "~": { "ground": "water", "solid": true, "examine": "village.examine.pond" },
-    "R": { "ground": "grass", "object": "roof", "solid": true },
-    "W": { "ground": "grass", "object": "wall", "solid": true },
-    "O": { "ground": "grass", "object": "window", "solid": true, "examine": "village.examine.window" },
-    "D": { "ground": "grass", "object": "door", "solid": true, "examine": "village.examine.door" },
-    "f": { "ground": "grass", "object": "fence", "solid": true },
-    "B": { "ground": "path", "object": "board", "solid": true, "board": true },
-    "S": { "ground": "grass", "object": "sign", "solid": true, "examine": "village.examine.sign" },
-    "w": { "ground": "path", "object": "well", "solid": true, "examine": "village.examine.well" },
-    "G": { "ground": "path", "object": "gate", "solid": true, "examine": "village.examine.gate" }
+    ".": {
+      "ground": "grass"
+    },
+    ",": {
+      "ground": "grass",
+      "object": "flowers"
+    },
+    ":": {
+      "ground": "path"
+    },
+    "T": {
+      "ground": "grass",
+      "object": "tree",
+      "solid": true
+    },
+    "~": {
+      "ground": "water",
+      "solid": true,
+      "examine": "village.examine.pond"
+    },
+    "D": {
+      "ground": "grass",
+      "object": "building",
+      "solid": true,
+      "examine": "village.examine.door"
+    },
+    "f": {
+      "ground": "grass",
+      "object": "hedge",
+      "solid": true
+    },
+    "B": {
+      "ground": "path",
+      "object": "board",
+      "solid": true,
+      "board": true
+    },
+    "S": {
+      "ground": "grass",
+      "object": "sign",
+      "solid": true,
+      "examine": "village.examine.sign"
+    },
+    "w": {
+      "ground": "path",
+      "object": "well",
+      "solid": true,
+      "examine": "village.examine.well"
+    },
+    "G": {
+      "ground": "path",
+      "object": "gate",
+      "solid": true,
+      "examine": "village.examine.gate"
+    },
+    "H": {
+      "ground": "grass",
+      "object": "building",
+      "solid": true
+    }
   },
   "map": [
     "TTTTTTTTTTTTTGGTTTTTTTTTTTTT",
     "TT,.........T::T.......,..TT",
-    "T..RRRRR....S::.....,.....,T",
-    "T..RRRRR.....::....RRRRRR..T",
-    "T..WOWDW.....::....RRRRRR..T",
-    "T.,...:......::....WOWWDW..T",
-    "T.....::::::::::::::::::...T",
+    "T..HHHH.....S::.....,.....,T",
+    "T..HHHH......::.....HHHH...T",
+    "T..HDHH......::.....HHHH...T",
+    "T.,.:........::.....HDHH...T",
+    "T...::::::::::::::::::.....T",
     "T.,.........,::,.....,.....T",
     "T.........::::::::.........T",
     "T..,......:B:::w::......,..T",
     "T.........::::::::.........T",
     "T.,.......::::::::......,..T",
     "T............::............T",
-    "T..fffff.....::.....~~~~...T",
+    "T..fffff.....::....~~~~~~..T",
     "T..f,,,f.....::....~~~~~~..T",
     "T..f,,,f.....::....~~~~~~..T",
-    "T..ff.ff.....::.....~~~~...T",
+    "T..ff.ff.....::....~~~~~~..T",
     "T.,..........::.........,..T",
     "TT...,.......::.......,...TT",
     "TTTTTTTTTTTTT::TTTTTTTTTTTTT"
   ],
-  "spawn": { "x": 13, "y": 17, "facing": "up" },
-  "partnerSpawn": { "x": 13, "y": 18 },
+  "buildings": [
+    {
+      "x": 3,
+      "y": 2,
+      "style": "houseOrange"
+    },
+    {
+      "x": 20,
+      "y": 3,
+      "style": "houseRed"
+    }
+  ],
+  "spawn": {
+    "x": 13,
+    "y": 17,
+    "facing": "up"
+  },
+  "partnerSpawn": {
+    "x": 13,
+    "y": 18
+  },
   "npcs": [
     {
       "id": "wurzel",
       "x": 8,
       "y": 5,
       "facing": "down",
-      "color": "#c9a3d9",
       "dialogs": [
-        { "when": { "quest": "leuchtmoos", "status": "accepted" }, "lines": "village.npcs.wurzel.questAccepted" },
-        { "lines": "village.npcs.wurzel.default" }
-      ]
+        {
+          "when": {
+            "quest": "leuchtmoos",
+            "status": "accepted"
+          },
+          "lines": "village.npcs.wurzel.questAccepted"
+        },
+        {
+          "lines": "village.npcs.wurzel.default"
+        }
+      ],
+      "sprite": "mushroom"
     },
     {
       "id": "fips",
       "x": 9,
       "y": 9,
       "facing": "right",
-      "color": "#f2b866",
       "dialogs": [
-        { "when": { "quest": "verirrt", "status": "accepted" }, "lines": "village.npcs.fips.questAccepted" },
-        { "lines": "village.npcs.fips.default" }
-      ]
+        {
+          "when": {
+            "quest": "verirrt",
+            "status": "accepted"
+          },
+          "lines": "village.npcs.fips.questAccepted"
+        },
+        {
+          "lines": "village.npcs.fips.default"
+        }
+      ],
+      "sprite": "mouse"
     }
   ],
   "examine": [
-    { "x": 6, "y": 4, "text": "village.examine.wurzelDoor" },
-    { "x": 23, "y": 5, "text": "village.examine.innDoor" }
+    {
+      "x": 4,
+      "y": 4,
+      "text": "village.examine.wurzelDoor"
+    },
+    {
+      "x": 21,
+      "y": 5,
+      "text": "village.examine.innDoor"
+    }
   ],
-  "quests": [{ "id": "verirrt" }, { "id": "leuchtmoos" }]
+  "quests": [
+    {
+      "id": "verirrt"
+    },
+    {
+      "id": "leuchtmoos"
+    }
+  ]
 }

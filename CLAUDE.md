@@ -41,7 +41,8 @@ public/assets/          # Platzhalter-Grafiken und Sounds
 
 - **Stil:** Pixel-Art von schräg oben, **16×16-Kacheln**, wie Mystery Dungeon auf GBA/DS
 - **Platzhalter:** [Ninja Adventure Asset Pack von pixel-boy](https://pixel-boy.itch.io/ninja-adventure-asset-pack) (CC0). Wo es kein passendes Wesen gibt: einfache Farbkreise mit Augen, ein Farbcode pro Wesen. Den Credit für pixel-boy trotzdem in den Credits nennen.
-- **Stand Meilenstein 2:** Das Pack ist noch nicht eingebunden (itch.io lässt sich nicht automatisch herunterladen; Julian stellt die Datei bereit). Bis dahin zeichnet `src/ui/tiles.ts` eigene Platzhalter-Kacheln; die Karte nutzt nur Bedeutungsnamen (grass, tree, roof …), damit der Austausch an einer Stelle passiert.
+- **Stand Meilenstein 2:** Das Pack liegt entpackt in `D:Projekte
+inja-adventure` (außerhalb des Repos). Ins Projekt kopiert werden nur die genutzten Bilder nach `public/assets/ninja/`; welche Kachel wofür steht, regelt `data/tileset.json`. Dorfbewohner nutzen Figuren aus dem Pack (Oma Wurzel = Pilz, Fips = Maus), unsere Wesen bleiben eigene Sprites.
 - **Farben:** Das Dorf warm und pastellig. Jeder Dungeon bekommt eine eigene, kräftigere Farbwelt (Wald grün, Höhle violett …).
 - **Wesen:** Tierähnlich mit Fantasy-Note, rund, großer Kopf, kurze Beine
 - **Formsprache für die Big Five** (gilt für alle Wesen):

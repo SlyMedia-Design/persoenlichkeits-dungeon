@@ -175,7 +175,6 @@
     },
     "examine": {
       "pond": "Im Teich flitzen kleine silberne Fische davon.",
-      "window": "Durchs Fenster siehst du ein warmes Licht flackern.",
       "door": "Die Tür ist verschlossen.",
       "wurzelDoor": "Oma Wurzels Haus. Es duftet nach Kräutertee.",
       "innDoor": "Das Gasthaus „Zum Kupferkessel“. Heute ist noch geschlossen.",
@@ -242,7 +241,7 @@
       "Fragebogen: Mini-IPIP (Donnellan et al. 2006), Kurzform der IPIP 50-Item Big-Five Factor Markers (Goldberg; ipip.ori.org, Public Domain)",
       "Deutsche Fassung: A. Angleitner, S. Hempel, R. Langert, F. Spinath (Universität Bielefeld)",
       "Vergleichswerte: Open-Source Psychometrics Project (openpsychometrics.org)",
-      "Geplante Platzhaltergrafik: Ninja Adventure Asset Pack von pixel-boy (CC0)",
+      "Grafik: Ninja Adventure Asset Pack von Pixel-boy und AAA (CC0) – Dorf, Dorfbewohner; die Wesen sind eigene Pixel-Sprites",
       "Schrift: Dorfschrift, abgeleitet von Pixelify Sans (SIL Open Font License)"
     ]
   }

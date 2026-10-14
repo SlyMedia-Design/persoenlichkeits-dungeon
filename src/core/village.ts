@@ -29,8 +29,8 @@ export interface NpcDef {
   x: number;
   y: number;
   facing: Dir;
-  /** Platzhalter-Farbe (Farbkreis mit Augen) */
-  color: string;
+  /** Figur aus data/tileset.json (actors) */
+  sprite: string;
   /** Erste passende Regel gewinnt */
   dialogs: DialogRule[];
 }
@@ -39,9 +39,15 @@ export interface Placement extends Pos {
   facing: Dir;
 }
 
+/** Fertiges Haus aus data/tileset.json (buildings), linke obere Ecke auf der Karte */
+export interface BuildingPlacement extends Pos {
+  style: string;
+}
+
 export interface VillageDef {
   legend: Record<string, TileDef>;
   map: string[];
+  buildings: BuildingPlacement[];
   spawn: Placement;
   partnerSpawn: Pos;
   npcs: NpcDef[];

@@ -10,6 +10,8 @@ import { shareResult } from './EndingScene';
 
 interface Dialog {
   speaker?: string;
+  /** Textur des Gesichtsbilds neben dem Text */
+  portrait?: string;
   lines: string[];
   index: number;
   /** Aktuelle Zeile ist fertig geschrieben (bei Neuaufbau nicht erneut tippen) */
@@ -60,8 +62,8 @@ export class VillageHudScene extends Phaser.Scene {
   }
 
   /** Jemand spricht: mehrere Sätze nacheinander, weiter per Tippen oder Leertaste. */
-  say(speaker: string | undefined, lines: string[], onDone?: () => void) {
-    this.setMode({ kind: 'dialog', dialog: { speaker, lines, index: 0, typed: false, onDone } });
+  say(speaker: string | undefined, lines: string[], onDone?: () => void, portrait?: string) {
+    this.setMode({ kind: 'dialog', dialog: { speaker, portrait, lines, index: 0, typed: false, onDone } });
   }
 
   openBoard() {
@@ -179,17 +181,33 @@ export class VillageHudScene extends Phaser.Scene {
     const { width, height, contentWidth, font, small } = this.m;
     const line = dialog.lines[dialog.index];
     const pad = Math.round(font * 0.8);
+    // Gesichtsbild in ganzzahliger Vergrößerung, damit die Pixel scharf bleiben
+    let faceSize = 0;
+    let faceScale = 1;
+    if (dialog.portrait && this.textures.exists(dialog.portrait)) {
+      const src = this.textures.get(dialog.portrait).getSourceImage().width;
+      faceScale = Math.max(1, Math.round((font * 3.4) / src));
+      faceSize = src * faceScale;
+    }
+    const textX = faceSize ? faceSize + pad * 2 : pad;
     const text = this.add.text(0, 0, line, {
       ...textStyle(font),
-      wordWrap: { width: contentWidth - pad * 2, useAdvancedWrap: true },
+      wordWrap: { width: contentWidth - textX - pad, useAdvancedWrap: true },
       lineSpacing: 5,
     });
-    const boxH = Math.max(Math.round(font * 4.4), text.height + pad * 2 + 6);
+    const boxH = Math.max(Math.round(font * 4.4), text.height + pad * 2 + 6, faceSize + pad * 2);
     const x = (width - contentWidth) / 2;
     const y = height - boxH - 14;
-    text.setPosition(x + pad, y + pad);
+    text.setPosition(x + textX, y + pad);
 
     const parts: Phaser.GameObjects.GameObject[] = [this.overlay(() => this.advance()), this.panel(x, y, contentWidth, boxH)];
+    if (faceSize) {
+      const frame = this.add.graphics();
+      frame.fillStyle(COLORS.panelLight, 1).fillRoundedRect(x + pad - 3, y + pad - 3, faceSize + 6, faceSize + 6, 6);
+      frame.lineStyle(2, COLORS.cream, 0.7).strokeRoundedRect(x + pad - 3, y + pad - 3, faceSize + 6, faceSize + 6, 6);
+      const face = this.add.image(x + pad, y + pad, dialog.portrait!).setOrigin(0).setScale(faceScale);
+      parts.push(frame, face);
+    }
     if (dialog.speaker) {
       const name = this.add.text(0, 0, dialog.speaker, headingStyle(small)).setOrigin(0, 1);
       const tagW = name.width + pad * 1.6;

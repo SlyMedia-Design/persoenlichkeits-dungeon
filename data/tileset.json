@@ -1,0 +1,57 @@
+{
+  "description": "Welche Kachel aus dem Ninja Adventure Asset Pack (Pixel-boy & AAA, CC0) für welche Bedeutung der Dorfkarte steht. x/y/w/h zählen in 16×16-Kacheln. Autotiles folgen dem Aufbau des Packs: 3×3-Block ab (x, y), senkrechter Streifen in Spalte x+3, waagerechter Streifen in Zeile y+3, Innenecken ab (x+5, y+1).",
+  "sheets": {
+    "floor": "assets/ninja/tilesets/TilesetFloor.png",
+    "water": "assets/ninja/tilesets/TilesetWater.png",
+    "nature": "assets/ninja/tilesets/TilesetNature.png",
+    "house": "assets/ninja/tilesets/TilesetHouse.png",
+    "element": "assets/ninja/tilesets/TilesetElement.png",
+    "detail": "assets/ninja/tilesets/TilesetFloorDetail.png"
+  },
+  "grass": {
+    "base": { "sheet": "floor", "x": 0, "y": 12 },
+    "variants": [
+      { "sheet": "floor", "x": 1, "y": 12 },
+      { "sheet": "floor", "x": 2, "y": 12 },
+      { "sheet": "floor", "x": 3, "y": 12 },
+      { "sheet": "floor", "x": 4, "y": 12 }
+    ],
+    "details": [
+      { "sheet": "detail", "x": 0, "y": 2 },
+      { "sheet": "detail", "x": 3, "y": 2 }
+    ]
+  },
+  "autotiles": {
+    "path": { "sheet": "floor", "x": 0, "y": 7, "innerCorners": true },
+    "water": { "sheet": "water", "x": 0, "y": 6, "innerCorners": false }
+  },
+  "objects": {
+    "flowers": [
+      { "sheet": "detail", "x": 5, "y": 2 },
+      { "sheet": "detail", "x": 2, "y": 0 },
+      { "sheet": "detail", "x": 3, "y": 0 }
+    ],
+    "bush": [
+      { "sheet": "nature", "x": 1, "y": 10 },
+      { "sheet": "nature", "x": 6, "y": 10 }
+    ],
+    "hedge": [{ "sheet": "nature", "x": 10, "y": 8 }],
+    "board": [{ "sheet": "element", "x": 1, "y": 2 }],
+    "sign": [{ "sheet": "element", "x": 0, "y": 2 }],
+    "well": [{ "sheet": "element", "x": 6, "y": 2 }],
+    "gate": [{ "sheet": "house", "x": 8, "y": 3 }]
+  },
+  "trees": [
+    { "sheet": "nature", "x": 0, "y": 0, "w": 2, "h": 2 },
+    { "sheet": "nature", "x": 16, "y": 0, "w": 2, "h": 2 },
+    { "sheet": "nature", "x": 0, "y": 0, "w": 2, "h": 2 }
+  ],
+  "buildings": {
+    "houseOrange": { "sheet": "house", "x": 0, "y": 0, "w": 4, "h": 3, "door": { "x": 1, "y": 2 } },
+    "houseRed": { "sheet": "house", "x": 12, "y": 0, "w": 4, "h": 3, "door": { "x": 1, "y": 2 } }
+  },
+  "actors": {
+    "mouse": { "sheet": "assets/ninja/actors/Mouse.png", "face": "assets/ninja/actors/MouseFace.png" },
+    "mushroom": { "sheet": "assets/ninja/actors/Mushroom.png", "face": "assets/ninja/actors/MushroomFace.png" }
+  }
+}
