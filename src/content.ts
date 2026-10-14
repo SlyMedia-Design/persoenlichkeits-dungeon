@@ -2,11 +2,14 @@
 import archetypesJson from '../data/archetypes.json';
 import de from '../data/i18n/de.json';
 import bankJson from '../data/ipip50_de.json';
+import shortFormJson from '../data/mini_ipip20.json';
 import normsJson from '../data/norms.json';
 import { createTranslator, type Dictionary } from './core/i18n';
+import { selectItems } from './core/scoring';
 import type { Archetype, ItemBank, Norms } from './core/types';
 
-export const bank = bankJson as ItemBank;
+/** Im Spiel gestellte Fragen: Mini-IPIP (20 Items aus der IPIP-50) */
+export const bank = selectItems(bankJson as ItemBank, shortFormJson.itemIds);
 export const norms = normsJson as unknown as Norms;
 export const archetypes = archetypesJson.archetypes as unknown as Archetype[];
 export const t = createTranslator(de as Dictionary);

@@ -1,7 +1,8 @@
 import { DIMENSIONS, type Answers, type Profile, type ScoreResult } from './types';
 
 export const SAVE_KEY = 'persoenlichkeits-dungeon.save';
-export const SAVE_VERSION = 1;
+/** 1 = Test mit 50 Fragen, 2 = Mini-IPIP mit 20 Fragen */
+export const SAVE_VERSION = 2;
 
 export interface SaveData {
   version: number;
@@ -31,7 +32,18 @@ export function newSave(): SaveData {
 function isSaveData(value: unknown): value is SaveData {
   if (!value || typeof value !== 'object') return false;
   const v = value as Partial<SaveData>;
-  return v.version === SAVE_VERSION && typeof v.answers === 'object' && v.answers !== null && typeof v.current === 'number';
+  return typeof v.version === 'number' && typeof v.answers === 'object' && v.answers !== null && typeof v.current === 'number';
+}
+
+/**
+ * Bringt ältere Spielstände auf den aktuellen Stand.
+ * Version 1 (50 Fragen): Ein fertiges Ergebnis bleibt erhalten; ein halb ausgefüllter
+ * Test wird verworfen, weil die Fragenposition nicht zur Kurzform passt.
+ */
+export function migrateSave(data: SaveData): SaveData | null {
+  if (data.version === SAVE_VERSION) return data;
+  if (data.version === 1 && data.result && data.archetypeId) return { ...data, version: SAVE_VERSION };
+  return null;
 }
 
 /** Lädt den Spielstand. Kaputte oder fremde Daten und blockierter Speicher ergeben null. */
@@ -41,7 +53,7 @@ export function loadSave(storage: StorageLike | undefined): SaveData | null {
     const raw = storage.getItem(SAVE_KEY);
     if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
-    return isSaveData(parsed) ? parsed : null;
+    return isSaveData(parsed) ? migrateSave(parsed) : null;
   } catch {
     return null;
   }
@@ -66,20 +78,11 @@ export function clearSave(storage: StorageLike | undefined): void {
   }
 }
 
-/** localStorage, falls verfügbar (kann in privaten Fenstern o. Ä. werfen). */
-export function browserStorage(): StorageLike | undefined {
-  try {
-    return typeof localStorage === 'undefined' ? undefined : localStorage;
-  } catch {
-    return undefined;
-  }
-}
-
 /**
  * Text für „Ergebnis teilen“: die fünf Mittelwerte (1–5) für die spätere Norm-Justierung.
  * Enthält bewusst keine Namen und keine Einzelantworten.
  */
 export function shareText(means: Profile, labels: Record<keyof Profile, string>, header: string): string {
   const parts = DIMENSIONS.map((d) => `${labels[d]} ${means[d].toFixed(2)}`);
-  return `${header}\n${parts.join(' | ')}\nIPIP-50 (1–5), v${SAVE_VERSION}`;
+  return `${header}\n${parts.join(' | ')}\nMini-IPIP (1–5), v${SAVE_VERSION}`;
 }

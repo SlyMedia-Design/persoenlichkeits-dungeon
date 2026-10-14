@@ -5,11 +5,12 @@
     "url": "https://openpsychometrics.org/_rawdata/",
     "file": "https://openpsychometrics.org/_rawdata/BIG5.zip",
     "instrument": "IPIP 50-Item Big-Five Factor Markers (englisches Original, Goldberg 1992), Ich-Form, Skala 1 = Disagree … 5 = Agree",
+    "scoring": "Mini-IPIP (Donnellan et al. 2006): Mittelwert aus den 4 Mini-IPIP-Items je Dimension, siehe data/mini_ipip20.json",
     "filter": "Englisch als Muttersprache, Land ∈ {US, GB, CA, AU, NZ, IE}, Alter 16–80, alle 50 Items beantwortet",
     "n": 10039,
     "nTotal": 19719,
     "computedWith": "scripts/compute-norms.ts",
-    "computed": "2026-10-13"
+    "computed": "2026-10-14"
   },
   "caveats": [
     "Selbstselektierte Online-Stichprobe, keine repräsentative Bevölkerungsnorm.",
@@ -19,24 +20,24 @@
   ],
   "dimensions": {
     "O": {
-      "mean": 3.964,
-      "sd": 0.613
+      "mean": 4.065,
+      "sd": 0.765
     },
     "C": {
-      "mean": 3.394,
-      "sd": 0.743
+      "mean": 3.237,
+      "sd": 0.911
     },
     "E": {
-      "mean": 3.06,
-      "sd": 0.953
+      "mean": 2.974,
+      "sd": 1.057
     },
     "A": {
-      "mean": 3.923,
-      "sd": 0.733
+      "mean": 3.971,
+      "sd": 0.876
     },
     "N": {
-      "mean": 3.037,
-      "sd": 0.887
+      "mean": 2.894,
+      "sd": 0.931
     }
   },
   "correlationOrder": [
@@ -49,37 +50,37 @@
   "correlations": [
     [
       1,
-      0.044,
-      0.154,
-      0.085,
-      -0.095
+      -0.056,
+      0.091,
+      0.124,
+      -0.071
     ],
     [
-      0.044,
+      -0.056,
       1,
-      0.087,
-      0.158,
-      -0.255
+      0.082,
+      0.065,
+      -0.258
     ],
     [
-      0.154,
-      0.087,
+      0.091,
+      0.082,
       1,
-      0.327,
-      -0.264
+      0.276,
+      -0.194
     ],
     [
-      0.085,
-      0.158,
-      0.327,
+      0.124,
+      0.065,
+      0.276,
       1,
-      -0.102
+      -0.011
     ],
     [
-      -0.095,
-      -0.255,
-      -0.264,
-      -0.102,
+      -0.071,
+      -0.258,
+      -0.194,
+      -0.011,
       1
     ]
   ]

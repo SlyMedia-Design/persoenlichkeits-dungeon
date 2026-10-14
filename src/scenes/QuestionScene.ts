@@ -9,7 +9,11 @@ import { Button } from '../ui/Button';
 import { glowTexture } from '../ui/sprites';
 import { COLORS, textStyle } from '../ui/theme';
 
-const INTERLUDE_EVERY = 10;
+const INTERLUDE_EVERY = 5;
+/** Fortschrittsleiste unterhalb des Musik-Schalters oben rechts */
+const BAR_Y = 54;
+const LABEL_Y = BAR_Y + 24;
+const QUESTION_TOP = LABEL_Y + 28;
 
 export class QuestionScene extends BaseScene {
   private index = 0;
@@ -46,9 +50,9 @@ export class QuestionScene extends BaseScene {
     this.progressBar = this.add.graphics();
     this.progressOrb = this.add.image(0, 0, glowTexture(this)).setScale(0.35).setTint(0xffe6a0).setBlendMode(Phaser.BlendModes.ADD);
     this.tweens.add({ targets: this.progressOrb, alpha: { from: 0.6, to: 1 }, duration: 800, yoyo: true, repeat: -1 });
-    this.progressText = this.add.text(left + contentWidth, 46, '', textStyle(small, COLORS.textDim)).setOrigin(1, 0.5);
+    this.progressText = this.add.text(left + contentWidth, LABEL_Y, '', textStyle(small, COLORS.textDim)).setOrigin(1, 0.5);
     this.backText = this.add
-      .text(left, 46, `‹ ${t('common.back')}`, textStyle(small, COLORS.textDim))
+      .text(left, LABEL_Y, `‹ ${t('common.back')}`, textStyle(small, COLORS.textDim))
       .setOrigin(0, 0.5)
       .setPadding(6, 6, 6, 6)
       .setInteractive({ useHandCursor: true })
@@ -71,7 +75,7 @@ export class QuestionScene extends BaseScene {
   private updateProgress() {
     const { left, contentWidth } = this.m;
     const answered = Math.min(this.index, this.total);
-    const y = 24;
+    const y = BAR_Y;
     const h = 8;
     const fill = (contentWidth * answered) / this.total;
     const g = this.progressBar;
@@ -133,7 +137,7 @@ export class QuestionScene extends BaseScene {
       .setOrigin(0.5, 0);
     // Frage mittig im freien Raum zwischen Fortschritt und Antworten
     const blockHeight = stem.height + gap + text.height;
-    const top = Math.max(70, 70 + (buttonsTop - 70 - blockHeight) / 2);
+    const top = Math.max(QUESTION_TOP, QUESTION_TOP + (buttonsTop - QUESTION_TOP - blockHeight) / 2);
     stem.setY(top);
     text.setY(top + stem.height + gap);
     c.add([stem, text]);

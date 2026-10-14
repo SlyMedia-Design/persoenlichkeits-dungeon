@@ -46,7 +46,10 @@ export interface Archetype {
   profile: Profile;
   color: string;
   aura: string;
+  /** 16×16 fürs Spielfeld */
   sprite: PixelSprite;
+  /** 32×32 für Menüs und Szenen */
+  portrait: PixelSprite;
 }
 
 export interface ScoreResult {

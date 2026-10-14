@@ -1,4 +1,4 @@
-import '@fontsource/pixelify-sans/400.css';
+import './ui/fonts/dorfschrift.css';
 import Phaser from 'phaser';
 import { EndingScene } from './scenes/EndingScene';
 import { IntroScene } from './scenes/IntroScene';
@@ -13,7 +13,10 @@ import { COLORS } from './ui/theme';
 async function start() {
   // Die Pixelschrift muss geladen sein, bevor Phaser Texte rendert
   try {
-    await document.fonts.load('20px "Pixelify Sans"', 'ÄÖÜäöüß');
+    await Promise.all([
+      document.fonts.load('20px "Dorfschrift"', 'ÄÖÜäöüß'),
+      document.fonts.load('bold 20px "Dorfschrift"', 'ÄÖÜäöüß'),
+    ]);
   } catch {
     // Ersatzschrift wird verwendet
   }

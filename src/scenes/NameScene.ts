@@ -2,7 +2,7 @@ import { archetypeById, creatureText, t } from '../content';
 import { getSave, updateSave } from '../state';
 import { BaseScene } from '../ui/BaseScene';
 import { Button } from '../ui/Button';
-import { creatureTexture, idleBob, pixelScale } from '../ui/sprites';
+import { PORTRAIT_SIZE, creatureTexture, idleBob, pixelScale } from '../ui/sprites';
 import { COLORS, textStyle } from '../ui/theme';
 
 const MAX_LENGTH = 14;
@@ -46,7 +46,7 @@ export class NameScene extends BaseScene {
         ? t('names.player')
         : t('names.partner', { article: creatureText(id, 'article'), species: creatureText(id, 'species') });
     const label = this.add
-      .text(cx, spriteY + 8 * scale + font * 1.5, question, {
+      .text(cx, spriteY + (PORTRAIT_SIZE / 2) * scale + font * 1.5, question, {
         ...textStyle(large),
         align: 'center',
         wordWrap: { width: contentWidth, useAdvancedWrap: true },

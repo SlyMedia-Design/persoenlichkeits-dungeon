@@ -1,4 +1,13 @@
-import { browserStorage, clearSave, loadSave, newSave, writeSave, type SaveData } from './core/save';
+import { clearSave, loadSave, newSave, writeSave, type SaveData, type StorageLike } from './core/save';
+
+/** localStorage, falls verfügbar (kann in privaten Fenstern o. Ä. werfen). */
+export function browserStorage(): StorageLike | undefined {
+  try {
+    return typeof localStorage === 'undefined' ? undefined : localStorage;
+  } catch {
+    return undefined;
+  }
+}
 
 /** Der aktuelle Spielstand im Speicher; jede Änderung wird sofort lokal gesichert. */
 let current: SaveData = loadSave(browserStorage()) ?? newSave();

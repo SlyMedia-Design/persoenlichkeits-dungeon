@@ -2,7 +2,7 @@ import { t } from '../content';
 import { getSave, resetSave } from '../state';
 import { BaseScene } from '../ui/BaseScene';
 import { Button } from '../ui/Button';
-import { COLORS, textStyle } from '../ui/theme';
+import { COLORS, headingStyle, textStyle } from '../ui/theme';
 
 export class TitleScene extends BaseScene {
   private confirming = false;
@@ -27,7 +27,7 @@ export class TitleScene extends BaseScene {
     const { cx, height, huge, font, small, contentWidth } = this.m;
     const title = this.add
       .text(cx, height * 0.3, t('meta.title'), {
-        ...textStyle(huge, COLORS.textGold),
+        ...headingStyle(huge),
         align: 'center',
         wordWrap: { width: contentWidth },
       })

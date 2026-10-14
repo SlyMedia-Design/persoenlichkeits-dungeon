@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import bankJson from '../data/ipip50_de.json';
-import { band, keyedValue, normalCdf, scaleMeans, score, toZ } from '../src/core/scoring';
+import { band, keyedValue, normalCdf, scaleMeans, score, selectItems, toZ } from '../src/core/scoring';
 import { DIMENSIONS, type Answers, type ItemBank, type Norms } from '../src/core/types';
 
 const bank = bankJson as ItemBank;
@@ -102,5 +102,23 @@ describe('normalCdf / band', () => {
     expect(band(-1)).toBe('low');
     expect(band(0.2)).toBe('mid');
     expect(band(0.5)).toBe('high');
+  });
+});
+
+describe('selectItems', () => {
+  it('übernimmt Items in der gewünschten Reihenfolge', () => {
+    const short = selectItems(bank, [9, 1, 17]);
+    expect(short.items.map((i) => i.id)).toEqual([9, 1, 17]);
+    expect(short.scale).toEqual(bank.scale);
+  });
+  it('lehnt unbekannte oder doppelte Items ab', () => {
+    expect(() => selectItems(bank, [1, 99])).toThrow(/99/);
+    expect(() => selectItems(bank, [1, 1])).toThrow();
+  });
+  it('bildet Mittelwerte nur über die ausgewählten Items', () => {
+    const short = selectItems(bank, [1, 6]); // E+ und E−
+    const answers: Answers = { 1: 5, 6: 1 };
+    const sums = short.items.reduce((s, i) => s + keyedValue(answers[i.id], i.keyed, short.scale), 0);
+    expect(sums / 2).toBe(5);
   });
 });

@@ -12,6 +12,17 @@ export function keyedValue(answer: number, keyed: 1 | -1, scale: ItemBank['scale
   return keyed === 1 ? answer : scale.min + scale.max - answer;
 }
 
+/** Kurzform aus einer Itembank bilden: nur die genannten Items, in genau dieser Reihenfolge. */
+export function selectItems(bank: ItemBank, ids: readonly number[]): ItemBank {
+  const items = ids.map((id) => {
+    const item = bank.items.find((i) => i.id === id);
+    if (!item) throw new Error(`Item ${id} gibt es in der Itembank nicht`);
+    return item;
+  });
+  if (new Set(ids).size !== ids.length) throw new Error('Item-Nummern doppelt vergeben');
+  return { scale: bank.scale, items };
+}
+
 export function isComplete(bank: ItemBank, answers: Answers): boolean {
   return bank.items.every((item) => answers[item.id] !== undefined);
 }

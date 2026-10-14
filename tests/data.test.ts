@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import archetypesJson from '../data/archetypes.json';
 import bankJson from '../data/ipip50_de.json';
 import de from '../data/i18n/de.json';
+import miniJson from '../data/mini_ipip20.json';
 import normsJson from '../data/norms.json';
+import { selectItems } from '../src/core/scoring';
 import { DIMENSIONS, type Archetype, type ItemBank, type Norms } from '../src/core/types';
 
 const bank = bankJson as ItemBank;
@@ -81,6 +83,44 @@ describe('archetypes.json', () => {
     const creatures = de.creatures as Record<string, Record<string, string>>;
     for (const a of archetypes) {
       for (const key of ['species', 'article', 'tagline', 'description']) expect(creatures[a.id]?.[key]).toBeTruthy();
+    }
+  });
+});
+
+describe('mini_ipip20.json', () => {
+  const mini = selectItems(bank, miniJson.itemIds);
+
+  it('enthält 20 Items, 4 je Dimension', () => {
+    expect(mini.items).toHaveLength(20);
+    for (const d of DIMENSIONS) expect(mini.items.filter((i) => i.dimension === d)).toHaveLength(4);
+  });
+
+  it('entspricht der veröffentlichten Mini-IPIP (Donnellan et al. 2006)', () => {
+    // Englische Originaltexte und Polung nach Tabelle 3 in PMC6064137, R = umgepolt
+    const published = [
+      ['E', 'Am the life of the party.', 1], ['A', "Sympathize with others' feelings.", 1],
+      ['C', 'Get chores done right away.', 1], ['N', 'Have frequent mood swings.', 1],
+      ['O', 'Have a vivid imagination.', 1], ['E', "Don't talk a lot.", -1],
+      ['A', "Am not interested in other people's problems.", -1], ['C', 'Often forget to put things back in their proper place.', -1],
+      ['N', 'Am relaxed most of the time.', -1], ['O', 'Am not interested in abstract ideas.', -1],
+      ['E', 'Talk to a lot of different people at parties.', 1], ['A', "Feel others' emotions.", 1],
+      ['C', 'Like order.', 1], ['N', 'Get upset easily.', 1],
+      ['O', 'Have difficulty understanding abstract ideas.', -1], ['E', 'Keep in the background.', -1],
+      ['A', 'Am not really interested in others.', -1], ['C', 'Make a mess of things.', -1],
+      ['N', 'Seldom feel blue.', -1], ['O', 'Do not have a good imagination.', -1],
+    ];
+    expect(mini.items.map((i) => [i.dimension, i.textEn, i.keyed])).toEqual(published);
+  });
+});
+
+describe('Porträts', () => {
+  it('sind gültige 32×32-Sprites', () => {
+    for (const a of archetypes) {
+      expect(a.portrait.rows, a.id).toHaveLength(32);
+      for (const row of a.portrait.rows) {
+        expect(row, `${a.id}: "${row}"`).toHaveLength(32);
+        for (const ch of row) if (ch !== '.') expect(a.portrait.palette, `${a.id}: ${ch}`).toHaveProperty(ch);
+      }
     }
   });
 });

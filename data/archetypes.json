@@ -1,9 +1,15 @@
 {
-  "description": "Prototyp-Wesen. profile = Ziel-z-Profil (hoch = +1, niedrig = −1), N = Neurotizismus/Feingefühl. Texte stehen in data/i18n/de.json unter creatures.<id>. Sprites: 16×16 Pixel, jedes Zeichen ist ein Eintrag der Palette, '.' ist durchsichtig.",
+  "description": "Prototyp-Wesen. profile = Ziel-z-Profil (hoch = +1, niedrig = −1), N = Neurotizismus/Feingefühl. Texte stehen in data/i18n/de.json unter creatures.<id>. sprite = 16×16 (Spielfeld), portrait = 32×32 (Menüs, erzeugt mit scripts/draw-creatures.ts). Jedes Zeichen ist ein Eintrag der Palette, '.' ist durchsichtig.",
   "archetypes": [
     {
       "id": "otter",
-      "profile": { "O": 1, "C": -1, "E": 1, "A": 1, "N": -1 },
+      "profile": {
+        "O": 1,
+        "C": -1,
+        "E": 1,
+        "A": 1,
+        "N": -1
+      },
       "color": "#e08a3c",
       "aura": "#8fdcff",
       "sprite": {
@@ -37,11 +43,72 @@
           "..obbbbbbbbbbo..",
           "...obbo..obbo..."
         ]
+      },
+      "portrait": {
+        "palette": {
+          "o": "#3b2114",
+          "B": "#f2ad63",
+          "b": "#d9823b",
+          "d": "#a35a26",
+          "C": "#fff3dc",
+          "c": "#f6dcb2",
+          "e": "#d9b486",
+          "k": "#1c1210",
+          "w": "#ffffff",
+          "n": "#4a2a1e",
+          "p": "#f2907e",
+          "z": "#fff0f5",
+          "s": "#f7c3d3",
+          "S": "#d0809d",
+          "q": "#bdeeff",
+          "Q": "#ffffff",
+          "r": "#69bfe4"
+        },
+        "rows": [
+          "................................",
+          ".............oooooo.............",
+          "...........oosssSssoo...........",
+          "..........ossSzsSssSSo..........",
+          "......ooo.ossSssSssSSo.ooo......",
+          ".....oBBboossSssSssSSooBBbo.....",
+          "....obBBbbbssssssssSSbbBbbdo....",
+          "....obbdbBBBSSSSSSSSSbbbdbdo....",
+          ".....obbbBBBBBBSSbbbbbbbbdoQr...",
+          ".....obbBBBBBBBBBbbbbbbbbdorqr..",
+          ".....obbBBBBBBBBbbbbbbbbbdorr...",
+          ".....obbbBBwkBBbbbbwkbbbbdo.....",
+          "..Qrrobbbbbkkbbbbbbkkbbbbdo.....",
+          "..rqrobbbbbkkbbccbbkkbbbddo.....",
+          "..rrrobbbbbbccCcccccbbbbddo.....",
+          ".....obbbppccCCBnccccppdddo.....",
+          ".....obbbbbccccnnccccbddddQrr...",
+          "......obbbbccccccccceddddrqqqr..",
+          "....Qr.odbbcccecceeeedddorqqqr..",
+          "....rr.oodddbeeeeeeddddoo.rrr...",
+          "......obbbBddddddddddbbbbo......",
+          "......oBBbdBccddddccbbBBbo......",
+          ".....obBbbdccCCcccccebBbbdo.....",
+          ".....obbbbdcccccccccebbbbdo.....",
+          "......obbdbcccccccccebbbdo......",
+          ".......odbbcccccccccedddobooo...",
+          ".......odbbcccccccceedddBBbbbo..",
+          "........odbbccccceeedddbbbbbbdo.",
+          "........oBBddeeeeeeddbbbbbbddo..",
+          "........obbbbddddddbbbboodooo...",
+          "........obbbbdoooobbbbdo.o......",
+          ".........ooooo....ooooo........."
+        ]
       }
     },
     {
       "id": "eule",
-      "profile": { "O": 1, "C": 1, "E": -1, "A": -1, "N": 1 },
+      "profile": {
+        "O": 1,
+        "C": 1,
+        "E": -1,
+        "A": -1,
+        "N": 1
+      },
       "color": "#4f5f95",
       "aura": "#9ff6ff",
       "sprite": {
@@ -72,11 +139,72 @@
           "...oobbbbbboo...",
           "....oyo..oyo...."
         ]
+      },
+      "portrait": {
+        "palette": {
+          "o": "#161a33",
+          "B": "#7384c6",
+          "b": "#4d5da0",
+          "d": "#344178",
+          "F": "#eef2ff",
+          "f": "#c8d1ef",
+          "D": "#99a5d3",
+          "Y": "#ffe28c",
+          "y": "#f0bd45",
+          "u": "#b8862a",
+          "k": "#0d0d18",
+          "w": "#ffffff",
+          "g": "#8ff8ff",
+          "G": "#e8ffff",
+          "H": "#dfe6fb",
+          "h": "#b3bfe6",
+          "j": "#8794c8"
+        },
+        "rows": [
+          ".....o....................o.....",
+          "....obo..................obo....",
+          ".....obo................obo.....",
+          ".....obbo..............obboG....",
+          ".....obdbo.oooooooooo.obdbo.....",
+          ".....obbdbobbbbbbbbbbobdbbo.....",
+          ".....obbbbbBBBBBbbbbbbbbbbo.....",
+          "......obbbBBBBBBBbbbbbbbbo......",
+          "......obbBBBBBBBBbbbbbbbbo...G..",
+          ".....obbBffffffBBffffffbbdo.....",
+          ".....obbffyyyyffffyyyyffbdo.....",
+          "...G.obbfywkkyyffywkkyyfbdo.....",
+          "....obbffykwkkyffykwkkyfDddo....",
+          "....obbffykkkkyffykkkkyfDddo....",
+          ".....obffykkGkyffykkGkyDDdo.....",
+          ".....obbffyyyyDYyfyyyyDDddo.....",
+          ".....obbDffffDDyyffffDDDddo.....",
+          "......obbbDDDDbyubDDDDdddo......",
+          "......obbbbbbbbbbbbdddddbo......",
+          ".....obBBddbbbbbdddddddBbbo.....",
+          ".....oBBBbddddddddddddBBbbo.....",
+          ".....oBBBbbBhddddddhbBBBbbo.....",
+          "....obBBbbbBhHHhhhhhbbBbbbdo....",
+          "....obbbbbbhhhjhhjhhjbbbbbdo....",
+          "....obbbbbbhhhhjhhjhjbbbbbdo....",
+          ".....obgbbdhhhhhhhhhjbbbgdo.....",
+          ".....obbgddhhjhjhhjjjbbgbdo.....",
+          ".....odgdgbbhhjhjhjjddgdgdo.....",
+          "......odGoYdbjjjjjjddyoGdo......",
+          ".......ooyYyddddddddyyyoo.......",
+          "........oyyyuuooooyyyuuo........",
+          ".........ooooo....ooooo........."
+        ]
       }
     },
     {
       "id": "dachs",
-      "profile": { "O": -1, "C": 1, "E": 1, "A": -1, "N": 1 },
+      "profile": {
+        "O": -1,
+        "C": 1,
+        "E": 1,
+        "A": -1,
+        "N": 1
+      },
       "color": "#8a7a70",
       "aura": "#ffb060",
       "sprite": {
@@ -109,11 +237,73 @@
           "..obbbbbbbbbbo..",
           "..osso....osso.."
         ]
+      },
+      "portrait": {
+        "palette": {
+          "o": "#221c1a",
+          "B": "#b3a79b",
+          "b": "#8f8378",
+          "d": "#675d55",
+          "M": "#4a403b",
+          "m": "#2e2725",
+          "v": "#f6f1e9",
+          "V": "#cbc2b5",
+          "R": "#ffb46e",
+          "r": "#e2742c",
+          "x": "#a24e1c",
+          "S": "#cfdbe6",
+          "s": "#8fa0b4",
+          "T": "#617086",
+          "k": "#0e0c0c",
+          "w": "#ffffff",
+          "n": "#141010",
+          "p": "#c49386"
+        },
+        "rows": [
+          "................................",
+          "................................",
+          ".....ooooo............ooooo.....",
+          "....obBbbbo..........obBbbbo....",
+          "....oBBBbbboooooooooobBBBbbo....",
+          "...obBpppbbobbvvvvbbobBpppbdo...",
+          "...obbpppbmmbBvvvvbbmmbpppbdo...",
+          "...obbpppMMmmBvvvvbMMmmpppbdo...",
+          "....obbbmMMmmmvvvvmMMmmmdbdo....",
+          ".....odbmMMmmmvvvvmMMmmmbdo.....",
+          ".....obbmMMmmmvvvvmMMmmmbdo.....",
+          ".....obbmMwkkmvvvvmwkkmmbdo.....",
+          "....obbbmmkkkmvvvvmkkkmmbddo....",
+          "....obbbmmkkwmvvvVmkkwmmbddo....",
+          "....obbbmmmmmmvvvVmmmmmmdddo....",
+          ".....obbmmmmmvvvvvvmmmmmddo.....",
+          ".....obbmmmmvvvMnvvVmmmmddo.....",
+          "......obbmmmvvvnnvvVmmmddo......",
+          "......odbbmmbvvvvvVbmmdddo......",
+          ".......odbbbbVvvVVVdddddo.......",
+          "......oobBddddddddddddbboo......",
+          ".....obbbBBBddddddddbbbbbbo.....",
+          ".....oBBbbBRrBBbbbbrRbbBBbo.....",
+          "....obBbbbbrxbbbbbbxrbbBbbdo....",
+          "....obbbbdbbbbbbbbbbbbbbbbdo....",
+          ".....obbbdbbbbbbbbbbbbbbbdo.....",
+          ".....oSddbbbbRrbbrRbbddddSo.....",
+          "......ossbbbbrxbbxrddddsso......",
+          ".......ooSSssddddddSSssoo.......",
+          ".......osssssTddddsssssTo.......",
+          "........oSsSToooooosSsSo........",
+          ".........oooo......oooo........."
+        ]
       }
     },
     {
       "id": "capybara",
-      "profile": { "O": -1, "C": -1, "E": -1, "A": 1, "N": -1 },
+      "profile": {
+        "O": -1,
+        "C": -1,
+        "E": -1,
+        "A": 1,
+        "N": -1
+      },
       "color": "#b89a72",
       "aura": "#b8e890",
       "sprite": {
@@ -144,6 +334,60 @@
           ".obbbbbbbbbbbbo.",
           "..obbbbbbbbbbo..",
           "..obo......obo.."
+        ]
+      },
+      "portrait": {
+        "palette": {
+          "o": "#3a2a1a",
+          "B": "#d4b088",
+          "b": "#b8936a",
+          "d": "#8f6e4c",
+          "L": "#e6cba5",
+          "l": "#c9a67c",
+          "a": "#a3815c",
+          "M": "#9fd36f",
+          "m": "#62a24a",
+          "N": "#3f7432",
+          "j": "#ffd2e2",
+          "f": "#f590b4",
+          "F": "#ffe27a",
+          "k": "#2a1c10",
+          "n": "#4a3420",
+          "e": "#9b7552"
+        },
+        "rows": [
+          "................................",
+          "...................o............",
+          "...........oooooooofo...........",
+          ".........oofmmmmmmjFfoo.........",
+          ".......oomjFfMMmmmmfmmmoo.......",
+          "......ommMMfMMMmmmmMMmmmfo......",
+          ".....oBmmmmmmmmmmmmMmmmjFfo.....",
+          ".....obbmmmmmmmmmmmmmmmNfbo.....",
+          ".....obbbNmmmmmmNNNmmNNNbdo.....",
+          "......obbBBBBNNNBbbbbbbbdo......",
+          ".....obbbBBBBBBBBbbbbbbbbdo.....",
+          ".....obbbkBBkBBBbbbkbbkbbdo.....",
+          ".....obbbbkkBBbbbbbbkkbbbdo.....",
+          ".....obbbbbbllllllllbbbbddo.....",
+          ".....obbbbbllLLllllllbbbddo.....",
+          ".....obbbblllLLlllllllbdddo.....",
+          "......obbllllnallanllladdo......",
+          "......obbllllnllllnllaaddo......",
+          ".......odbllllllllllaaddo.......",
+          ".......obddllllaalaaadddo.......",
+          "......obbBBdaaaaaaaadbbbdo......",
+          "......obbBBddddddddddbbbbo......",
+          ".....obbbBBBBBBbbbbbbbbbbdo.....",
+          ".....obbbbbbbbbbbbbbbbbbddo.....",
+          ".....obbbbbbbbbbbbbbbbbbddo.....",
+          ".....obbbbbbbbbbbbbbbbbdddo.....",
+          "......obbbbbbbbbbbbbbbdddo......",
+          ".......obbbbbbbbbbbbddddo.......",
+          "........odbbbbbbbddddddo........",
+          ".......obbbddddddddddbbdo.......",
+          "........obbbddoooobbbbdo........",
+          ".........ooooo....ooooo........."
         ]
       }
     }

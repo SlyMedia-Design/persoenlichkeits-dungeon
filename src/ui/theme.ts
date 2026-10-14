@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-export const FONT = '"Pixelify Sans", "Trebuchet MS", sans-serif';
+export const FONT = '"Dorfschrift", "Trebuchet MS", sans-serif';
 
 export const COLORS = {
   night: 0x1a1830,
@@ -11,7 +11,7 @@ export const COLORS = {
   gold: 0xffd27a,
   rose: 0xf49a8a,
   text: '#fff8ea',
-  textDim: '#c9bfd8',
+  textDim: '#e2d9ee',
   textGold: '#ffd27a',
 };
 
@@ -25,7 +25,7 @@ export const SKY = {
 export function metrics(scene: Phaser.Scene) {
   const { width, height } = scene.scale;
   const contentWidth = Math.min(width - 32, 640);
-  const base = Phaser.Math.Clamp(Math.min(width / 22, height / 34), 15, 24);
+  const base = Phaser.Math.Clamp(Math.min(width / 20, height / 32), 17, 24);
   return {
     width,
     height,
@@ -33,7 +33,7 @@ export function metrics(scene: Phaser.Scene) {
     contentWidth,
     left: (width - contentWidth) / 2,
     font: base,
-    small: Math.round(base * 0.8),
+    small: Math.round(base * 0.86),
     large: Math.round(base * 1.35),
     huge: Math.round(base * 2),
     gap: Math.round(base * 0.7),
@@ -51,6 +51,20 @@ export function textStyle(size: number, color = COLORS.text, extra: Phaser.Types
     shadow: { offsetX: 2, offsetY: 2, color: '#120f22', blur: 0, fill: true },
     ...extra,
   } satisfies Phaser.Types.GameObjects.Text.TextStyle;
+}
+
+/** Verkleinert einen einzeiligen Text, bis er in die verfügbare Breite passt. */
+export function fitWidth<T extends Phaser.GameObjects.Text>(text: T, maxWidth: number): T {
+  if (text.width > maxWidth) {
+    const size = parseFloat(String(text.style.fontSize));
+    text.setFontSize(Math.floor((size * maxWidth) / text.width));
+  }
+  return text;
+}
+
+/** Überschriften: fetter Schnitt der Dorfschrift */
+export function headingStyle(size: number, color = COLORS.textGold, extra: Phaser.Types.GameObjects.Text.TextStyle = {}) {
+  return textStyle(size, color, { fontStyle: 'bold', ...extra });
 }
 
 export function lerpColor(a: number, b: number, t: number): number {

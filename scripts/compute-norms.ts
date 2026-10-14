@@ -6,12 +6,14 @@
  *
  * Ausgewertet werden Personen mit Englisch als Muttersprache aus englischsprachigen
  * Ländern, Alter 16–80, alle 50 Items beantwortet. Gerechnet wird mit genau der
- * Auswertung des Spiels (src/core/scoring.ts) und den Schlüsseln aus data/ipip50_de.json.
+ * Auswertung des Spiels (src/core/scoring.ts): die 20 Mini-IPIP-Items aus
+ * data/mini_ipip20.json mit den Schlüsseln aus data/ipip50_de.json.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import bank from '../data/ipip50_de.json';
-import { scaleMeans } from '../src/core/scoring';
+import shortForm from '../data/mini_ipip20.json';
+import { scaleMeans, selectItems } from '../src/core/scoring';
 import { DIMENSIONS, type Answers, type Dimension, type ItemBank, type Profile } from '../src/core/types';
 
 const input = process.argv[2];
@@ -37,7 +39,7 @@ const col = (name: string) => {
   return i;
 };
 
-const itemBank = bank as ItemBank;
+const itemBank = selectItems(bank as ItemBank, shortForm.itemIds);
 const profiles: Profile[] = [];
 let total = 0;
 
@@ -80,6 +82,7 @@ const norms = {
     url: 'https://openpsychometrics.org/_rawdata/',
     file: 'https://openpsychometrics.org/_rawdata/BIG5.zip',
     instrument: 'IPIP 50-Item Big-Five Factor Markers (englisches Original, Goldberg 1992), Ich-Form, Skala 1 = Disagree … 5 = Agree',
+    scoring: 'Mini-IPIP (Donnellan et al. 2006): Mittelwert aus den 4 Mini-IPIP-Items je Dimension, siehe data/mini_ipip20.json',
     filter: `Englisch als Muttersprache, Land ∈ {${COUNTRIES.join(', ')}}, Alter ${MIN_AGE}–${MAX_AGE}, alle 50 Items beantwortet`,
     n,
     nTotal: total,

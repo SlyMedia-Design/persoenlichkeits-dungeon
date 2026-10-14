@@ -57,8 +57,9 @@ public/assets/          # Platzhalter-Grafiken und Sounds
   - Quelle: https://ipip.ori.org/German50-itemBigFiveFactorMarkers.htm
   - Englisches Original mit Schlüssel (welche Items umgepolt werden): https://ipip.ori.org/new_ipip-50-item-scale.htm
   - **Die Items wortgetreu aus der Quelle übernehmen, nichts selbst übersetzen oder umformulieren.** Fehlt etwas oder ist etwas unklar: nachfragen, nicht erfinden.
-- **Antwortskala:** 5-stufig (trifft gar nicht zu … trifft voll zu). Umgepolte Items werden invertiert, und pro Dimension wird der Mittelwert aus 10 Items gebildet.
-- **Vergleichswerte:** Mittelwerte und Standardabweichungen aus veröffentlichten englischsprachigen Studien zum IPIP-50 übernehmen, **mit Quellenangabe in `norms.json`**. Daraus z-Werte berechnen. Nicht die Skalenmitte als Durchschnitt verwenden. Später werden die Werte mit freiwillig geteilten Ergebnissen aus dem Freundeskreis nachjustiert.
+  - **Im Spiel gestellt wird die Kurzform Mini-IPIP** (Donnellan et al. 2006): 20 der 50 Items, 4 pro Dimension (Entscheidung vom 14.10.2026 nach Feedback: 50 Fragen waren zu viele). Die Auswahl steht in `data/mini_ipip20.json`, die Texte bleiben die aus `data/ipip50_de.json`.
+- **Antwortskala:** 5-stufig (trifft gar nicht zu … trifft voll zu). Umgepolte Items werden invertiert, und pro Dimension wird der Mittelwert aus den 4 Mini-IPIP-Items gebildet.
+- **Vergleichswerte:** Mittelwerte und Standardabweichungen aus veröffentlichten englischsprachigen Studien zum IPIP-50 übernehmen, **mit Quellenangabe in `norms.json`**. (Umgesetzt mit dem offenen IPIP-50-Datensatz von openpsychometrics.org, ausgewertet für die Mini-IPIP-Items – mit Julian abgestimmt.) Daraus z-Werte berechnen. Nicht die Skalenmitte als Durchschnitt verwenden. Später werden die Werte mit freiwillig geteilten Ergebnissen aus dem Freundeskreis nachjustiert.
 - **Benennung im Spiel:** Neurotizismus heißt **„Feingefühl“**, mit positiver Lesart. Intern wird mit dem Original gerechnet.
 - **Inszenierung:** Der Test ist Teil der Story. Ein Mensch wacht als Wesen auf, und der Test zeigt, welches Wesen er geworden ist. Er ist stimmungsvoll gestaltet (Musik, Atmosphäre, Erzählstimme als Text), eine Frage pro Bildschirm, mit sichtbarem Fortschritt. Er darf sich nicht wie ein Formular anfühlen.
 - **Ergebnis:** Zuerst die Enthüllung des Wesens. Das volle Big-Five-Profil mit verständlicher Erklärung jeder Dimension ist danach im Menü nachlesbar, zusammen mit dem Hinweis: *kein klinischer oder diagnostischer Test*.
@@ -103,7 +104,7 @@ Jede Dimension hat zwei hohe und zwei niedrige Wesen. Die Artnamen sind Platzhal
 
 ## 7. Prototyp-Umfang (nicht mehr!)
 
-1. Intro + Test (50 Fragen), Enthüllung, Partnervorschlag und -wahl, Namensvergabe
+1. Intro + Test (20 Fragen, Mini-IPIP), Enthüllung, Partnervorschlag und -wahl, Namensvergabe
 2. 4 Wesen (Otter, Eule, Dachs, Capybara)
 3. Begehbares Dorf mit 2 NPCs und einem Schwarzen Brett mit 1–2 Aufträgen
 4. 1 Dungeon mit **3 Etagen** und 1 Boss

@@ -4,8 +4,8 @@ import type { Archetype } from '../core/types';
 import { getSave } from '../state';
 import { BaseScene } from '../ui/BaseScene';
 import { Button } from '../ui/Button';
-import { creatureTexture, glowTexture, idleBob, pixelScale } from '../ui/sprites';
-import { COLORS, hexToInt, textStyle } from '../ui/theme';
+import { PORTRAIT_SIZE, creatureTexture, glowTexture, idleBob, pixelScale } from '../ui/sprites';
+import { COLORS, fitWidth, headingStyle, hexToInt, textStyle } from '../ui/theme';
 import { Typewriter } from '../ui/typewriter';
 
 export class RevealScene extends BaseScene {
@@ -76,14 +76,14 @@ export class RevealScene extends BaseScene {
     const y = height * 0.25;
 
     const aura = this.add.image(cx, y, glowTexture(this)).setTint(hexToInt(archetype.aura)).setBlendMode(Phaser.BlendModes.ADD);
-    aura.setScale((16 * scale * 2.2) / 64);
+    aura.setScale((PORTRAIT_SIZE * scale * 2.2) / 64);
     this.tweens.add({ targets: aura, alpha: { from: 0.5, to: 0.95 }, scale: aura.scale * 1.08, duration: 1600, yoyo: true, repeat: -1 });
 
     const creature = this.add.image(cx, y, creatureTexture(this, archetype)).setScale(scale);
     const species = creatureText(archetype.id, 'species');
     const title = this.add
-      .text(cx, y + (16 * scale) / 2 + font, t('reveal.youAre', { article: creatureText(archetype.id, 'article'), species }), {
-        ...textStyle(huge, COLORS.textGold),
+      .text(cx, y + (PORTRAIT_SIZE * scale) / 2 + font, t('reveal.youAre', { article: creatureText(archetype.id, 'article'), species }), {
+        ...headingStyle(huge),
         align: 'center',
         wordWrap: { width: contentWidth },
       })
@@ -91,6 +91,7 @@ export class RevealScene extends BaseScene {
     const tagline = this.add
       .text(cx, title.y + title.height + 4, capitalize(creatureText(archetype.id, 'tagline')), textStyle(large, COLORS.textDim))
       .setOrigin(0.5, 0);
+    fitWidth(tagline, contentWidth);
     const description = this.add
       .text(cx, tagline.y + tagline.height + font, creatureText(archetype.id, 'description'), {
         ...textStyle(font),

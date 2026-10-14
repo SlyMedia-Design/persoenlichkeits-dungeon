@@ -1,0 +1,14 @@
+{
+  "title": "Mini-IPIP – 20-Item-Kurzform der IPIP 50-Item Big-Five Factor Markers",
+  "source": {
+    "citation": "Donnellan, M. B., Oswald, F. L., Baird, B. M., & Lucas, R. E. (2006). The Mini-IPIP scales: Tiny-yet-effective measures of the Big Five factors of personality. Psychological Assessment, 18(2), 192–203. https://doi.org/10.1037/1040-3590.18.2.192",
+    "itemList": "Itemliste und Reihenfolge nach Tabelle 3 in https://pmc.ncbi.nlm.nih.gov/articles/PMC6064137/ (adaptiert aus Donnellan et al. 2006)",
+    "license": "Public Domain (International Personality Item Pool, https://ipip.ori.org/)"
+  },
+  "notes": [
+    "Alle 20 Items sind Teil der IPIP-50. Die Texte kommen unverändert aus data/ipip50_de.json (deutsche Fassung, Universität Bielefeld).",
+    "itemIds = Nummern der IPIP-50-Items in der Reihenfolge der Mini-IPIP (Frage 1 bis 20).",
+    "Auswertung: Mittelwert aus 4 Items je Dimension, Polung wie in der IPIP-50."
+  ],
+  "itemIds": [1, 17, 23, 39, 15, 6, 22, 28, 9, 20, 31, 42, 33, 29, 10, 16, 32, 18, 19, 30]
+}

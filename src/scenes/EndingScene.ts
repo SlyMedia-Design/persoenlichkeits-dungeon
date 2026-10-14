@@ -4,8 +4,8 @@ import { shareText } from '../core/save';
 import { getSave, updateSave } from '../state';
 import { Button } from '../ui/Button';
 import { copyToClipboard } from '../ui/share';
-import { creatureTexture, idleBob, pixelScale } from '../ui/sprites';
-import { COLORS, textStyle } from '../ui/theme';
+import { PORTRAIT_SIZE, creatureTexture, idleBob, pixelScale } from '../ui/sprites';
+import { COLORS, fitWidth, headingStyle, textStyle } from '../ui/theme';
 import { NarrationScene } from './NarrationScene';
 
 export class EndingScene extends NarrationScene {
@@ -27,9 +27,9 @@ export class EndingScene extends NarrationScene {
     const { cx, height, contentWidth } = this.m;
     const scale = pixelScale(Math.min(contentWidth * 0.22, height * 0.12));
     const y = height * 0.18;
-    const player = this.add.image(cx - 12 * scale, y, creatureTexture(this, archetypeById(save.archetypeId))).setScale(scale);
+    const player = this.add.image(cx - PORTRAIT_SIZE * 0.75 * scale, y, creatureTexture(this, archetypeById(save.archetypeId))).setScale(scale);
     const partner = this.add
-      .image(cx + 12 * scale, y, creatureTexture(this, archetypeById(save.partnerId)))
+      .image(cx + PORTRAIT_SIZE * 0.75 * scale, y, creatureTexture(this, archetypeById(save.partnerId)))
       .setScale(scale)
       .setFlipX(true);
     idleBob(this, player, scale);
@@ -49,7 +49,8 @@ export class EndingScene extends NarrationScene {
     const { cx, height, font, huge, small, contentWidth, gap } = this.m;
     this.tweens.add({ targets: this.narration, alpha: 0, duration: 500 });
 
-    const end = this.add.text(cx, height * 0.36, t('ending.end'), textStyle(huge, COLORS.textGold)).setOrigin(0.5).setAlpha(0);
+    const end = this.add.text(cx, height * 0.36, t('ending.end'), headingStyle(huge)).setOrigin(0.5).setAlpha(0);
+    fitWidth(end, contentWidth);
     const next = this.add.text(cx, end.y + huge, t('ending.next'), textStyle(font, COLORS.textDim)).setOrigin(0.5).setAlpha(0);
 
     const width = Math.min(contentWidth, 300);

@@ -21,8 +21,12 @@ export function pixelTexture(scene: Phaser.Scene, key: string, sprite: PixelSpri
   return key;
 }
 
+/** Kantenlänge der Wesen-Porträts in Pixeln */
+export const PORTRAIT_SIZE = 32;
+
+/** Porträt (32×32) für Menüs und Szenen; das 16×16-Sprite ist fürs Spielfeld gedacht. */
 export function creatureTexture(scene: Phaser.Scene, archetype: Archetype): string {
-  return pixelTexture(scene, `creature-${archetype.id}`, archetype.sprite);
+  return pixelTexture(scene, `portrait-${archetype.id}`, archetype.portrait);
 }
 
 /** Weicher runder Lichtpunkt für Glühwürmchen, Auren usw. */
@@ -44,7 +48,7 @@ export function glowTexture(scene: Phaser.Scene): string {
 }
 
 /** Ganzzahlige Vergrößerung, damit die Pixel scharf bleiben. */
-export function pixelScale(targetSize: number, spriteSize = 16): number {
+export function pixelScale(targetSize: number, spriteSize = PORTRAIT_SIZE): number {
   return Math.max(1, Math.floor(targetSize / spriteSize));
 }
 

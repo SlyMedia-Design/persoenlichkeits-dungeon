@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SAVE_KEY, clearSave, loadSave, newSave, shareText, writeSave, type StorageLike } from '../src/core/save';
+import { SAVE_KEY, SAVE_VERSION, clearSave, loadSave, newSave, shareText, writeSave, type StorageLike } from '../src/core/save';
 
 function memoryStorage(): StorageLike & { data: Map<string, string> } {
   const data = new Map<string, string>();
@@ -43,6 +43,22 @@ describe('Spielstand', () => {
     storage.setItem(SAVE_KEY, '{kaputt');
     expect(loadSave(storage)).toBeNull();
     storage.setItem(SAVE_KEY, JSON.stringify({ version: 0, answers: {}, current: 0 }));
+    expect(loadSave(storage)).toBeNull();
+  });
+
+  it('übernimmt fertige Ergebnisse aus Version 1 (50 Fragen)', () => {
+    const storage = memoryStorage();
+    const result = { means: { O: 3, C: 3, E: 3, A: 3, N: 3 }, z: { O: 0, C: 0, E: 0, A: 0, N: 0 } };
+    storage.setItem(SAVE_KEY, JSON.stringify({ version: 1, answers: { 1: 3 }, current: 50, result, archetypeId: 'eule', playerName: 'Ada' }));
+    const loaded = loadSave(storage);
+    expect(loaded?.version).toBe(SAVE_VERSION);
+    expect(loaded?.archetypeId).toBe('eule');
+    expect(loaded?.playerName).toBe('Ada');
+  });
+
+  it('verwirft halb ausgefüllte Tests aus Version 1', () => {
+    const storage = memoryStorage();
+    storage.setItem(SAVE_KEY, JSON.stringify({ version: 1, answers: { 1: 3, 2: 4 }, current: 2 }));
     expect(loadSave(storage)).toBeNull();
   });
 

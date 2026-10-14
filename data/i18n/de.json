@@ -29,7 +29,7 @@
       "„Ich zeige dir Sätze. Sag mir ehrlich, wie gut sie zu dir passen – so, wie du gerade bist, nicht so, wie du gern wärst.“",
       "„Es gibt keine falschen Antworten. Jede Antwort ist ein Stück von dir.“"
     ],
-    "info": "50 kurze Sätze · etwa 10 Minuten",
+    "info": "{n} kurze Sätze · etwa {minutes} Minuten",
     "begin": "Ich bin bereit"
   },
   "test": {
@@ -43,11 +43,10 @@
       "trifft voll zu"
     ],
     "interludes": {
-      "10": "„Ich sehe schon erste Umrisse … Erzähl mir mehr.“",
-      "20": "„Der Nebel wird dünner. Irgendwo in der Ferne plätschert Wasser.“",
-      "30": "„Dein Herzschlag wird ruhiger. Du bist fast hier.“",
-      "40": "„Nur noch ein kleines Stück. Ich kann dich schon beinahe sehen.“",
-      "50": "„Danke. Jetzt weiß ich, wer du bist. Öffne die Augen …“"
+      "5": "„Ich sehe schon erste Umrisse … Erzähl mir mehr.“",
+      "10": "„Der Nebel wird dünner. Irgendwo in der Ferne plätschert Wasser.“",
+      "15": "„Nur noch ein kleines Stück. Ich kann dich schon beinahe sehen.“",
+      "20": "„Danke. Jetzt weiß ich, wer du bist. Öffne die Augen …“"
     }
   },
   "reveal": {
@@ -59,7 +58,7 @@
     "intro": "Hinter dir raschelt es im Gebüsch. Jemand hat dich gefunden – und schaut dich neugierig an.",
     "suggest": "Die Stimme flüstert: „{article} {species} würde dich gut ergänzen. Ihr seid verschieden – und gerade deshalb stark zusammen.“",
     "choose": "Wer soll an deiner Seite sein?",
-    "suggested": "Vorschlag",
+    "suggested": "Ergänzt dich",
     "pick": "Wählen"
   },
   "names": {
@@ -89,7 +88,7 @@
     "creature": "{player}, {article} {species}",
     "partnerLine": "Partner: {partner}, {article} {species}",
     "percentile": "Höher als bei etwa {pct} % der Vergleichsgruppe",
-    "disclaimer": "Hinweis: Dies ist ein Spiel. Der Test beruht auf einem wissenschaftlichen Fragebogen (IPIP Big Five), ist aber kein klinischer oder diagnostischer Test. Die Vergleichswerte sind vorläufig.",
+    "disclaimer": "Hinweis: Dies ist ein Spiel. Der Test beruht auf einem wissenschaftlichen Fragebogen (Mini-IPIP, eine Kurzform des IPIP Big Five), ist aber kein klinischer oder diagnostischer Test. Die Vergleichswerte sind vorläufig.",
     "close": "Schließen"
   },
   "dimensions": {
@@ -158,11 +157,11 @@
   "credits": {
     "title": "Quellen & Dank",
     "lines": [
-      "Fragebogen: IPIP 50-Item Big-Five Factor Markers (Goldberg; ipip.ori.org, Public Domain)",
+      "Fragebogen: Mini-IPIP (Donnellan et al. 2006), Kurzform der IPIP 50-Item Big-Five Factor Markers (Goldberg; ipip.ori.org, Public Domain)",
       "Deutsche Fassung: A. Angleitner, S. Hempel, R. Langert, F. Spinath (Universität Bielefeld)",
       "Vergleichswerte: Open-Source Psychometrics Project (openpsychometrics.org)",
       "Geplante Platzhaltergrafik: Ninja Adventure Asset Pack von pixel-boy (CC0)",
-      "Schrift: Pixelify Sans (SIL Open Font License)"
+      "Schrift: Dorfschrift, abgeleitet von Pixelify Sans (SIL Open Font License)"
     ]
   }
 }

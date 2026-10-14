@@ -5,8 +5,8 @@ import { DIMENSIONS, type Dimension } from '../core/types';
 import { getSave } from '../state';
 import { BaseScene } from '../ui/BaseScene';
 import { Button } from '../ui/Button';
-import { creatureTexture, idleBob, pixelScale } from '../ui/sprites';
-import { COLORS, hexToInt, textStyle } from '../ui/theme';
+import { PORTRAIT_SIZE, creatureTexture, idleBob, pixelScale } from '../ui/sprites';
+import { COLORS, headingStyle, hexToInt, textStyle } from '../ui/theme';
 import { shareResult } from './EndingScene';
 
 /** Volles Big-Five-Profil mit Erklärungen. Scrollbar per Wischen, Mausrad oder Pfeiltasten. */
@@ -30,13 +30,13 @@ export class ProfileScene extends BaseScene {
     const archetype = archetypeById(save.archetypeId);
 
     let y = 56;
-    this.add.text(cx, y, t('profile.title'), textStyle(large, COLORS.textGold)).setOrigin(0.5, 0);
+    this.add.text(cx, y, t('profile.title'), headingStyle(large)).setOrigin(0.5, 0);
     y += large + gap * 2;
 
     const scale = pixelScale(Math.min(96, contentWidth * 0.25));
-    const sprite = this.add.image(cx, y + 8 * scale, creatureTexture(this, archetype)).setScale(scale);
+    const sprite = this.add.image(cx, y + (PORTRAIT_SIZE / 2) * scale, creatureTexture(this, archetype)).setScale(scale);
     idleBob(this, sprite, Math.max(1, scale / 2));
-    y += 16 * scale + gap;
+    y += PORTRAIT_SIZE * scale + gap;
 
     const article = creatureText(archetype.id, 'article');
     const species = creatureText(archetype.id, 'species');
@@ -77,7 +77,7 @@ export class ProfileScene extends BaseScene {
     status.setY(y);
     y += small * 2 + gap;
 
-    y = this.line(cx, y, t('credits.title'), textStyle(small, COLORS.textGold), wrap) + 4;
+    y = this.line(cx, y, t('credits.title'), headingStyle(small), wrap) + 4;
     for (const credit of t.list('credits.lines')) {
       y = this.line(cx, y, credit, { ...textStyle(Math.round(small * 0.9), COLORS.textDim), align: 'center' }, wrap) + 2;
     }
@@ -109,7 +109,7 @@ export class ProfileScene extends BaseScene {
   private dimensionBlock(d: Dimension, z: number, y: number, accent: number): number {
     const { left, contentWidth, font, small } = this.m;
     const wrap = { width: contentWidth, useAdvancedWrap: true };
-    this.add.text(left, y, t(`dimensions.${d}.name`), textStyle(font, COLORS.textGold));
+    this.add.text(left, y, t(`dimensions.${d}.name`), headingStyle(font));
     y += font + 6;
     const about = this.add.text(left, y, t(`dimensions.${d}.about`), { ...textStyle(small, COLORS.textDim), wordWrap: wrap });
     y += about.height + 8;
@@ -126,8 +126,11 @@ export class ProfileScene extends BaseScene {
     g.lineBetween(left + contentWidth / 2, y - 3, left + contentWidth / 2, y + barH + 3);
     y += barH + 6;
     const percent = Math.round(Phaser.Math.Clamp(pct * 100, 1, 99));
-    this.add.text(left, y, t('profile.percentile', { pct: percent }), textStyle(Math.round(small * 0.9), COLORS.textDim));
-    y += small + 8;
+    const pctText = this.add.text(left, y, t('profile.percentile', { pct: percent }), {
+      ...textStyle(Math.round(small * 0.9), COLORS.textDim),
+      wordWrap: wrap,
+    });
+    y += pctText.height + 6;
     const desc = this.add.text(left, y, t(`dimensions.${d}.${band(z)}`), { ...textStyle(small), wordWrap: wrap, lineSpacing: 3 });
     return y + desc.height;
   }

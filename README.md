@@ -2,7 +2,7 @@
 
 Hobby-Browserspiel im Geist von *Mystery Dungeon* mit eigener Welt. Am Anfang steht ein echter Big-Five-Persönlichkeitstest; das Ergebnis bestimmt, welches Wesen man wird.
 
-**Stand: Meilenstein 1** – der Test als eigenständig spielbares Stück (Intro, 50 Fragen, Enthüllung, Partnerwahl, Namen, Profilseite).
+**Stand: Meilenstein 1** – der Test als eigenständig spielbares Stück (Intro, 20 Fragen, Enthüllung, Partnerwahl, Namen, Profilseite).
 
 ## Entwickeln
 
@@ -24,7 +24,7 @@ npm run build      # Typprüfung + Produktions-Build nach dist/
 | `src/core/` | Reine Logik ohne Phaser: Scoring, Zuordnung, Partnervorschlag, Simulation, Spielstand |
 | `src/scenes/` | Phaser-Szenen |
 | `src/ui/` | Darstellung: Knöpfe, Hintergrund, Sprites, Musik (prozedural per WebAudio) |
-| `scripts/` | Werkzeuge: Item-Extraktion, Normberechnung, Verteilungssimulation |
+| `scripts/` | Werkzeuge: Item-Extraktion, Normberechnung, Verteilungssimulation, Schrift- und Porträt-Generator |
 | `tests/` | Unit-Tests der Logik und Datenprüfungen |
 
 ## Der Test
@@ -32,9 +32,10 @@ npm run build      # Typprüfung + Produktions-Build nach dist/
 - **Fragebogen:** IPIP 50-Item Big-Five Factor Markers, deutsche Fassung von Alois Angleitner, Susanne Hempel, Rika Langert und Frank Spinath (Universität Bielefeld), bereitgestellt von Fritz Ostendorf.
   Quelle: <https://ipip.ori.org/German50-itemBigFiveFactorMarkers.htm> · Schlüssel: <https://ipip.ori.org/new_ipip-50-item-scale.htm>
   `data/ipip50_de.json` wurde mit `scripts/extract-ipip.ts` direkt aus der HTML-Seite erzeugt; die Item-Texte sind wortgetreu übernommen (auch kleine Eigenheiten der Quelle wie fehlende Punkte oder „grübel“).
+- **Kurzform im Spiel:** Mini-IPIP mit 20 Items, 4 je Dimension (Donnellan, Oswald, Baird & Lucas, 2006, *Psychological Assessment, 18*, 192–203). Alle 20 Items stammen aus der IPIP-50; `data/mini_ipip20.json` legt nur fest, welche und in welcher Reihenfolge. Ein Test vergleicht die Auswahl mit der veröffentlichten Itemliste.
 - **Lizenz:** Die IPIP-Items sind gemeinfrei (Public Domain), siehe <https://ipip.ori.org/>.
-- **Auswertung:** Antwortskala 1–5, umgepolte Items werden invertiert, Mittelwert aus 10 Items je Dimension, dann z-Werte gegen die Vergleichswerte. Intern wird Neurotizismus gerechnet (Faktor 4 „Emotionale Stabilität“ also umgepolt); im Spiel heißt die Dimension „Feingefühl“.
-- **Vergleichswerte** (`data/norms.json`): berechnet mit `scripts/compute-norms.ts` aus dem offenen Datensatz „Answers to the IPIP Big Five Factor Markers“ des Open-Source Psychometrics Project (<https://openpsychometrics.org/_rawdata/>, BIG5.zip). Gefiltert auf englische Muttersprache aus US/GB/CA/AU/NZ/IE, Alter 16–80, vollständige Antworten (n = 10 039). Vorläufig: Online-Stichprobe, nicht repräsentativ; die Werte werden später mit Ergebnissen aus dem Freundeskreis nachjustiert.
+- **Auswertung:** Antwortskala 1–5, umgepolte Items werden invertiert, Mittelwert aus den 4 Mini-IPIP-Items je Dimension, dann z-Werte gegen die Vergleichswerte. Intern wird Neurotizismus gerechnet (Faktor 4 „Emotionale Stabilität“ also umgepolt); im Spiel heißt die Dimension „Feingefühl“.
+- **Vergleichswerte** (`data/norms.json`): berechnet mit `scripts/compute-norms.ts` aus dem offenen Datensatz „Answers to the IPIP Big Five Factor Markers“ des Open-Source Psychometrics Project (<https://openpsychometrics.org/_rawdata/>, BIG5.zip). Gefiltert auf englische Muttersprache aus US/GB/CA/AU/NZ/IE, Alter 16–80, vollständige Antworten (n = 10 039), ausgewertet mit genau den 20 Mini-IPIP-Items. Vorläufig: Online-Stichprobe, nicht repräsentativ; die Werte werden später mit Ergebnissen aus dem Freundeskreis nachjustiert.
 - **Zuordnung:** nächstes Wesen per euklidischer Distanz im z-Raum; der Partnervorschlag ist das fernste andere Wesen.
 - **Kein klinischer oder diagnostischer Test.**
 
@@ -51,6 +52,6 @@ Jeder Push auf `main` testet, baut und veröffentlicht über `.github/workflows/
 - Fragebogen: International Personality Item Pool (Goldberg), Public Domain
 - Deutsche Übersetzung: A. Angleitner, S. Hempel, R. Langert, F. Spinath (Universität Bielefeld)
 - Vergleichsdaten: Open-Source Psychometrics Project
-- Geplante Platzhaltergrafik: [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) von pixel-boy (CC0) – im Meilenstein 1 noch nicht eingebunden, die Wesen sind eigene 16×16-Pixel-Sprites aus `data/archetypes.json`
-- Schrift: [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) (SIL Open Font License), gebündelt über `@fontsource/pixelify-sans`
+- Geplante Platzhaltergrafik: [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) von pixel-boy (CC0) – im Meilenstein 1 noch nicht eingebunden. Die Wesen sind eigene Pixel-Sprites aus `data/archetypes.json`: 16×16 fürs Spielfeld, 32×32-Porträts für Menüs (erzeugt mit `scripts/draw-creatures.ts`)
+- Schrift: „Dorfschrift“, abgeleitet von [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) (SIL Open Font License) – kräftiger, höhere Kleinbuchstaben, mehr Buchstabenabstand. Erzeugt mit `scripts/build-font.ts`, Dateien und Lizenz in `src/ui/fonts/`
 - Engine: [Phaser 3](https://phaser.io/)

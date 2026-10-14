@@ -1,0 +1,15 @@
+/* Dorfschrift: abgeleitet von Pixelify Sans, siehe scripts/build-font.ts und OFL.txt */
+@font-face {
+  font-family: 'Dorfschrift';
+  src: url('./dorfschrift-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Dorfschrift';
+  src: url('./dorfschrift-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
