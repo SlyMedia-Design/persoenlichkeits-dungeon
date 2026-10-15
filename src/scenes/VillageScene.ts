@@ -5,6 +5,8 @@ import { canStep, combineDirs, dirTo, findPath, horizontalOf, samePos, step, typ
 import { approachTiles, completeQuest, interactionAt, isWalkable, pickDialog, type Placement } from '../core/village';
 import { getSave, updateSave } from '../state';
 import { ambient } from '../ui/ambient';
+import { pixelZoom } from '../ui/camera';
+import { bindFastForward } from '../ui/speed';
 import { creatureTexture, fieldTexture, shadowTexture } from '../ui/sprites';
 import { BORDER, TILE, actorFrame, actorKey, faceKey, preloadTileset, villageMapTexture } from '../ui/tiles';
 import { COLORS } from '../ui/theme';
@@ -93,6 +95,7 @@ export class VillageScene extends Phaser.Scene {
     this.scale.on('resize', onResize);
 
     this.setupInput();
+    bindFastForward(this);
 
     this.scene.launch('VillageHud');
     this.hud = this.scene.get('VillageHud') as VillageHudScene;
@@ -117,11 +120,8 @@ export class VillageScene extends Phaser.Scene {
     this.hud.showHint();
   }
 
-  /** Ganzzahliger Zoom, damit die Pixel scharf bleiben: am Handy ca. 8, am Desktop ca. 16 Felder breit */
   private applyZoom() {
-    const { width, height } = this.scale;
-    const zoom = Math.max(2, Math.round(Math.min(width / (8 * TILE), height / (10 * TILE))));
-    this.cameras.main.setZoom(zoom);
+    this.cameras.main.setZoom(pixelZoom(this.scale.width, this.scale.height));
     this.cameras.main.centerOn(this.player.body.x, this.player.body.y);
   }
 

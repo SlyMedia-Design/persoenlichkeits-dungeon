@@ -7,6 +7,8 @@ import type { Action, DungeonState, GameEvent, Unit } from '../core/dungeon/type
 import { combineDirs, dirTo, findPath, horizontalOf, samePos, type Dir, type Pos } from '../core/grid';
 import { getSave, updateSave } from '../state';
 import { ambient } from '../ui/ambient';
+import { pixelZoom } from '../ui/camera';
+import { bindFastForward } from '../ui/speed';
 import { creatureTexture, fieldTexture, shadowTexture } from '../ui/sprites';
 import { BORDER, TILE, actorFrame, actorKey, dungeonFloorTexture, faceKey, fxKey, itemKey, preloadTileset, tileset } from '../ui/tiles';
 import { COLORS } from '../ui/theme';
@@ -80,6 +82,7 @@ export class DungeonScene extends Phaser.Scene {
     const onResize = () => this.applyZoom();
     this.scale.on('resize', onResize);
     this.setupInput();
+    bindFastForward(this);
 
     this.scene.launch('DungeonHud');
     this.hud = this.scene.get('DungeonHud') as DungeonHudScene;
@@ -150,9 +153,7 @@ export class DungeonScene extends Phaser.Scene {
   }
 
   private applyZoom() {
-    const { width, height } = this.scale;
-    const zoom = Math.max(2, Math.round(Math.min(width / (8 * TILE), height / (10 * TILE))));
-    this.cameras.main.setZoom(zoom);
+    this.cameras.main.setZoom(pixelZoom(this.scale.width, this.scale.height));
   }
 
   private addItem(p: Pos, item: string) {

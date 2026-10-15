@@ -3,8 +3,8 @@
 Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt nach `src/core/` und bekommt Vitest-Tests, die Inhalte kommen als JSON nach `data/`. Nach jedem Paket kurz Julian zeigen.
 
 ## A – Bedienung und Kamera (klein, schneller Gewinn)
-- [ ] Kamera-Zoom in Dorf und Dungeon reduzieren
-- [ ] Vorspulen: Shift + Bewegung beschleunigt die ganze Welt (Tempo-Faktor in einem zentralen Wert, auch für Gegner und Animationen)
+- [x] Kamera-Zoom in Dorf und Dungeon reduzieren
+- [x] Vorspulen: Shift + Bewegung beschleunigt die ganze Welt (Tempo-Faktor in einem zentralen Wert, auch für Gegner und Animationen)
 
 ## B – Elemente (Kern, Basis für C und D)
 - [ ] `data/elements.json`: Glut, Fels, Flut, Wind, Ranke, die Typentabelle und die Faktoren (×1,1 / ×0,9 einstellbar)

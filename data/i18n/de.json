@@ -165,7 +165,7 @@
       "„Und Oma Wurzel weiß alles über unser Dorf. Komm, sag ihr Hallo!“"
     ],
     "hintTouch": "Tippe auf ein Feld, um dorthin zu laufen. Tippe auf jemanden, um zu reden.",
-    "hintKeys": "Pfeiltasten oder WASD zum Laufen (zwei Tasten zusammen für schräg), Leertaste zum Reden und Untersuchen.",
+    "hintKeys": "Pfeiltasten oder WASD zum Laufen (zwei Tasten zusammen für schräg), Leertaste zum Reden und Untersuchen, Shift halten zum Vorspulen.",
     "menu": {
       "open": "Menü",
       "title": "Menü",
@@ -432,7 +432,7 @@
       "stairsGo": "Weitergehen",
       "stairsStay": "Noch nicht",
       "hintTouch": "Tippe neben dich, um zu laufen oder anzugreifen. Unten findest du Fähigkeiten und Beutel.",
-      "hintKeys": "WASD/Pfeiltasten: laufen und angreifen · Leertaste: Angriff · 1–4: Fähigkeiten · B: Beutel · Q: warten",
+      "hintKeys": "WASD/Pfeiltasten: laufen und angreifen · Leertaste: Angriff · 1–4: Fähigkeiten · B: Beutel · Q: warten · Shift: vorspulen",
       "profile": "Mein Profil"
     },
     "log": {
