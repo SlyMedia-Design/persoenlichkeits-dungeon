@@ -171,7 +171,8 @@ Die Einzelheiten stehen in `CHECKLISTE.md`. **Sie ist die verbindliche Quelle f�
 2. Meilenstein 2: Dorf (begehbar, NPCs, Schwarzes Brett)
 3. Meilenstein 3: Dungeon (3 Etagen, Kampf, Boss)
 4. Meilenstein 4: Story-Rahmen und Kapitelende
-5. Feedback-Runde: Arbeitspakete A–G in `PLAN-FEEDBACK.md` (aus `CHECKLISTE.md`)
+5. Feedback-Runde: Arbeitspakete A–G in `PLAN-FEEDBACK.md` (aus `CHECKLISTE.md`) – erledigt am 15.10.2026, alle Punkte abgehakt
+6. Nächste Feedback-Runde mit Spielern abwarten. Erst danach wird der Prototyp weiter ausgebaut, auch Meilenstein 4 (Story-Rahmen und Kapitelende). Ab dann gilt immer: ausbauen, dann wieder auf Feedback warten (Entscheidung vom 15.10.2026).
 
 ---
 
