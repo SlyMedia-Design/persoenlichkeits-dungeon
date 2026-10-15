@@ -124,9 +124,9 @@ Die Einzelheiten stehen in `CHECKLISTE.md`. **Sie ist die verbindliche Quelle f�
   - Der Faktor ist einstellbar: im Prototyp ×1,1 bei Stärke und ×0,9 bei Schwäche, später ×1,5 und ×0,5.
 - **Fähigkeiten:**
   - Maximal 4 aktive Fähigkeiten.
-  - Fähigkeitssteine: 1–3 pro Dungeon, für Spieler oder Partner einsetzbar, werden beim Einsatz verbraucht.
+  - Fähigkeitssteine: Im Prototyp (Flüsterwald, 3 Etagen) liegt genau 1 Stein. Erst Dungeons mit mehr als 3 Etagen haben zufällig 1–3 Steine. Steine sind für Spieler oder Partner einsetzbar und werden beim Einsatz verbraucht (geändert am 15.10.2026).
   - Neues Lernen ersetzt immer eine der 4 aktiven Fähigkeiten.
-  - Ein Stein lehrt eine zufällige Fähigkeit seines Elements. Jedes Wesen darf Fähigkeiten jedes Elements lernen. Ist beim Stufenaufstieg kein Platz frei, wählt der Spieler, was er verlernt, oder er lässt die neue Fähigkeit aus. Gelernte Fähigkeiten bleiben über Ausflüge hinweg erhalten (Entscheidungen vom 15.10.2026).
+  - Ein Stein lehrt eine zufällige Fähigkeit seines Elements. Jedes Wesen darf Fähigkeiten jedes Elements lernen. Ist beim Stufenaufstieg kein Platz frei, wählt der Spieler, was er verlernt, oder er lässt die neue Fähigkeit aus. Das gilt auch nach dem Bosskampf: Erst wird entschieden, dann verlässt man den Dungeon. Gelernte Fähigkeiten bleiben über Ausflüge hinweg erhalten (Entscheidungen vom 15.10.2026).
 - **Fortschritt:**
   - Weniger Erfahrung, die Skalierung folgt dem Prinzip von Mystery Dungeon.
   - Schaden skaliert mit der Stufe.

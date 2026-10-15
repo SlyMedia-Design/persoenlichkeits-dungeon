@@ -7,7 +7,7 @@ import movesJson from '../data/moves.json';
 import elementsJson from '../data/elements.json';
 import { createTranslator, type Dictionary } from '../src/core/i18n';
 import { findPath, type Pos } from '../src/core/grid';
-import { act, startRun, unitById, type RunOptions } from '../src/core/dungeon/engine';
+import { act, startRun, stoneCount, unitById, type RunOptions } from '../src/core/dungeon/engine';
 import { generateLayout, isFloorTile } from '../src/core/dungeon/generate';
 import { createRandom } from '../src/core/dungeon/random';
 import { settleRun } from '../src/core/dungeon/settle';
@@ -240,14 +240,23 @@ describe('Züge und Kampf', () => {
 describe('Fähigkeiten und Fähigkeitssteine', () => {
   const stonesOf = (s: DungeonState) => s.floor.items.filter((it) => parseBagEntry(it.item).move);
 
-  it('pro Dungeon liegen 1 bis 3 Steine, verteilt auf die Etagen', () => {
+  it('im Flüsterwald (3 Etagen) liegt genau ein Stein, auf einer zufälligen Etage', () => {
+    const floorsWithStone = new Set<number>();
     for (let seed = 1; seed <= 40; seed++) {
       const s = run({ seed });
-      const { min, max } = content.dungeon.stones;
-      expect(s.stonePlan!.length).toBeGreaterThanOrEqual(min);
-      expect(s.stonePlan!.length).toBeLessThanOrEqual(max);
+      expect(s.stonePlan).toHaveLength(1);
+      floorsWithStone.add(s.stonePlan![0]);
       expect(stonesOf(s)).toHaveLength(s.stonePlan!.filter((f) => f === 1).length);
     }
+    expect(floorsWithStone.size).toBe(content.dungeon.floors.length);
+  });
+
+  it('erst Dungeons mit mehr als 3 Etagen haben zufällig 1 bis 3 Steine', () => {
+    const longer = { ...content, dungeon: { ...content.dungeon, floors: [...content.dungeon.floors, content.dungeon.floors[2]] } };
+    const counts = new Set<number>();
+    for (let seed = 1; seed <= 60; seed++) counts.add(stoneCount(longer, createRandom(seed)));
+    expect([...counts].sort()).toEqual([1, 2, 3]);
+    for (let seed = 1; seed <= 20; seed++) expect(stoneCount(content, createRandom(seed))).toBe(1);
   });
 
   it('ein Stein lehrt eine Fähigkeit seines Elements (kein Ranke-Stein)', () => {
@@ -305,6 +314,15 @@ describe('Fähigkeiten und Fähigkeitssteine', () => {
     expect(act(content, s, { type: 'wait' })).toEqual([]);
     const events = act(content, s, { type: 'learn', forget: 3 });
     expect(events).toContainEqual({ type: 'learned', id: 'player', move: 'glutstoss', forgot: 'wasserblase' });
+    expect(s.pendingLearn).toHaveLength(0);
+  });
+
+  it('nach dem Ende (z. B. Aufstieg beim Boss) lässt sich die offene Fähigkeit noch lernen', () => {
+    const s = run();
+    s.outcome = 'cleared';
+    s.pendingLearn = [{ id: 'player', move: 'wasserblase' }];
+    expect(act(content, s, { type: 'wait' })).toEqual([]);
+    expect(act(content, s, { type: 'learn', forget: null })).toHaveLength(1);
     expect(s.pendingLearn).toHaveLength(0);
   });
 

@@ -23,7 +23,7 @@ Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt n
 
 ## D – Fähigkeiten und Fähigkeitssteine
 - [x] Maximal 4 aktive Fähigkeiten, Austausch-Logik in `src/core`
-- [x] Fähigkeitssteine: 1–3 pro Dungeon verteilt, einsetzbar für Spieler oder Partner, Verbrauch beim Einsatz, Verlernen-Dialog
+- [x] Fähigkeitssteine: im Prototyp genau 1 (ab mehr als 3 Etagen 1–3) verteilt, einsetzbar für Spieler oder Partner, Verbrauch beim Einsatz, Verlernen-Dialog
 - [x] Kampfmenü kompakter: nur Name + Elementsymbol, Beschreibung im Info-Feld per Antippen
 - [x] Stein-Icons pro Element (kein Ranke-Stein)
 

@@ -97,8 +97,8 @@ export interface DungeonDef {
     leuchtmoos: { item: string; perFloor: number; needed: number };
   };
   boss: { species: string; level: number; map: string[] };
-  /** Fähigkeitssteine pro Dungeon (nicht pro Etage) */
-  stones: { min: number; max: number };
+  /** Fähigkeitssteine pro Dungeon (nicht pro Etage): bis moreAbove Etagen genau min, darüber zufällig min bis max */
+  stones: { min: number; max: number; moreAbove: number };
 }
 
 export interface Content {

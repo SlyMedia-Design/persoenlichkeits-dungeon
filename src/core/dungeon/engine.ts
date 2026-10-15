@@ -57,12 +57,17 @@ export function startRun(content: Content, opts: RunOptions): DungeonState {
   };
   withRandom(state, (rng) => {
     // Fähigkeitssteine pro Dungeon: Anzahl und Etagen werden beim Betreten ausgewürfelt
-    const { min, max } = content.dungeon.stones;
-    state.stonePlan = Array.from({ length: rng.int(min, max) }, () => rng.int(1, content.dungeon.floors.length));
+    state.stonePlan = Array.from({ length: stoneCount(content, rng) }, () => rng.int(1, content.dungeon.floors.length));
     enterFloor(content, state, 1, rng);
   });
   updateExplored(content, state);
   return state;
+}
+
+/** Anzahl der Fähigkeitssteine: kurze Dungeons (wie der Flüsterwald) haben genau einen, längere zufällig mehr */
+export function stoneCount(content: Content, rng: Random): number {
+  const { min, max, moreAbove } = content.dungeon.stones;
+  return content.dungeon.floors.length > moreAbove ? rng.int(min, max) : min;
 }
 
 function withRandom<T>(state: DungeonState, fn: (rng: Random) => T): T {
@@ -480,6 +485,8 @@ function asleep(unit: Unit, events: GameEvent[]): boolean {
 
 /** Führt die Aktion des Spielers aus. Gibt [] zurück, wenn sie nicht möglich war (kein Zug verbraucht). */
 export function act(content: Content, state: DungeonState, action: Action): GameEvent[] {
+  // Eine offene Wahl aus einem Stufenaufstieg geht auch nach dem Ende (z. B. nach dem Boss), vor dem Heimweg
+  if (action.type === 'learn') return resolveLearn(content, state, action.forget);
   if (state.outcome) return [];
   return withRandom(state, (rng) => {
     const events: GameEvent[] = [];
@@ -491,7 +498,6 @@ export function act(content: Content, state: DungeonState, action: Action): Game
     }
     if (action.type === 'giveUp') return defeat(state, events);
     // Erst die offene Wahl aus einem Stufenaufstieg, dann geht es weiter
-    if (action.type === 'learn') return resolveLearn(content, state, action.forget);
     if (state.pendingLearn?.length) return [];
 
     if (!asleep(player, events)) {

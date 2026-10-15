@@ -670,6 +670,15 @@ export class DungeonScene extends Phaser.Scene {
   /** Ende des Durchgangs: Ergebnis ins Dorf übernehmen und heimkehren. */
   private async finish(lines: string[]) {
     this.ended = true;
+    // Offene Fähigkeiten aus dem letzten Kampf (z. B. Aufstieg nach dem Boss) erst entscheiden, dann heimkehren
+    while (this.state.pendingLearn?.length) {
+      const { id, move } = this.state.pendingLearn[0];
+      const unit = unitById(this.state, id)!;
+      const forget = await new Promise<number | null>((resolve) => this.hud.askForget(this.nameOf(id), unit.moves.map((m) => m.id), move, resolve));
+      const events = act(content, this.state, { type: 'learn', forget });
+      if (events.length === 0) break;
+      await this.play(events);
+    }
     const save = getSave();
     const result = settleRun(content, this.state, save.quests ?? {});
     updateSave({
