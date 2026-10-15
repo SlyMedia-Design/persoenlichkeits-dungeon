@@ -11,6 +11,7 @@ import battleJson from '../data/battle.json';
 import bonusesJson from '../data/bonuses.json';
 import dungeonJson from '../data/dungeon.json';
 import movesJson from '../data/moves.json';
+import elementsJson from '../data/elements.json';
 import { DIMENSIONS } from '../src/core/types';
 import { findPath, type Pos } from '../src/core/grid';
 import { act, canStrike, startRun, unitById } from '../src/core/dungeon/engine';
@@ -19,7 +20,7 @@ import { createRandom } from '../src/core/dungeon/random';
 import type { BonusDef } from '../src/core/dungeon/stats';
 import type { Action, Content, DungeonState } from '../src/core/dungeon/types';
 
-const content = { dungeon: dungeonJson, battle: battleJson, moves: movesJson } as unknown as Content;
+const content = { dungeon: dungeonJson, battle: battleJson, moves: movesJson, elements: elementsJson } as unknown as Content;
 const species = ['otter', 'eule', 'dachs', 'capybara'];
 const RUNS = 200;
 

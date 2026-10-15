@@ -75,6 +75,7 @@
     "claw": { "sheet": "assets/ninja/fx/claw.png", "frameWidth": 32, "frameHeight": 32, "frames": 4 },
     "water": { "sheet": "assets/ninja/fx/water.png", "frameWidth": 40, "frameHeight": 33, "frames": 11 },
     "rock": { "sheet": "assets/ninja/fx/rock.png", "frameWidth": 30, "frameHeight": 30, "frames": 14 },
+    "fire": { "sheet": "assets/ninja/fx/fire.png", "frameWidth": 20, "frameHeight": 30, "frames": 10 },
     "plant": { "sheet": "assets/ninja/fx/plant.png", "frameWidth": 30, "frameHeight": 28, "frames": 8 },
     "spark": { "sheet": "assets/ninja/fx/spark.png", "frameWidth": 30, "frameHeight": 35, "frames": 9 },
     "shield": { "sheet": "assets/ninja/fx/shield.png", "frameWidth": 24, "frameHeight": 26, "frames": 6 },

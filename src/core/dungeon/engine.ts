@@ -3,6 +3,7 @@
  * Begleiter und Gegnern aus. act() verändert den Zustand und liefert Ereignisse,
  * die die Darstellung nacheinander abspielt.
  */
+import { elementFactor } from '../elements';
 import { DIRS, canStep, dirTo, findPath, samePos, step, type Dir, type Pos } from '../grid';
 import type { Profile } from '../types';
 import { enterBossFloor, enterFloor, isFloorTile, newId, rollEnemy } from './generate';
@@ -198,7 +199,12 @@ function addStatus(unit: Unit, kind: Unit['status'][number]['kind'], turns: numb
   events.push({ type: 'status', id: unit.id, status: kind });
 }
 
-function damageTo(state: DungeonState, user: Unit, target: Unit, def: MoveDef, isAttack: boolean, rng: Random) {
+/** Element eines Wesens; Begleiter wie Stups kämpfen nicht und haben keins */
+function elementOf(content: Content, unit: Unit): string | undefined {
+  return unit.side === 'escort' ? undefined : speciesDef(content, unit.side, unit.species).element;
+}
+
+function damageTo(content: Content, state: DungeonState, user: Unit, target: Unit, def: MoveDef, isAttack: boolean, rng: Random) {
   const b = state.bonuses;
   let power = def.power;
   if (isAttack && user.id === 'player') power += b.attackPower;
@@ -207,6 +213,7 @@ function damageTo(state: DungeonState, user: Unit, target: Unit, def: MoveDef, i
     const player = unitById(state, 'player');
     if (player && chebyshev(player.pos, user.pos) <= 1) dmg *= 1 + b.teamPower;
   }
+  dmg *= elementFactor(content.elements, def.element, elementOf(content, target));
   if (hasStatus(target, 'guard')) dmg *= 0.6;
   if (target.id === 'player') dmg *= 1 - b.toughness;
   const crit = rng.chance(5 + (hasStatus(user, 'focus') ? 15 : 0) + (user.id === 'player' ? b.crit : 0));
@@ -246,7 +253,7 @@ function useMove(content: Content, state: DungeonState, user: Unit, moveId: stri
       continue;
     }
     if (def.power > 0) {
-      const { amount, crit } = damageTo(state, user, target, def, moveId === 'attack', rng);
+      const { amount, crit } = damageTo(content, state, user, target, def, moveId === 'attack', rng);
       target.hp = Math.max(0, target.hp - amount);
       events.push({ type: 'hit', id: target.id, amount, crit, fx: def.fx });
       // Schlafende wachen durch Treffer auf

@@ -1,3 +1,4 @@
+import { weaknessesOf, type ElementChart } from './elements';
 import { DIMENSIONS, type Archetype, type Profile } from './types';
 
 export function distance(a: Profile, b: Profile): number {
@@ -25,12 +26,26 @@ export function matchArchetype(z: Profile, archetypes: readonly Archetype[]): Ar
   return rankArchetypes(z, archetypes)[0].archetype;
 }
 
+/** Elemente der Wesen samt Typentabelle */
+export interface CreatureElements {
+  chart: ElementChart;
+  /** Wesen-id → Element */
+  of: Record<string, string>;
+}
+
 /**
- * Partnervorschlag: das Wesen, das vom Spielerprofil am weitesten entfernt ist (Ergänzung).
+ * Partnervorschlag (Entscheidung vom 15.10.2026):
+ * 1. Element: nur Wesen, die keine Elementschwäche mit dem Spieler teilen.
+ *    Hat der Spieler keine Schwäche (oder passt keins), zählen alle.
+ * 2. Persönlichkeit: darunter das Wesen, das vom Spielerprofil am weitesten entfernt ist (Ergänzung).
  * Das eigene Wesen ist ausgeschlossen.
  */
-export function suggestPartner(z: Profile, archetypes: readonly Archetype[], ownId: string): Archetype {
+export function suggestPartner(z: Profile, archetypes: readonly Archetype[], ownId: string, elements: CreatureElements): Archetype {
   const candidates = rankArchetypes(z, archetypes).filter((r) => r.archetype.id !== ownId);
   if (candidates.length === 0) throw new Error('Kein möglicher Partner vorhanden');
-  return candidates[candidates.length - 1].archetype;
+  const weaknesses = (id: string) => weaknessesOf(elements.chart, elements.of[id]);
+  const own = weaknesses(ownId);
+  const balancing = candidates.filter((r) => !weaknesses(r.archetype.id).some((w) => own.includes(w)));
+  const pool = balancing.length > 0 ? balancing : candidates;
+  return pool[pool.length - 1].archetype;
 }

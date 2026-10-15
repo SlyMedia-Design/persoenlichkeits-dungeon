@@ -1,4 +1,5 @@
 /** Typen des Dungeons. Alles hier ist reines JSON, damit ein laufender Dungeon gespeichert werden kann. */
+import type { ElementChart } from '../elements';
 import type { Dir, Pos } from '../grid';
 
 export type MoveTarget = 'front' | 'line' | 'around' | 'self' | 'team';
@@ -8,6 +9,8 @@ export interface MoveDef {
   power: number;
   accuracy: number;
   pp: number;
+  /** Element der Fähigkeit; ohne Element (Grundangriff) immer neutral */
+  element?: string;
   target: MoveTarget;
   range?: number;
   effect?: StatusKind | 'heal';
@@ -24,6 +27,8 @@ export interface Stats {
 }
 
 export interface SpeciesDef {
+  /** Element der Art (data/elements.json) */
+  element: string;
   base: Stats;
   growth: Stats;
   sprite?: string;
@@ -87,6 +92,7 @@ export interface Content {
   dungeon: DungeonDef;
   battle: BattleData;
   moves: MovesData;
+  elements: ElementChart;
 }
 
 export interface MoveSlot {

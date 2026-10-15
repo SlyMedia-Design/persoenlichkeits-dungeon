@@ -1,25 +1,29 @@
 {
-  "description": "Kampfwerte. Wert auf Stufe L = base + growth × (L − 1), abgerundet. learn: Stufe → Fähigkeit (ein Wesen kennt höchstens 4, die zuletzt gelernten). xp = Erfahrung, die das Besiegen auf Stufe 1 bringt (plus 3 je Stufe). sprite verweist auf actors in data/tileset.json.",
+  "description": "Kampfwerte. Wert auf Stufe L = base + growth × (L − 1), abgerundet. learn: Stufe → Fähigkeit (ein Wesen kennt höchstens 4, die zuletzt gelernten). xp = Erfahrung, die das Besiegen auf Stufe 1 bringt (plus 3 je Stufe). sprite verweist auf actors in data/tileset.json. element = Element der Art (siehe data/elements.json).",
   "startLevel": 5,
   "maxMoves": 4,
   "xpToNext": { "base": 10, "perLevel": 8 },
   "team": {
     "otter": {
+      "element": "flut",
       "base": { "hp": 22, "atk": 6, "def": 4 },
       "growth": { "hp": 3, "atk": 1.1, "def": 0.7 },
       "learn": { "1": "kopfnuss", "2": "wasserblase", "5": "muschelschild", "8": "planschwelle" }
     },
     "eule": {
+      "element": "wind",
       "base": { "hp": 20, "atk": 6, "def": 4 },
       "growth": { "hp": 2.7, "atk": 1.2, "def": 0.7 },
       "learn": { "1": "schnabelhieb", "2": "leuchtfeder", "5": "eulenblick", "8": "federsturm" }
     },
     "dachs": {
+      "element": "glut",
       "base": { "hp": 24, "atk": 6, "def": 5 },
       "growth": { "hp": 3.2, "atk": 1, "def": 0.9 },
-      "learn": { "1": "kratzer", "2": "steinkralle", "5": "erzpanzer", "8": "erdstoss" }
+      "learn": { "1": "kratzer", "2": "glutkralle", "5": "glutpanzer", "8": "glutstoss" }
     },
     "capybara": {
+      "element": "fels",
       "base": { "hp": 26, "atk": 5, "def": 5 },
       "growth": { "hp": 3.4, "atk": 0.9, "def": 0.9 },
       "learn": { "1": "rempler", "2": "moospolster", "5": "bluetenduft", "8": "wurzelgriff" }
@@ -27,6 +31,7 @@
   },
   "enemies": {
     "schleim": {
+      "element": "flut",
       "sprite": "slime",
       "base": { "hp": 9, "atk": 4, "def": 2 },
       "growth": { "hp": 2.2, "atk": 0.9, "def": 0.5 },
@@ -34,6 +39,7 @@
       "moves": ["schleimspritzer"]
     },
     "larve": {
+      "element": "ranke",
       "sprite": "larva",
       "base": { "hp": 8, "atk": 5, "def": 1 },
       "growth": { "hp": 2, "atk": 1, "def": 0.4 },
@@ -41,6 +47,7 @@
       "moves": ["biss"]
     },
     "falter": {
+      "element": "wind",
       "sprite": "butterfly",
       "base": { "hp": 7, "atk": 4, "def": 1 },
       "growth": { "hp": 1.8, "atk": 0.9, "def": 0.4 },
@@ -48,6 +55,7 @@
       "moves": ["schuppenstaub"]
     },
     "schlange": {
+      "element": "fels",
       "sprite": "snake",
       "base": { "hp": 10, "atk": 5, "def": 2 },
       "growth": { "hp": 2.3, "atk": 1.1, "def": 0.5 },
@@ -55,6 +63,7 @@
       "moves": ["giftbiss"]
     },
     "spinne": {
+      "element": "ranke",
       "sprite": "spider",
       "base": { "hp": 10, "atk": 5, "def": 3 },
       "growth": { "hp": 2.4, "atk": 1, "def": 0.6 },
@@ -62,6 +71,7 @@
       "moves": ["netz", "biss"]
     },
     "bambus": {
+      "element": "ranke",
       "sprite": "bamboo",
       "base": { "hp": 13, "atk": 6, "def": 3 },
       "growth": { "hp": 2.8, "atk": 1.1, "def": 0.7 },
@@ -69,6 +79,7 @@
       "moves": ["peitschen"]
     },
     "irrlicht": {
+      "element": "glut",
       "sprite": "spirit",
       "base": { "hp": 8, "atk": 5, "def": 2 },
       "growth": { "hp": 1.6, "atk": 0.8, "def": 0.4 },
@@ -78,6 +89,7 @@
   },
   "boss": {
     "waldgeist": {
+      "element": "ranke",
       "sprite": "forestSpirit",
       "base": { "hp": 56, "atk": 5, "def": 3 },
       "growth": { "hp": 3, "atk": 0.5, "def": 0.3 },

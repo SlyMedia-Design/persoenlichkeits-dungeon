@@ -263,6 +263,13 @@
       "mossMissing": "Leuchtmoos im Beutel: {n} von {needed}."
     }
   },
+  "elements": {
+    "glut": "Glut",
+    "fels": "Fels",
+    "flut": "Flut",
+    "wind": "Wind",
+    "ranke": "Ranke"
+  },
   "moves": {
     "attack": {
       "name": "Angriff",
@@ -304,17 +311,17 @@
       "name": "Kratzer",
       "info": "Ein Hieb mit den Krallen."
     },
-    "steinkralle": {
-      "name": "Steinkralle",
-      "info": "Ein harter Schlag mit den steinernen Krallen."
+    "glutkralle": {
+      "name": "Glutkralle",
+      "info": "Ein harter Schlag mit glühenden Krallen."
     },
-    "erzpanzer": {
-      "name": "Erzpanzer",
-      "info": "Erzflecken härten dein Fell: weniger Schaden für einige Züge."
+    "glutpanzer": {
+      "name": "Glutpanzer",
+      "info": "Deine Erzflecken glühen auf und härten dein Fell: weniger Schaden für einige Züge."
     },
-    "erdstoss": {
-      "name": "Erdstoß",
-      "info": "Du stampfst auf: Alle Gegner um dich herum werden getroffen."
+    "glutstoss": {
+      "name": "Glutstoß",
+      "info": "Du stampfst auf, und Funken stieben: Alle Gegner um dich herum werden getroffen."
     },
     "rempler": {
       "name": "Rempler",

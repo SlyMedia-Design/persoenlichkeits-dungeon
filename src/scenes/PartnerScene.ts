@@ -1,10 +1,11 @@
 import Phaser from 'phaser';
-import { archetypes, capitalize, creatureText, t } from '../content';
+import { archetypes, capitalize, creatureElements, creatureText, t } from '../content';
 import { suggestPartner } from '../core/matching';
 import type { Archetype } from '../core/types';
 import { getSave, updateSave } from '../state';
 import { BaseScene } from '../ui/BaseScene';
 import { Button } from '../ui/Button';
+import { elementColor, elementName, elementTexture } from '../ui/elements';
 import { creatureTexture, glowTexture, idleBob, pixelScale } from '../ui/sprites';
 import { COLORS, fitWidth, headingStyle, textStyle } from '../ui/theme';
 
@@ -46,7 +47,7 @@ export class PartnerScene extends BaseScene {
       return;
     }
     const { cx, width, height, contentWidth, left, font, small, gap } = this.m;
-    const suggested = suggestPartner(save.result.z, archetypes, save.archetypeId);
+    const suggested = suggestPartner(save.result.z, archetypes, save.archetypeId, creatureElements);
     this.suggestedId = suggested.id;
     this.selectedId ??= suggested.id;
 
@@ -112,8 +113,8 @@ export class PartnerScene extends BaseScene {
     const labelSize = Math.min(small, Math.round(w / 9));
     const nameSize = Math.min(font, Math.round(labelSize * 1.2));
     const taglineSize = Math.round(labelSize * 0.85);
-    // Platz für Name + bis zu zwei Zeilen Untertitel
-    const textBlock = nameSize * 1.4 + taglineSize * 2.8 + 10;
+    // Platz für Name + bis zu zwei Zeilen Untertitel + Element
+    const textBlock = nameSize * 1.4 + taglineSize * 2.8 + 10 + (taglineSize >= 16 ? 32 : 16) + 4;
     const spriteArea = h - textBlock;
     const scale = pixelScale(Math.min(w * 0.8, spriteArea - 6));
     const sprite = this.add.image(x, y - h / 2 + spriteArea / 2 + 4, creatureTexture(this, archetype)).setScale(scale);
@@ -131,6 +132,7 @@ export class PartnerScene extends BaseScene {
         wordWrap: { width: w - 12, useAdvancedWrap: true },
       })
       .setOrigin(0.5, 0);
+    this.addElement(archetype.id, x - w / 2 + 8, y + h / 2 - 8, taglineSize);
     if (archetype.id === this.suggestedId) this.addBadge(x, y - h / 2, w, labelSize);
 
     const zone = this.add.zone(x, y, w, h).setInteractive({ useHandCursor: true });
@@ -138,6 +140,15 @@ export class PartnerScene extends BaseScene {
       this.selectedId = archetype.id;
       this.redrawCards();
     });
+  }
+
+  /** Element des Wesens unten links in der Karte: Icon und Name */
+  private addElement(id: string, left: number, bottom: number, size: number) {
+    const element = creatureElements.of[id];
+    if (!element) return;
+    const scale = size >= 16 ? 2 : 1;
+    const icon = this.add.image(left, bottom, elementTexture(this, element)).setOrigin(0, 1).setScale(scale);
+    this.add.text(left + icon.displayWidth + 4, bottom - icon.displayHeight / 2, elementName(element), textStyle(size, elementColor(element))).setOrigin(0, 0.5);
   }
 
   /** Abzeichen über der vorgeschlagenen Karte: Pixelstern + Text auf goldenem Schild */

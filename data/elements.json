@@ -1,0 +1,126 @@
+{
+  "description": "Elemente (Entscheidung vom 15.10.2026). strongAgainst: Angreifer-Element → Elemente, gegen die es stark ist; die Schwäche ergibt sich aus der Gegenseite, alles andere ist neutral. factor: Schadensfaktor bei Stärke/Schwäche (Prototyp 1,1/0,9; später 1,5/0,5). Ranke gibt es nur bei Gegnern. icon = 16×16 Pixel, jedes Zeichen ist ein Eintrag der Palette, '.' ist durchsichtig. Namen stehen in data/i18n/de.json unter elements.",
+  "elements": ["glut", "fels", "flut", "wind", "ranke"],
+  "strongAgainst": {
+    "flut": ["glut", "fels"],
+    "fels": ["glut"],
+    "glut": ["ranke"],
+    "ranke": ["flut"],
+    "wind": ["ranke"]
+  },
+  "factor": { "strong": 1.1, "weak": 0.9 },
+  "colors": {
+    "glut": "#ff9a5c",
+    "fels": "#d8b88a",
+    "flut": "#7cc8f2",
+    "wind": "#c8f4ee",
+    "ranke": "#8fd06b"
+  },
+  "icons": {
+    "glut": {
+      "palette": { "o": "#4a1810", "r": "#e0503a", "y": "#ffb347", "w": "#fff2b0" },
+      "rows": [
+        "................",
+        ".......o........",
+        "......oro.......",
+        "......oryo......",
+        ".....oryro......",
+        "....oryyro..o...",
+        "...orryyrro.oo..",
+        "...oryywyroorro.",
+        "..oryywwyyrrryo.",
+        "..oryywwwyyyyro.",
+        "..orywwwwwwyyro.",
+        "..oryywwwwyyro..",
+        "...oryywwyyro...",
+        "....orryyyrro...",
+        ".....oorrroo....",
+        ".......ooo......"
+      ]
+    },
+    "fels": {
+      "palette": { "o": "#3a2a1e", "l": "#e6d4b0", "g": "#b49a7a", "d": "#7a6048" },
+      "rows": [
+        "................",
+        "................",
+        ".....oooooo.....",
+        "...oollllllo....",
+        "..ollllggggoo...",
+        "..olllggggggdo..",
+        ".ollgggggggggdo.",
+        ".olggggggggggdo.",
+        ".olgggdgggggddo.",
+        ".oggggddggggddo.",
+        ".ogggggdggggddo.",
+        ".ogggggggggdddo.",
+        "..oggggggddddo..",
+        "...oddddddddo...",
+        "....oooooooo....",
+        "................"
+      ]
+    },
+    "flut": {
+      "palette": { "o": "#1e3a5a", "b": "#6ec3f0", "w": "#e8f8ff", "d": "#3a8cc8" },
+      "rows": [
+        "................",
+        ".......oo.......",
+        "......obbo......",
+        "......obbo......",
+        ".....obbbbo.....",
+        "....obbbbbbo....",
+        "....obwbbbbo....",
+        "...obwbbbbbbo...",
+        "...obwbbbbbbo...",
+        "...obbbbbbbdo...",
+        "...obbbbbbbdo...",
+        "...obbbbbbddo...",
+        "....obbbbddo....",
+        ".....oddddo.....",
+        "......oooo......",
+        "................"
+      ]
+    },
+    "wind": {
+      "palette": { "o": "#2a4a58", "w": "#f0fcff", "c": "#9fd8e0" },
+      "rows": [
+        "................",
+        "........ooo.....",
+        ".......owwwo....",
+        "......ow...wo...",
+        ".oooooow....wo..",
+        "owwwwwwwo...wo..",
+        ".ooooooooocwo...",
+        "................",
+        "..ooooooooooo...",
+        ".owwwwwwwwwwwo..",
+        "..oooooooooocwo.",
+        ".............wo.",
+        "...oooooo...cwo.",
+        "..owwwwwwo.owo..",
+        "...oooooocwwo...",
+        "..........ooo..."
+      ]
+    },
+    "ranke": {
+      "palette": { "o": "#1e3a1a", "g": "#7cc860", "l": "#c8f0a0", "d": "#4a8a3a" },
+      "rows": [
+        "................",
+        "..........oooo..",
+        "........oogggo..",
+        "......oogglggo..",
+        ".....ogglggggo..",
+        "....oggglgggo...",
+        "....ogglggggo...",
+        "...ogglgggggo...",
+        "...oglggggdo....",
+        "...olgggddo.....",
+        "..olggddoo......",
+        "..oloooo........",
+        ".olo............",
+        ".oo.............",
+        "................",
+        "................"
+      ]
+    }
+  }
+}

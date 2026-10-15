@@ -115,6 +115,8 @@ Die Einzelheiten stehen in `CHECKLISTE.md`. **Sie ist die verbindliche Quelle f�
   - **Flut** (Wasser) = Otter
   - **Wind** (Luft) = Eule
   - **Ranke** (Pflanze) gibt es nur bei Gegnern, nicht als spielbares Wesen.
+  - Jede Fähigkeit hat das Element ihres Wesens, der Grundangriff ist neutral. Die Elemente der Arten stehen in `data/battle.json`.
+  - Die Fähigkeiten des Dachses sind auf Glut umgebaut: Glutkralle, Glutpanzer, Glutstoß (Entscheidung vom 15.10.2026).
 - **Typentabelle** als JSON (z. B. `data/elements.json`), nicht fest im Code:
   - Flut > Glut, Flut > Fels, Fels > Glut, Glut > Ranke, Ranke > Flut, Wind > Ranke
   - Wind hat keine Schwäche. Alles andere ist neutral.

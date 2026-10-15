@@ -7,11 +7,11 @@ Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt n
 - [x] Vorspulen: Shift + Bewegung beschleunigt die ganze Welt (Tempo-Faktor in einem zentralen Wert, auch für Gegner und Animationen)
 
 ## B – Elemente (Kern, Basis für C und D)
-- [ ] `data/elements.json`: Glut, Fels, Flut, Wind, Ranke, die Typentabelle und die Faktoren (×1,1 / ×0,9 einstellbar)
-- [ ] `src/core`: Funktion für den Element-Faktor, mit Tests aus der kompletten Tabelle
-- [ ] Wesen (`archetypes.json`), Fähigkeiten (`moves.json`) und Gegner bekommen ein Element, im Waldgeist-Wald kommen Ranke-Gegner dazu
-- [ ] Partnervorschlag neu: zuerst Wesen ohne gemeinsame Schwäche, dann die Persönlichkeits-Ergänzung. Tests für alle 4 Spieler-Wesen.
-- [ ] Icons für die 5 Elemente (16×16)
+- [x] `data/elements.json`: Glut, Fels, Flut, Wind, Ranke, die Typentabelle und die Faktoren (×1,1 / ×0,9 einstellbar)
+- [x] `src/core`: Funktion für den Element-Faktor, mit Tests aus der kompletten Tabelle
+- [x] Wesen (`archetypes.json`), Fähigkeiten (`moves.json`) und Gegner bekommen ein Element, im Waldgeist-Wald kommen Ranke-Gegner dazu
+- [x] Partnervorschlag neu: zuerst Wesen ohne gemeinsame Schwäche, dann die Persönlichkeits-Ergänzung. Tests für alle 4 Spieler-Wesen.
+- [x] Icons für die 5 Elemente (16×16)
 
 ## C – Fortschritt und Balance
 - [ ] EP-Kurve nach dem Prinzip von Mystery Dungeon, insgesamt weniger EP

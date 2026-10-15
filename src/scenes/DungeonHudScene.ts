@@ -1,6 +1,7 @@
 import { dungeonContent, t } from '../content';
 import { senses, teamSees } from '../core/dungeon/engine';
 import type { Action, DungeonState, Unit } from '../core/dungeon/types';
+import { ELEMENT_ICON_SIZE, elementTexture } from '../ui/elements';
 import { HudScene } from '../ui/HudScene';
 import { COLORS, headingStyle, textStyle } from '../ui/theme';
 
@@ -197,7 +198,16 @@ export class DungeonHudScene extends HudScene<Mode> {
       b.button(t('moves.attack.name'), () => this.act({ type: 'attack' }), { fontSize: this.m.small });
       player.moves.forEach((m, i) => {
         const label = `${t(`moves.${m.id}.name`)}  ·  ${t('dungeon.ui.pp', { pp: m.pp, max: m.maxPp })}`;
-        b.button(label, () => this.act({ type: 'skill', index: i }), { fontSize: this.m.small, enabled: m.pp > 0 });
+        const top = b.y;
+        const element = dungeonContent.moves.moves[m.id]?.element;
+        const button = b.button(label, () => this.act({ type: 'skill', index: i }), { fontSize: this.m.small, enabled: m.pp > 0, align: element ? 'left' : 'center' });
+        // Elementsymbol links im Knopf, der Name rückt daneben
+        if (element) {
+          const iconX = b.pad + Math.round(this.m.small * 0.8);
+          const icon = this.add.image(iconX, top + button.buttonHeight / 2, elementTexture(this, element)).setOrigin(0, 0.5).setScale(2).setAlpha(m.pp > 0 ? 1 : 0.45);
+          button.label.x += ELEMENT_ICON_SIZE * 2 + 6;
+          b.add(icon, 0);
+        }
         b.text(t(`moves.${m.id}.info`), { color: COLORS.textDim, fontSize: `${Math.round(this.m.small * 0.9)}px` });
       });
       b.gap(4);

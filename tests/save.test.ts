@@ -62,6 +62,15 @@ describe('Spielstand', () => {
     expect(loadSave(storage)).toBeNull();
   });
 
+  it('benennt alte Fähigkeiten des Dachses in einem laufenden Dungeon um', () => {
+    const storage = memoryStorage();
+    const slot = (id: string) => ({ id, pp: 5, maxPp: 10 });
+    const dungeon = { units: [{ id: 'player', moves: [slot('kratzer'), slot('steinkralle'), slot('erzpanzer'), slot('erdstoss')] }] };
+    storage.setItem(SAVE_KEY, JSON.stringify({ ...newSave(), archetypeId: 'dachs', dungeon }));
+    const ids = loadSave(storage)?.dungeon?.units[0].moves.map((m) => m.id);
+    expect(ids).toEqual(['kratzer', 'glutkralle', 'glutpanzer', 'glutstoss']);
+  });
+
   it('löscht den Spielstand', () => {
     const storage = memoryStorage();
     writeSave(storage, newSave());

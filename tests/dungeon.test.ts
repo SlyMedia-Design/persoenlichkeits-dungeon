@@ -4,6 +4,7 @@ import bonusesJson from '../data/bonuses.json';
 import dungeonJson from '../data/dungeon.json';
 import de from '../data/i18n/de.json';
 import movesJson from '../data/moves.json';
+import elementsJson from '../data/elements.json';
 import { createTranslator, type Dictionary } from '../src/core/i18n';
 import { findPath, type Pos } from '../src/core/grid';
 import { act, startRun, unitById, type RunOptions } from '../src/core/dungeon/engine';
@@ -13,7 +14,7 @@ import { settleRun } from '../src/core/dungeon/settle';
 import { computeBonuses, gainXp, makeUnit, movesAt, statsAt, type BonusDef } from '../src/core/dungeon/stats';
 import type { Action, Content, DungeonState } from '../src/core/dungeon/types';
 
-const content = { dungeon: dungeonJson, battle: battleJson, moves: movesJson } as unknown as Content;
+const content = { dungeon: dungeonJson, battle: battleJson, moves: movesJson, elements: elementsJson } as unknown as Content;
 const bonusDefs = bonusesJson as unknown as Record<string, BonusDef>;
 const t = createTranslator(de as Dictionary);
 const neutral = { O: 0, C: 0, E: 0, A: 0, N: 0 };
@@ -119,6 +120,37 @@ describe('Züge und Kampf', () => {
     let events = act(content, s, { type: 'attack' });
     for (let i = 0; i < 5 && !events.some((e) => e.type === 'hit' && e.id === enemy.id); i++) events = act(content, s, { type: 'attack' });
     expect(enemy.hp).toBeLessThan(hpBefore);
+  });
+
+  it('das Element der Fähigkeit wirkt auf den Schaden (Glut stark gegen Ranke, schwach gegen Flut)', () => {
+    /** Schaden des ersten Treffers der Glutkralle gegen einen Gegner der Art species (sonst gleiche Werte) */
+    const firstHit = (seed: number, species: string) => {
+      const s = run({ seed });
+      const player = unitById(s, 'player')!;
+      const enemy = s.units.find((u) => u.side === 'enemy')!;
+      s.units = s.units.filter((u) => u.side !== 'enemy' || u === enemy);
+      Object.assign(enemy, { species, hp: 999, maxHp: 999, def: 0, pos: { x: player.pos.x + 1, y: player.pos.y } });
+      const partner = unitById(s, 'partner')!;
+      if (partner.pos.x === enemy.pos.x && partner.pos.y === enemy.pos.y) partner.pos = { x: player.pos.x - 1, y: player.pos.y };
+      s.floor.tiles = s.floor.tiles.map((row, y) => (y === player.pos.y ? row.slice(0, player.pos.x - 1) + '...' + row.slice(player.pos.x + 2) : row));
+      player.facing = 'right';
+      const index = player.moves.findIndex((m) => m.id === 'glutkralle');
+      const hit = act(content, s, { type: 'skill', index }).find((e) => e.type === 'hit' && e.id === enemy.id);
+      return hit && hit.type === 'hit' ? hit.amount : 0;
+    };
+    let strong = 0;
+    let weak = 0;
+    for (let seed = 1; seed <= 30; seed++) {
+      const vsRanke = firstHit(seed, 'bambus');
+      const vsFlut = firstHit(seed, 'schleim');
+      expect(vsRanke, `Seed ${seed}`).toBeGreaterThanOrEqual(vsFlut);
+      strong += vsRanke;
+      weak += vsFlut;
+    }
+    expect(weak).toBeGreaterThan(0);
+    // 1,1 / 0,9 ≈ 1,22 (Rundung der einzelnen Treffer lässt etwas Spielraum)
+    expect(strong / weak).toBeGreaterThan(1.15);
+    expect(strong / weak).toBeLessThan(1.3);
   });
 
   it('Spielzüge sind reproduzierbar (gleicher Startwert, gleiche Eingaben)', () => {

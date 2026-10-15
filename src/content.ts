@@ -8,12 +8,15 @@ import villageJson from '../data/village.json';
 import battleJson from '../data/battle.json';
 import bonusesJson from '../data/bonuses.json';
 import dungeonJson from '../data/dungeon.json';
+import elementsJson from '../data/elements.json';
 import movesJson from '../data/moves.json';
 import type { BonusDef } from './core/dungeon/stats';
 import type { Content } from './core/dungeon/types';
+import type { ElementChart } from './core/elements';
 import { createTranslator, type Dictionary } from './core/i18n';
+import type { CreatureElements } from './core/matching';
 import { selectItems } from './core/scoring';
-import type { Archetype, ItemBank, Norms } from './core/types';
+import type { Archetype, ItemBank, Norms, PixelSprite } from './core/types';
 import { parseVillage, type VillageDef } from './core/village';
 
 /** Im Spiel gestellte Fragen: Mini-IPIP (20 Items aus der IPIP-50) */
@@ -22,7 +25,14 @@ export const norms = normsJson as unknown as Norms;
 export const archetypes = archetypesJson.archetypes as unknown as Archetype[];
 export const t = createTranslator(de as Dictionary);
 export const village = parseVillage(villageJson as unknown as VillageDef);
-export const dungeonContent = { dungeon: dungeonJson, battle: battleJson, moves: movesJson } as unknown as Content;
+export const dungeonContent = { dungeon: dungeonJson, battle: battleJson, moves: movesJson, elements: elementsJson } as unknown as Content;
+/** Elemente der spielbaren Wesen (aus den Kampfwerten) samt Typentabelle */
+export const creatureElements: CreatureElements = {
+  chart: elementsJson as unknown as ElementChart,
+  of: Object.fromEntries(Object.entries(dungeonContent.battle.team).map(([id, def]) => [id, def.element])),
+};
+/** Aussehen der Elemente: 16×16-Icon und Textfarbe */
+export const elementLooks = elementsJson as unknown as { icons: Record<string, PixelSprite>; colors: Record<string, string> };
 export const bonusDefs = bonusesJson as unknown as Record<string, BonusDef>;
 
 export function archetypeById(id: string): Archetype {

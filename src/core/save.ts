@@ -58,9 +58,21 @@ function isSaveData(value: unknown): value is SaveData {
  * Test wird verworfen, weil die Fragenposition nicht zur Kurzform passt.
  */
 export function migrateSave(data: SaveData): SaveData | null {
-  if (data.version === SAVE_VERSION) return data;
-  if (data.version === 1 && data.result && data.archetypeId) return { ...data, version: SAVE_VERSION };
+  if (data.version === SAVE_VERSION) return renameMoves(data);
+  if (data.version === 1 && data.result && data.archetypeId) return renameMoves({ ...data, version: SAVE_VERSION });
   return null;
+}
+
+/** Umbenannte Fähigkeiten (15.10.2026: der Dachs ist jetzt Glut) */
+const RENAMED_MOVES: Record<string, string> = { steinkralle: 'glutkralle', erzpanzer: 'glutpanzer', erdstoss: 'glutstoss' };
+
+/** Ein laufender Dungeon kann noch alte Fähigkeiten enthalten. */
+function renameMoves(data: SaveData): SaveData {
+  if (!data.dungeon) return data;
+  for (const unit of data.dungeon.units) {
+    for (const slot of unit.moves) slot.id = RENAMED_MOVES[slot.id] ?? slot.id;
+  }
+  return data;
 }
 
 /** Lädt den Spielstand. Kaputte oder fremde Daten und blockierter Speicher ergeben null. */
