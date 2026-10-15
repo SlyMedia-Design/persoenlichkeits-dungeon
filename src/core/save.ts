@@ -7,6 +7,14 @@ export const SAVE_KEY = 'persoenlichkeits-dungeon.save';
 /** 1 = Test mit 50 Fragen, 2 = Mini-IPIP mit 20 Fragen */
 export const SAVE_VERSION = 2;
 
+/** Stufe, Erfahrung und aktive Fähigkeiten eines Team-Mitglieds zwischen den Ausflügen */
+export interface TeamProgress {
+  level: number;
+  xp: number;
+  /** Fehlt bei älteren Spielständen: dann gelten die Fähigkeiten der Stufe */
+  moves?: string[];
+}
+
 export interface SaveData {
   version: number;
   /** Antworten, auch während der Test noch läuft */
@@ -26,7 +34,7 @@ export interface SaveData {
   /** Begrüßung beim ersten Betreten des Dorfs schon gesehen */
   villageIntroSeen?: boolean;
   /** Meilenstein 3: Stufe und Erfahrung von Spieler und Partner */
-  team?: { player: { level: number; xp: number }; partner: { level: number; xp: number } };
+  team?: { player: TeamProgress; partner: TeamProgress };
   /** Beutel zwischen den Ausflügen */
   bag?: string[];
   /** Laufender Dungeon-Durchgang (wird nach jedem Zug gesichert) */

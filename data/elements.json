@@ -1,5 +1,5 @@
 {
-  "description": "Elemente (Entscheidung vom 15.10.2026). strongAgainst: Angreifer-Element → Elemente, gegen die es stark ist; die Schwäche ergibt sich aus der Gegenseite, alles andere ist neutral. factor: Schadensfaktor bei Stärke/Schwäche (Prototyp 1,1/0,9; später 1,5/0,5). Ranke gibt es nur bei Gegnern. icon = 16×16 Pixel, jedes Zeichen ist ein Eintrag der Palette, '.' ist durchsichtig. Namen stehen in data/i18n/de.json unter elements.",
+  "description": "Elemente (Entscheidung vom 15.10.2026). strongAgainst: Angreifer-Element → Elemente, gegen die es stark ist; die Schwäche ergibt sich aus der Gegenseite, alles andere ist neutral. factor: Schadensfaktor bei Stärke/Schwäche (Prototyp 1,1/0,9; später 1,5/0,5). Ranke gibt es nur bei Gegnern. icon = 16×16 Pixel, jedes Zeichen ist ein Eintrag der Palette, '.' ist durchsichtig. Namen stehen in data/i18n/de.json unter elements. stone = 16×16-Fähigkeitsstein, eine Form mit einer Palette je Element (kein Ranke-Stein).",
   "elements": ["glut", "fels", "flut", "wind", "ranke"],
   "strongAgainst": {
     "flut": ["glut", "fels"],
@@ -121,6 +121,32 @@
         "................",
         "................"
       ]
+    }
+  },
+  "stone": {
+    "rows": [
+      "................",
+      "................",
+      "......oooo......",
+      "....ooaawboo....",
+      "...oaaawwbbbo...",
+      "..oaaaawbbbbco..",
+      "..oaaabbbbbbco..",
+      ".oaabbbbbbbbcco.",
+      ".oabbbbbbbbbcco.",
+      ".obbbbbbbbbccco.",
+      ".obbbbbbbbcccco.",
+      "..obbbbbbcccco..",
+      "..occcccccccco..",
+      "...oocccccoo....",
+      ".....ooooo......",
+      "................"
+    ],
+    "palettes": {
+      "glut": { "o": "#4a1810", "a": "#ffd08a", "w": "#fff6d8", "b": "#f07840", "c": "#b03a20" },
+      "fels": { "o": "#3a2a1e", "a": "#efdcb8", "w": "#fff8ea", "b": "#bea07a", "c": "#7a6048" },
+      "flut": { "o": "#1e3a5a", "a": "#bfe8ff", "w": "#f4fcff", "b": "#5ab4ec", "c": "#2a78b8" },
+      "wind": { "o": "#2a4a58", "a": "#e8fffb", "w": "#ffffff", "b": "#a8e4dc", "c": "#62a8a4" }
     }
   }
 }

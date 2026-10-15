@@ -20,7 +20,7 @@ export interface RunResult {
 export function settleRun(content: Content, state: DungeonState, quests: QuestLog): RunResult {
   const member = (id: string) => {
     const u = state.units.find((x) => x.id === id)!;
-    return { level: u.level, xp: u.xp };
+    return { level: u.level, xp: u.xp, moves: u.moves.map((m) => m.id) };
   };
   const next: QuestLog = { ...quests };
   let bag = [...state.bag];

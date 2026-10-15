@@ -22,10 +22,10 @@ Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt n
 - [x] Balance-Check per Simulation (Test oder Skript)
 
 ## D – Fähigkeiten und Fähigkeitssteine
-- [ ] Maximal 4 aktive Fähigkeiten, Austausch-Logik in `src/core`
-- [ ] Fähigkeitssteine: 1–3 pro Dungeon verteilt, einsetzbar für Spieler oder Partner, Verbrauch beim Einsatz, Verlernen-Dialog
-- [ ] Kampfmenü kompakter: nur Name + Elementsymbol, Beschreibung im Info-Feld per Antippen
-- [ ] Stein-Icons pro Element (kein Ranke-Stein)
+- [x] Maximal 4 aktive Fähigkeiten, Austausch-Logik in `src/core`
+- [x] Fähigkeitssteine: 1–3 pro Dungeon verteilt, einsetzbar für Spieler oder Partner, Verbrauch beim Einsatz, Verlernen-Dialog
+- [x] Kampfmenü kompakter: nur Name + Elementsymbol, Beschreibung im Info-Feld per Antippen
+- [x] Stein-Icons pro Element (kein Ranke-Stein)
 
 ## E – Items und Quests
 - [ ] Eigene Quest-Tasche, getrennt vom Beutel

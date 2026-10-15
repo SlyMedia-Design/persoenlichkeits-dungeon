@@ -51,11 +51,11 @@ export function speciesDef(content: Content, side: Side, species: string): Speci
 
 export function makeUnit(
   content: Content,
-  opts: { id: string; side: Side; species: string; level: number; xp?: number; pos: Pos; facing?: Dir; extraPp?: number; boss?: boolean },
+  opts: { id: string; side: Side; species: string; level: number; xp?: number; moves?: string[]; pos: Pos; facing?: Dir; extraPp?: number; boss?: boolean },
 ): Unit {
   const def = speciesDef(content, opts.side, opts.species);
   const s = statsAt(def, opts.level);
-  const moveIds = opts.side === 'team' ? movesAt(content, def, opts.level) : (def.moves ?? []);
+  const moveIds = opts.side === 'team' ? (opts.moves ?? movesAt(content, def, opts.level)) : (def.moves ?? []);
   return {
     id: opts.id,
     side: opts.side,
@@ -75,7 +75,10 @@ export function makeUnit(
   };
 }
 
-/** Erfahrung gutschreiben; bei Stufenaufstieg steigen die Werte, neue Fähigkeiten werden gelernt. */
+/**
+ * Erfahrung gutschreiben; bei Stufenaufstieg steigen die Werte, neue Fähigkeiten werden gelernt.
+ * Sind schon alle Plätze belegt, wird die neue Fähigkeit nur angeboten (levelUp.offered): Der Spieler wählt.
+ */
 export function gainXp(content: Content, unit: Unit, amount: number, extraPp: number): GameEvent[] {
   const events: GameEvent[] = [{ type: 'xp', id: unit.id, amount }];
   unit.xp += amount;
@@ -89,14 +92,54 @@ export function gainXp(content: Content, unit: Unit, amount: number, extraPp: nu
     unit.atk = s.atk;
     unit.def = s.def;
     const newMove = def.learn?.[String(unit.level)];
-    let forgot: string | undefined;
-    if (newMove && !unit.moves.some((m) => m.id === newMove)) {
-      if (unit.moves.length >= content.battle.maxMoves) forgot = unit.moves.shift()!.id;
-      unit.moves.push(slot(content, newMove, extraPp));
+    if (newMove && !knows(unit, newMove)) {
+      if (unit.moves.length < content.battle.maxMoves) {
+        unit.moves.push(slot(content, newMove, extraPp));
+        events.push({ type: 'levelUp', id: unit.id, level: unit.level, learned: newMove });
+      } else {
+        events.push({ type: 'levelUp', id: unit.id, level: unit.level, offered: newMove });
+      }
+    } else {
+      events.push({ type: 'levelUp', id: unit.id, level: unit.level });
     }
-    events.push({ type: 'levelUp', id: unit.id, level: unit.level, learned: newMove, forgot });
   }
   return events;
+}
+
+export function knows(unit: Unit, moveId: string): boolean {
+  return unit.moves.some((m) => m.id === moveId);
+}
+
+/**
+ * Lernt eine Fähigkeit. Bei vollen Plätzen ersetzt sie die Fähigkeit auf Platz forget.
+ * Gibt null zurück, wenn das nicht geht (schon bekannt, oder voll und kein Platz gewählt).
+ */
+export function learnMove(content: Content, unit: Unit, moveId: string, forget: number | undefined, extraPp: number): { forgot?: string } | null {
+  if (!content.moves.moves[moveId] || knows(unit, moveId)) return null;
+  if (unit.moves.length < content.battle.maxMoves) {
+    unit.moves.push(slot(content, moveId, extraPp));
+    return {};
+  }
+  if (forget === undefined || !unit.moves[forget]) return null;
+  const forgot = unit.moves[forget].id;
+  unit.moves[forget] = slot(content, moveId, extraPp);
+  return { forgot };
+}
+
+/** Fähigkeiten eines Elements, die ein Stein lehren kann (alle, die die spielbaren Wesen lernen) */
+export function teachableMoves(content: Content, element: string): string[] {
+  const all = Object.values(content.battle.team).flatMap((def) => Object.values(def.learn ?? {}));
+  return [...new Set(all)].filter((id) => content.moves.moves[id]?.element === element);
+}
+
+/** Ein Eintrag im Beutel: Gegenstand, bei Fähigkeitssteinen mit Fähigkeit („glutstein:glutkralle“) */
+export function parseBagEntry(entry: string): { item: string; move?: string } {
+  const [item, move] = entry.split(':');
+  return move ? { item, move } : { item };
+}
+
+export function stoneEntry(item: string, move: string): string {
+  return `${item}:${move}`;
 }
 
 /** Boni aus dem z-Profil: Jeder Pol einer Dimension bringt einen eigenen Vorteil. */

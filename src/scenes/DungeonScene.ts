@@ -7,6 +7,8 @@ import type { Action, DungeonState, GameEvent, Unit } from '../core/dungeon/type
 import { combineDirs, dirTo, findPath, horizontalOf, samePos, type Dir, type Pos } from '../core/grid';
 import { getSave, updateSave } from '../state';
 import { ambient } from '../ui/ambient';
+import { stoneTexture } from '../ui/elements';
+import { bagEntryDef, bagEntryName } from '../ui/items';
 import { pixelZoom } from '../ui/camera';
 import { bindFastForward } from '../ui/speed';
 import { creatureTexture, fieldTexture, shadowTexture } from '../ui/sprites';
@@ -104,6 +106,8 @@ export class DungeonScene extends Phaser.Scene {
       this.hud.showHint();
     }
     if (this.state.floor.boss && this.state.turn === 0) await this.bossIntro();
+    // Spielstand mit offener Wahl (z. B. nach dem Neuladen)
+    if (this.state.pendingLearn?.length) this.askLearn();
   }
 
   private async bossIntro() {
@@ -157,7 +161,9 @@ export class DungeonScene extends Phaser.Scene {
   }
 
   private addItem(p: Pos, item: string) {
-    const img = this.add.image(center(p).x, center(p).y, itemKey(content.dungeon.items[item].sprite)).setDepth(-5);
+    const def = bagEntryDef(item);
+    const texture = def.use === 'learn' && def.element ? stoneTexture(this, def.element) : itemKey(def.sprite);
+    const img = this.add.image(center(p).x, center(p).y, texture).setDepth(-5);
     img.setScale(Math.min(1, 12 / Math.max(img.width, img.height)));
     this.items.set(key(p), img);
   }
@@ -357,10 +363,22 @@ export class DungeonScene extends Phaser.Scene {
     // Automatisches Laufen stoppt, sobald etwas passiert
     const quiet = events.every((e) => e.type === 'move' || e.type === 'face');
     if (auto && (!quiet || this.visibleEnemies() > enemiesBefore)) this.autoPath = [];
-    if (events.some((e) => e.type === 'onStairs')) {
+    if (this.state.pendingLearn?.length) {
+      this.autoPath = [];
+      this.askLearn();
+    } else if (events.some((e) => e.type === 'onStairs')) {
       this.autoPath = [];
       this.stairsPrompt();
     }
+  }
+
+  /** Neue Fähigkeit aus einem Stufenaufstieg bei 4 aktiven: Was wird verlernt? */
+  private askLearn() {
+    const pending = this.state.pendingLearn?.[0];
+    if (!pending) return;
+    const unit = unitById(this.state, pending.id);
+    if (!unit) return;
+    this.hud.askForget(this.nameOf(unit.id), unit.moves.map((m) => m.id), pending.move, (forget) => void this.perform({ type: 'learn', forget }));
   }
 
   /** Sicherheitsnetz: Ansichten exakt an den Zustand angleichen */
@@ -545,23 +563,33 @@ export class DungeonScene extends Phaser.Scene {
         if (view) this.fx('boost', { x: view.body.x, y: view.body.y - 4 });
         this.log('levelUp', { name: this.nameOf(e.id), level: e.level });
         if (e.learned) this.log('learned', { name: this.nameOf(e.id), move: t(`moves.${e.learned}.name`) });
+        await this.wait(300);
+        return;
+      }
+      case 'learned': {
+        const view = this.views.get(e.id);
+        if (view) this.fx('boost', { x: view.body.x, y: view.body.y - 4 });
+        this.log('learned', { name: this.nameOf(e.id), move: t(`moves.${e.move}.name`) });
         if (e.forgot) this.log('forgot', { name: this.nameOf(e.id), move: t(`moves.${e.forgot}.name`) });
         await this.wait(300);
         return;
       }
+      case 'learnSkipped':
+        this.log('skipped', { name: this.nameOf(e.id), move: t(`moves.${e.move}.name`) });
+        return;
       case 'pickup': {
         const p = unitById(s, e.id)!.pos;
         this.items.get(key(p))?.destroy();
         this.items.delete(key(p));
-        this.log('pickup', { item: t(`dungeon.items.${e.item}.name`) });
+        this.log('pickup', { item: bagEntryName(e.item) });
         return;
       }
       case 'bagFull':
-        this.log('bagFull', { item: t(`dungeon.items.${e.item}.name`) });
+        this.log('bagFull', { item: bagEntryName(e.item) });
         return;
       case 'itemUsed': {
-        const item = t(`dungeon.items.${e.item}.name`);
-        const def = content.dungeon.items[e.item];
+        const item = bagEntryName(e.item);
+        const def = bagEntryDef(e.item);
         if (def.use === 'throw') this.log('itemThrow', { name: this.nameOf(e.id), item });
         else if (e.target === 'player') this.log('itemSelf', { name: this.nameOf(e.id), item });
         else this.log('itemGive', { name: this.nameOf(e.id), target: this.nameOf(e.target), item });

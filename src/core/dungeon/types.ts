@@ -61,7 +61,9 @@ export interface MovesData {
 
 export interface ItemDef {
   weight: number;
-  use: 'heal' | 'pp' | 'throw' | 'quest';
+  use: 'heal' | 'pp' | 'throw' | 'quest' | 'learn';
+  /** Fähigkeitsstein: Element der Fähigkeit, die er lehrt */
+  element?: string;
   amount?: number;
   range?: number;
   sprite: string;
@@ -95,6 +97,8 @@ export interface DungeonDef {
     leuchtmoos: { item: string; perFloor: number; needed: number };
   };
   boss: { species: string; level: number; map: string[] };
+  /** Fähigkeitssteine pro Dungeon (nicht pro Etage) */
+  stones: { min: number; max: number };
 }
 
 export interface Content {
@@ -204,6 +208,15 @@ export interface DungeonState {
   bossSummoned: boolean;
   nextId: number;
   outcome?: 'cleared' | 'defeated';
+  /** Etagen, auf denen ein Fähigkeitsstein liegt (beim Betreten ausgewürfelt) */
+  stonePlan?: number[];
+  /** Neue Fähigkeiten aus Stufenaufstiegen, bei denen der Spieler wählen muss, was er verlernt */
+  pendingLearn?: PendingLearn[];
+}
+
+export interface PendingLearn {
+  id: 'player' | 'partner';
+  move: string;
 }
 
 export type Action =
@@ -211,7 +224,10 @@ export type Action =
   | { type: 'turn'; dir: Dir }
   | { type: 'attack' }
   | { type: 'skill'; index: number }
-  | { type: 'item'; index: number; target: 'player' | 'partner' }
+  /** forget = Platz der Fähigkeit, die für einen Fähigkeitsstein verlernt wird (nur bei 4 aktiven) */
+  | { type: 'item'; index: number; target: 'player' | 'partner'; forget?: number }
+  /** Offene Fähigkeit aus einem Stufenaufstieg: forget = verlernter Platz, null = nicht lernen (kostet keinen Zug) */
+  | { type: 'learn'; forget: number | null }
   | { type: 'wait' }
   | { type: 'stairs' }
   | { type: 'giveUp' };
@@ -231,7 +247,10 @@ export type GameEvent =
   | { type: 'noPp'; id: string }
   | { type: 'faint'; id: string }
   | { type: 'xp'; id: string; amount: number }
-  | { type: 'levelUp'; id: string; level: number; learned?: string; forgot?: string }
+  /** offered = neue Fähigkeit, für die erst eine andere verlernt werden muss */
+  | { type: 'levelUp'; id: string; level: number; learned?: string; offered?: string }
+  | { type: 'learned'; id: string; move: string; forgot?: string }
+  | { type: 'learnSkipped'; id: string; move: string }
   | { type: 'pickup'; id: string; item: string }
   | { type: 'bagFull'; item: string }
   | { type: 'itemUsed'; id: string; item: string; target: string }

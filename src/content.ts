@@ -32,7 +32,12 @@ export const creatureElements: CreatureElements = {
   of: Object.fromEntries(Object.entries(dungeonContent.battle.team).map(([id, def]) => [id, def.element])),
 };
 /** Aussehen der Elemente: 16×16-Icon und Textfarbe */
-export const elementLooks = elementsJson as unknown as { icons: Record<string, PixelSprite>; colors: Record<string, string> };
+export const elementLooks = elementsJson as unknown as {
+  icons: Record<string, PixelSprite>;
+  colors: Record<string, string>;
+  /** Fähigkeitsstein: eine Form, eine Palette je Element */
+  stone: { rows: string[]; palettes: Record<string, Record<string, string>> };
+};
 export const bonusDefs = bonusesJson as unknown as Record<string, BonusDef>;
 
 export function archetypeById(id: string): Archetype {

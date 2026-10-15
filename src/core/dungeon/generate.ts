@@ -1,7 +1,7 @@
 /** Erzeugt Etagen: Räume in einem Raster, verbunden durch Gänge; dazu die handgebaute Boss-Lichtung. */
 import type { Pos } from '../grid';
 import type { Random } from './random';
-import { makeUnit } from './stats';
+import { makeUnit, stoneEntry, teachableMoves } from './stats';
 import type { Content, DungeonState, Floor, GroundItem, Rect, Trap, Unit } from './types';
 
 const key = (p: Pos) => `${p.x},${p.y}`;
@@ -161,6 +161,15 @@ export function enterFloor(content: Content, state: DungeonState, number: number
   for (let i = 0; i < itemCount; i++) {
     const p = freeSpot(floor, taken, rng);
     if (p) items.push({ pos: p, item: rng.weighted(findable, ([, it]) => it.weight)[0] });
+  }
+  // Fähigkeitssteine, die für diese Etage ausgewürfelt wurden: Element zufällig, Fähigkeit zufällig aus dem Element
+  const stones = Object.entries(def.items).filter(([, it]) => it.use === 'learn' && it.element);
+  for (const planned of state.stonePlan ?? []) {
+    if (planned !== number || stones.length === 0) continue;
+    const [id, stone] = rng.pick(stones);
+    const moves = teachableMoves(content, stone.element!);
+    const p = freeSpot(floor, taken, rng);
+    if (p && moves.length > 0) items.push({ pos: p, item: stoneEntry(id, rng.pick(moves)) });
   }
   if (state.mossActive) {
     for (let i = 0; i < def.quests.leuchtmoos.perFloor; i++) {

@@ -126,6 +126,7 @@ Die Einzelheiten stehen in `CHECKLISTE.md`. **Sie ist die verbindliche Quelle f�
   - Maximal 4 aktive Fähigkeiten.
   - Fähigkeitssteine: 1–3 pro Dungeon, für Spieler oder Partner einsetzbar, werden beim Einsatz verbraucht.
   - Neues Lernen ersetzt immer eine der 4 aktiven Fähigkeiten.
+  - Ein Stein lehrt eine zufällige Fähigkeit seines Elements. Jedes Wesen darf Fähigkeiten jedes Elements lernen. Ist beim Stufenaufstieg kein Platz frei, wählt der Spieler, was er verlernt, oder er lässt die neue Fähigkeit aus. Gelernte Fähigkeiten bleiben über Ausflüge hinweg erhalten (Entscheidungen vom 15.10.2026).
 - **Fortschritt:**
   - Weniger Erfahrung, die Skalierung folgt dem Prinzip von Mystery Dungeon.
   - Schaden skaliert mit der Stufe.

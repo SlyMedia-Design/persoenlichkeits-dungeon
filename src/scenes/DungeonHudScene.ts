@@ -1,11 +1,14 @@
 import { dungeonContent, t } from '../content';
 import { senses, teamSees } from '../core/dungeon/engine';
+import { knows, parseBagEntry } from '../core/dungeon/stats';
 import type { Action, DungeonState, Unit } from '../core/dungeon/types';
 import { ELEMENT_ICON_SIZE, elementTexture } from '../ui/elements';
-import { HudScene } from '../ui/HudScene';
+import { HudScene, type PanelBuilder } from '../ui/HudScene';
+import { bagEntryDef, bagEntryInfo, bagEntryName } from '../ui/items';
 import { COLORS, headingStyle, textStyle } from '../ui/theme';
 
-type Mode = { kind: 'skills' } | { kind: 'bag' } | { kind: 'bagItem'; index: number } | { kind: 'menu' };
+/** info = Platz der Fähigkeit, deren Beschreibung gerade aufgeklappt ist */
+type Mode = { kind: 'skills'; info?: number } | { kind: 'bag' } | { kind: 'bagItem'; index: number } | { kind: 'menu' };
 
 const LOG_LINES = 3;
 const LOG_MS = 6000;
@@ -181,7 +184,7 @@ export class DungeonHudScene extends HudScene<Mode> {
   protected drawMode(mode: Mode) {
     const s = this.state;
     if (!s) return;
-    if (mode.kind === 'skills') this.drawSkills(s);
+    if (mode.kind === 'skills') this.drawSkills(s, mode.info);
     else if (mode.kind === 'bag') this.drawBag(s);
     else if (mode.kind === 'bagItem') this.drawBagItem(s, mode.index);
     else this.drawMenu();
@@ -192,27 +195,47 @@ export class DungeonHudScene extends HudScene<Mode> {
     this.onAction?.(action);
   }
 
-  private drawSkills(s: DungeonState) {
+  /** Kompaktes Fähigkeiten-Menü: Elementsymbol, Name und Energie; die Beschreibung klappt per Info-Knopf auf */
+  private drawSkills(s: DungeonState, info?: number) {
     const player = s.units.find((u) => u.id === 'player')!;
+    const { small } = this.m;
     this.drawPanel(t('dungeon.ui.skills'), (b) => {
-      b.button(t('moves.attack.name'), () => this.act({ type: 'attack' }), { fontSize: this.m.small });
+      b.button(t('moves.attack.name'), () => this.act({ type: 'attack' }), { fontSize: small });
+      const rowH = Math.round(small * 2.3);
+      const infoW = rowH;
+      const skillW = b.width - b.pad * 2 - infoW - 6;
       player.moves.forEach((m, i) => {
-        const label = `${t(`moves.${m.id}.name`)}  ·  ${t('dungeon.ui.pp', { pp: m.pp, max: m.maxPp })}`;
         const top = b.y;
+        const label = `${t(`moves.${m.id}.name`)}  ${t('dungeon.ui.ppShort', { pp: m.pp, max: m.maxPp })}`;
+        const skill = this.button(b.pad + skillW / 2, top + rowH / 2, label, { width: skillW, height: rowH, fontSize: small, align: 'left' }, () => this.act({ type: 'skill', index: i }));
+        if (m.pp <= 0) skill.setAlpha(0.45).disableInteractive();
+        b.add(skill, 0);
         const element = dungeonContent.moves.moves[m.id]?.element;
-        const button = b.button(label, () => this.act({ type: 'skill', index: i }), { fontSize: this.m.small, enabled: m.pp > 0, align: element ? 'left' : 'center' });
-        // Elementsymbol links im Knopf, der Name rückt daneben
         if (element) {
-          const iconX = b.pad + Math.round(this.m.small * 0.8);
-          const icon = this.add.image(iconX, top + button.buttonHeight / 2, elementTexture(this, element)).setOrigin(0, 0.5).setScale(2).setAlpha(m.pp > 0 ? 1 : 0.45);
-          button.label.x += ELEMENT_ICON_SIZE * 2 + 6;
+          // Elementsymbol links im Knopf, der Name rückt daneben
+          const icon = this.add.image(b.pad + Math.round(small * 0.6), top + rowH / 2, elementTexture(this, element)).setOrigin(0, 0.5).setScale(2).setAlpha(m.pp > 0 ? 1 : 0.45);
+          skill.label.x += ELEMENT_ICON_SIZE * 2 + 2;
           b.add(icon, 0);
         }
-        b.text(t(`moves.${m.id}.info`), { color: COLORS.textDim, fontSize: `${Math.round(this.m.small * 0.9)}px` });
+        const toggle = this.button(b.width - b.pad - infoW / 2, top + rowH / 2, '?', { width: infoW, height: rowH, fontSize: small }, () =>
+          this.setMode({ kind: 'skills', info: info === i ? undefined : i }),
+        );
+        toggle.setSelected(info === i);
+        b.add(toggle, rowH + this.m.gap * 0.6);
+        if (info === i) b.text(t(`moves.${m.id}.info`), { color: COLORS.textDim, fontSize: `${Math.round(small * 0.9)}px` });
       });
       b.gap(4);
-      b.button(t('dungeon.ui.close'), () => this.close(), { fontSize: this.m.small });
-    }, 420);
+      b.button(t('dungeon.ui.close'), () => this.close(), { fontSize: small });
+    }, 360);
+  }
+
+  /** Volle Plätze: Welche Fähigkeit wird für die neue verlernt? onPick(null) = nicht lernen */
+  askForget(name: string, moves: string[], newMove: string, onPick: (forget: number | null) => void) {
+    const move = t(`moves.${newMove}.name`);
+    const options = moves.map((id, i) => ({ label: t(`moves.${id}.name`), onPick: () => onPick(i) }));
+    options.push({ label: t('dungeon.ui.dontLearn', { move }), onPick: () => onPick(null) });
+    // Escape öffnet die Frage erneut: Die Entscheidung soll bewusst fallen
+    this.choose(t('dungeon.ui.forgetPrompt', { name, move }), options, () => this.askForget(name, moves, newMove, onPick));
   }
 
   private drawBag(s: DungeonState) {
@@ -223,7 +246,7 @@ export class DungeonHudScene extends HudScene<Mode> {
       const counts = new Map<string, number[]>();
       s.bag.forEach((item, i) => counts.set(item, [...(counts.get(item) ?? []), i]));
       for (const [item, indices] of counts) {
-        const label = `${t(`dungeon.items.${item}.name`)}${indices.length > 1 ? `  ×${indices.length}` : ''}`;
+        const label = `${bagEntryName(item)}${indices.length > 1 ? `  ×${indices.length}` : ''}`;
         b.button(label, () => this.setMode({ kind: 'bagItem', index: indices[0] }), { fontSize: this.m.small });
       }
       b.gap(4);
@@ -233,19 +256,44 @@ export class DungeonHudScene extends HudScene<Mode> {
 
   private drawBagItem(s: DungeonState, index: number) {
     const item = s.bag[index];
-    const def = dungeonContent.dungeon.items[item];
-    this.drawPanel(t(`dungeon.items.${item}.name`), (b) => {
-      b.text(t(`dungeon.items.${item}.info`));
+    const def = bagEntryDef(item);
+    this.drawPanel(bagEntryName(item), (b) => {
+      b.text(bagEntryInfo(item));
       if (def.use === 'heal' || def.use === 'pp') {
         b.button(t('dungeon.ui.useSelf'), () => this.act({ type: 'item', index, target: 'player' }), { fontSize: this.m.small });
         b.button(t('dungeon.ui.usePartner', { partner: this.names.partner ?? '' }), () => this.act({ type: 'item', index, target: 'partner' }), { fontSize: this.m.small });
       } else if (def.use === 'throw') {
         b.button(t('dungeon.ui.throw'), () => this.act({ type: 'item', index, target: 'player' }), { fontSize: this.m.small });
+      } else if (def.use === 'learn') {
+        this.learnButtons(b, s, index);
       } else {
         b.text(t('dungeon.ui.questItem'), { color: COLORS.textGold });
       }
       b.button(t('dungeon.ui.close'), () => this.setMode({ kind: 'bag' }), { fontSize: this.m.small });
     });
+  }
+
+  /** Fähigkeitsstein: für Spieler oder Partner; bei 4 aktiven Fähigkeiten wird erst gefragt, welche verlernt wird */
+  private learnButtons(b: PanelBuilder, s: DungeonState, index: number) {
+    const move = parseBagEntry(s.bag[index]).move;
+    if (!move) return;
+    for (const id of ['player', 'partner'] as const) {
+      const unit = s.units.find((u) => u.id === id);
+      if (!unit) continue;
+      const label = id === 'player' ? t('dungeon.ui.learnSelf') : t('dungeon.ui.learnPartner', { partner: this.names.partner ?? '' });
+      if (knows(unit, move)) {
+        b.button(label, () => {}, { fontSize: this.m.small, enabled: false });
+        b.text(t('dungeon.ui.alreadyKnows', { name: this.nameOf(unit), move: t(`moves.${move}.name`) }), { color: COLORS.textDim });
+        continue;
+      }
+      b.button(label, () => {
+        if (unit.moves.length < dungeonContent.battle.maxMoves) this.act({ type: 'item', index, target: id });
+        else this.askForget(this.nameOf(unit), unit.moves.map((m) => m.id), move, (forget) => {
+          if (forget === null) this.setMode({ kind: 'bagItem', index });
+          else this.act({ type: 'item', index, target: id, forget });
+        });
+      }, { fontSize: this.m.small });
+    }
   }
 
   private drawMenu() {

@@ -410,6 +410,22 @@
       "leuchtmoos": {
         "name": "Leuchtmoos",
         "info": "Für Oma Wurzels Laternen. Leuchtet sanft im Dunkeln."
+      },
+      "glutstein": {
+        "name": "Glutstein",
+        "info": "Ein warm glimmender Fähigkeitsstein. Er lehrt {move} und zerfällt danach."
+      },
+      "felsstein": {
+        "name": "Felsstein",
+        "info": "Ein schwerer, erdiger Fähigkeitsstein. Er lehrt {move} und zerfällt danach."
+      },
+      "flutstein": {
+        "name": "Flutstein",
+        "info": "Ein kühler, schimmernder Fähigkeitsstein. Er lehrt {move} und zerfällt danach."
+      },
+      "windstein": {
+        "name": "Windstein",
+        "info": "Ein federleichter Fähigkeitsstein. Er lehrt {move} und zerfällt danach."
       }
     },
     "status": {
@@ -441,7 +457,16 @@
       "stairsStay": "Noch nicht",
       "hintTouch": "Tippe neben dich, um zu laufen oder anzugreifen. Unten findest du Fähigkeiten und Beutel, oben rechts Shift zum Vorspulen.",
       "hintKeys": "WASD/Pfeiltasten: laufen und angreifen · Leertaste: Angriff · 1–4: Fähigkeiten · B: Beutel · Q: warten · Shift: vorspulen",
-      "profile": "Mein Profil"
+      "profile": "Mein Profil",
+      "stoneName": "{stone}: {move}",
+      "learnSelf": "Selbst lernen",
+      "learnPartner": "{partner} lernen lassen",
+      "alreadyKnows": "{name} kennt {move} schon.",
+      "forgetPrompt": "{name} kennt schon 4 Fähigkeiten. Welche soll für {move} verlernt werden?",
+      "dontLearn": "{move} nicht lernen",
+      "cancel": "Abbrechen",
+      "info": "Info",
+      "ppShort": "{pp}/{max}"
     },
     "log": {
       "attack": "{name} greift an!",
@@ -474,6 +499,7 @@
       "levelUp": "{name} erreicht Stufe {level}!",
       "learned": "{name} lernt {move}!",
       "forgot": "{name} vergisst dafür {move}.",
+      "skipped": "{name} lernt {move} nicht.",
       "pickup": "{item} eingesteckt.",
       "bagFull": "Der Beutel ist voll – {item} bleibt liegen.",
       "itemSelf": "{name} benutzt {item}.",

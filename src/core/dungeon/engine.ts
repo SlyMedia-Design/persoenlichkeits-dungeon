@@ -8,7 +8,7 @@ import { DIRS, canStep, dirTo, findPath, samePos, step, type Dir, type Pos } fro
 import type { Profile } from '../types';
 import { enterBossFloor, enterFloor, isFloorTile, newId, rollEnemy } from './generate';
 import { createRandom, type Random } from './random';
-import { computeBonuses, gainXp, levelDamage, makeUnit, speciesDef, xpYield, type BonusDef } from './stats';
+import { computeBonuses, gainXp, learnMove, levelDamage, makeUnit, parseBagEntry, speciesDef, xpYield, type BonusDef } from './stats';
 import type { Action, Content, DungeonState, GameEvent, MoveDef, Unit } from './types';
 
 const chebyshev = (a: Pos, b: Pos) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
@@ -17,6 +17,8 @@ export interface TeamMember {
   species: string;
   level: number;
   xp: number;
+  /** Aktive Fähigkeiten (fehlt bei alten Spielständen: dann die der Stufe) */
+  moves?: string[];
 }
 
 export interface RunOptions {
@@ -36,8 +38,8 @@ export interface RunOptions {
 export function startRun(content: Content, opts: RunOptions): DungeonState {
   const bonuses = computeBonuses(opts.z, opts.bonusDefs);
   const origin = { x: 0, y: 0 };
-  const player = makeUnit(content, { id: 'player', side: 'team', species: opts.player.species, level: opts.player.level, xp: opts.player.xp, pos: origin, extraPp: bonuses.extraPp });
-  const partner = makeUnit(content, { id: 'partner', side: 'team', species: opts.partner.species, level: opts.partner.level, xp: opts.partner.xp, pos: origin });
+  const player = makeUnit(content, { id: 'player', side: 'team', species: opts.player.species, level: opts.player.level, xp: opts.player.xp, moves: opts.player.moves, pos: origin, extraPp: bonuses.extraPp });
+  const partner = makeUnit(content, { id: 'partner', side: 'team', species: opts.partner.species, level: opts.partner.level, xp: opts.partner.xp, moves: opts.partner.moves, pos: origin });
   const state: DungeonState = {
     version: 1,
     dungeonId: content.dungeon.id,
@@ -53,7 +55,12 @@ export function startRun(content: Content, opts: RunOptions): DungeonState {
     bossSummoned: false,
     nextId: 1,
   };
-  withRandom(state, (rng) => enterFloor(content, state, 1, rng));
+  withRandom(state, (rng) => {
+    // Fähigkeitssteine pro Dungeon: Anzahl und Etagen werden beim Betreten ausgewürfelt
+    const { min, max } = content.dungeon.stones;
+    state.stonePlan = Array.from({ length: rng.int(min, max) }, () => rng.int(1, content.dungeon.floors.length));
+    enterFloor(content, state, 1, rng);
+  });
   updateExplored(content, state);
   return state;
 }
@@ -279,7 +286,12 @@ function faint(content: Content, state: DungeonState, unit: Unit, by: Unit, even
   const def = speciesDef(content, 'enemy', unit.species);
   const amount = xpYield(content, def, unit.level);
   for (const member of state.units.filter((u) => u.side === 'team' && u.hp > 0)) {
-    events.push(...gainXp(content, member, amount, member.id === 'player' ? state.bonuses.extraPp : 0));
+    const gained = gainXp(content, member, amount, member.id === 'player' ? state.bonuses.extraPp : 0);
+    events.push(...gained);
+    // Volle Plätze: der Spieler entscheidet nach dem Zug, was verlernt wird
+    for (const e of gained) {
+      if (e.type === 'levelUp' && e.offered) (state.pendingLearn ??= []).push({ id: member.id as 'player' | 'partner', move: e.offered });
+    }
   }
   if (unit.boss) {
     events.push({ type: 'bossCalm' });
@@ -315,12 +327,22 @@ function afterPlayerStep(content: Content, state: DungeonState, player: Unit, ev
   if (f.stairs && samePos(f.stairs, player.pos)) events.push({ type: 'onStairs' });
 }
 
-function useItem(content: Content, state: DungeonState, player: Unit, index: number, targetId: 'player' | 'partner', events: GameEvent[]): boolean {
+function useItem(content: Content, state: DungeonState, player: Unit, index: number, targetId: 'player' | 'partner', forget: number | undefined, events: GameEvent[]): boolean {
   const item = state.bag[index];
-  const def = item && content.dungeon.items[item];
+  if (!item) return false;
+  const { item: id, move } = parseBagEntry(item);
+  const def = content.dungeon.items[id];
   if (!def || def.use === 'quest') return false;
   const target = unitById(state, targetId);
   if (!target || target.hp <= 0) return false;
+  if (def.use === 'learn') {
+    // Der Stein verbraucht sich sofort; geht das Lernen nicht, bleibt er im Beutel
+    const result = move ? learnMove(content, target, move, forget, target.id === 'player' ? state.bonuses.extraPp : 0) : null;
+    if (!result) return false;
+    state.bag.splice(index, 1);
+    events.push({ type: 'itemUsed', id: player.id, item, target: targetId }, { type: 'learned', id: target.id, move: move!, forgot: result.forgot });
+    return true;
+  }
   state.bag.splice(index, 1);
   events.push({ type: 'itemUsed', id: player.id, item, target: targetId });
   if (def.use === 'heal') {
@@ -468,6 +490,9 @@ export function act(content: Content, state: DungeonState, action: Action): Game
       return [{ type: 'face', id: 'player', dir: action.dir }];
     }
     if (action.type === 'giveUp') return defeat(state, events);
+    // Erst die offene Wahl aus einem Stufenaufstieg, dann geht es weiter
+    if (action.type === 'learn') return resolveLearn(content, state, action.forget);
+    if (state.pendingLearn?.length) return [];
 
     if (!asleep(player, events)) {
       if (!playerAction(content, state, player, action, rng, events)) return [];
@@ -524,7 +549,7 @@ function playerAction(content: Content, state: DungeonState, player: Unit, actio
       return true;
     }
     case 'item':
-      return useItem(content, state, player, action.index, action.target, events);
+      return useItem(content, state, player, action.index, action.target, action.forget, events);
     case 'wait':
       return true;
     case 'stairs':
@@ -532,6 +557,22 @@ function playerAction(content: Content, state: DungeonState, player: Unit, actio
     default:
       return false;
   }
+}
+
+/** Offene Fähigkeit aus einem Stufenaufstieg: lernen (anstelle von forget) oder auslassen */
+function resolveLearn(content: Content, state: DungeonState, forget: number | null): GameEvent[] {
+  const pending = state.pendingLearn?.[0];
+  if (!pending) return [];
+  const unit = unitById(state, pending.id);
+  if (!unit) return [];
+  if (forget === null) {
+    state.pendingLearn!.shift();
+    return [{ type: 'learnSkipped', id: unit.id, move: pending.move }];
+  }
+  const result = learnMove(content, unit, pending.move, forget, unit.id === 'player' ? state.bonuses.extraPp : 0);
+  if (!result) return [];
+  state.pendingLearn!.shift();
+  return [{ type: 'learned', id: unit.id, move: pending.move, forgot: result.forgot }];
 }
 
 function takeStairs(content: Content, state: DungeonState, player: Unit, rng: Random, events: GameEvent[]): boolean {

@@ -25,6 +25,8 @@ const species = ['otter', 'eule', 'dachs', 'capybara'];
 const RUNS = 200;
 
 function chooseAction(s: DungeonState, rng: ReturnType<typeof createRandom>): Action {
+  // Neue Fähigkeit bei vollen Plätzen: der Bot ersetzt die älteste
+  if (s.pendingLearn?.length) return { type: 'learn', forget: 0 };
   const player = unitById(s, 'player')!;
   const adjacent = s.units.find((u) => u.side === 'enemy' && u.hp > 0 && Math.max(Math.abs(u.pos.x - player.pos.x), Math.abs(u.pos.y - player.pos.y)) === 1 && canStrike(s, player.pos, u.pos));
   const berry = s.bag.indexOf('heilbeere');

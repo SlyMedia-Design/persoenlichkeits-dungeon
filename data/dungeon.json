@@ -1,5 +1,5 @@
 {
-  "description": "Der Flüsterwald. floors werden zufällig erzeugt (Räume + Gänge), danach folgt die handgebaute Lichtung des Bosses. level = Schwierigkeit, wird vor dem Betreten angezeigt. enemyLevel: Stufe der Gegner (von, bis), steigt pro Etage; enemies: [Art, Gewicht]. Die Boss-Stufe ist fest (boss.level). items: Gewichte für zufällige Funde. Boss-Karte: # Baum/Wand, . Boden, B Boss, P Spieler, Q Partner. Texte in data/i18n/de.json unter dungeon.",
+  "description": "Der Flüsterwald. floors werden zufällig erzeugt (Räume + Gänge), danach folgt die handgebaute Lichtung des Bosses. level = Schwierigkeit, wird vor dem Betreten angezeigt. enemyLevel: Stufe der Gegner (von, bis), steigt pro Etage; enemies: [Art, Gewicht]. Die Boss-Stufe ist fest (boss.level). items: Gewichte für zufällige Funde; use learn = Fähigkeitsstein (lehrt eine zufällige Fähigkeit seines Elements, im Beutel als „glutstein:glutkralle“). stones: Anzahl Fähigkeitssteine pro Dungeon, verteilt auf zufällige Etagen. Boss-Karte: # Baum/Wand, . Boden, B Boss, P Spieler, Q Partner. Texte in data/i18n/de.json unter dungeon.",
   "id": "fluesterwald",
   "level": 7,
   "size": { "width": 40, "height": 28 },
@@ -31,11 +31,16 @@
     }
   ],
   "spawnEvery": 30,
+  "stones": { "min": 1, "max": 3 },
   "items": {
     "heilbeere": { "weight": 5, "use": "heal", "amount": 30, "sprite": "berryRed" },
     "sternbeere": { "weight": 2, "use": "pp", "amount": 5, "sprite": "berryOrange" },
     "wurfstein": { "weight": 3, "use": "throw", "amount": 10, "range": 8, "sprite": "rock" },
-    "leuchtmoos": { "weight": 0, "use": "quest", "sprite": "moss" }
+    "leuchtmoos": { "weight": 0, "use": "quest", "sprite": "moss" },
+    "glutstein": { "weight": 0, "use": "learn", "element": "glut", "sprite": "stone" },
+    "felsstein": { "weight": 0, "use": "learn", "element": "fels", "sprite": "stone" },
+    "flutstein": { "weight": 0, "use": "learn", "element": "flut", "sprite": "stone" },
+    "windstein": { "weight": 0, "use": "learn", "element": "wind", "sprite": "stone" }
   },
   "traps": { "dornen": { "damage": 8, "sprite": "spikes" } },
   "quests": {

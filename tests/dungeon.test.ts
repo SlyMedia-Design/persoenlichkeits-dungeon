@@ -11,7 +11,7 @@ import { act, startRun, unitById, type RunOptions } from '../src/core/dungeon/en
 import { generateLayout, isFloorTile } from '../src/core/dungeon/generate';
 import { createRandom } from '../src/core/dungeon/random';
 import { settleRun } from '../src/core/dungeon/settle';
-import { computeBonuses, gainXp, levelDamage, makeUnit, movesAt, statsAt, xpToNext, xpYield, type BonusDef } from '../src/core/dungeon/stats';
+import { computeBonuses, gainXp, learnMove, levelDamage, makeUnit, movesAt, parseBagEntry, statsAt, teachableMoves, xpToNext, xpYield, type BonusDef } from '../src/core/dungeon/stats';
 import type { Action, Content, DungeonState } from '../src/core/dungeon/types';
 
 const content = { dungeon: dungeonJson, battle: battleJson, moves: movesJson, elements: elementsJson } as unknown as Content;
@@ -237,6 +237,85 @@ describe('Züge und Kampf', () => {
   });
 });
 
+describe('Fähigkeiten und Fähigkeitssteine', () => {
+  const stonesOf = (s: DungeonState) => s.floor.items.filter((it) => parseBagEntry(it.item).move);
+
+  it('pro Dungeon liegen 1 bis 3 Steine, verteilt auf die Etagen', () => {
+    for (let seed = 1; seed <= 40; seed++) {
+      const s = run({ seed });
+      const { min, max } = content.dungeon.stones;
+      expect(s.stonePlan!.length).toBeGreaterThanOrEqual(min);
+      expect(s.stonePlan!.length).toBeLessThanOrEqual(max);
+      expect(stonesOf(s)).toHaveLength(s.stonePlan!.filter((f) => f === 1).length);
+    }
+  });
+
+  it('ein Stein lehrt eine Fähigkeit seines Elements (kein Ranke-Stein)', () => {
+    for (let seed = 1; seed <= 40; seed++) {
+      for (const stone of stonesOf(run({ seed }))) {
+        const { item, move } = parseBagEntry(stone.item);
+        const element = content.dungeon.items[item].element!;
+        expect(element).not.toBe('ranke');
+        expect(teachableMoves(content, element)).toContain(move);
+      }
+    }
+  });
+
+  it('lernen: freier Platz wird belegt, bei 4 aktiven nur mit gewähltem Platz, Bekanntes nie doppelt', () => {
+    const u = makeUnit(content, { id: 'player', side: 'team', species: 'dachs', level: 5, pos: { x: 0, y: 0 } });
+    expect(u.moves).toHaveLength(3);
+    expect(learnMove(content, u, 'wasserblase', undefined, 0)).toEqual({});
+    expect(u.moves).toHaveLength(4);
+    expect(learnMove(content, u, 'federsturm', undefined, 0)).toBeNull();
+    expect(learnMove(content, u, 'kratzer', 0, 0)).toBeNull();
+    expect(learnMove(content, u, 'federsturm', 1, 0)).toEqual({ forgot: 'glutkralle' });
+    expect(u.moves.map((m) => m.id)).toEqual(['kratzer', 'federsturm', 'glutpanzer', 'wasserblase']);
+  });
+
+  it('ein Stein kann dem Partner gegeben werden und verbraucht sich', () => {
+    const s = run({ bag: ['flutstein:planschwelle'] });
+    act(content, s, { type: 'item', index: 0, target: 'partner' });
+    expect(s.bag).toEqual([]);
+    expect(unitById(s, 'partner')!.moves.map((m) => m.id)).toContain('planschwelle');
+  });
+
+  it('bei 4 aktiven Fähigkeiten braucht der Stein einen gewählten Platz, sonst bleibt er im Beutel', () => {
+    const s = run({ player: { species: 'dachs', level: 8, xp: 0 }, bag: ['windstein:federsturm'] });
+    expect(act(content, s, { type: 'item', index: 0, target: 'player' })).toEqual([]);
+    expect(s.bag).toHaveLength(1);
+    act(content, s, { type: 'item', index: 0, target: 'player', forget: 2 });
+    expect(s.bag).toHaveLength(0);
+    expect(unitById(s, 'player')!.moves[2].id).toBe('federsturm');
+  });
+
+  it('Stufenaufstieg bei 4 aktiven: die neue Fähigkeit wartet auf die Wahl des Spielers', () => {
+    const s = run({ player: { species: 'dachs', level: 7, xp: 0, moves: ['kratzer', 'glutkralle', 'glutpanzer', 'wasserblase'] } });
+    const player = unitById(s, 'player')!;
+    const enemy = s.units.find((u) => u.side === 'enemy')!;
+    s.units = s.units.filter((u) => u.side !== 'enemy' || u === enemy);
+    Object.assign(enemy, { hp: 1, level: 80, pos: { x: player.pos.x + 1, y: player.pos.y } });
+    const partner = unitById(s, 'partner')!;
+    if (partner.pos.x === enemy.pos.x && partner.pos.y === enemy.pos.y) partner.pos = { x: player.pos.x - 1, y: player.pos.y };
+    s.floor.tiles = s.floor.tiles.map((row, y) => (y === player.pos.y ? row.slice(0, player.pos.x - 1) + '...' + row.slice(player.pos.x + 2) : row));
+    player.facing = 'right';
+    for (let i = 0; i < 10 && enemy.hp > 0; i++) act(content, s, { type: 'attack' });
+    expect(player.level).toBeGreaterThanOrEqual(8);
+    expect(s.pendingLearn?.[0]).toEqual({ id: 'player', move: 'glutstoss' });
+    // Solange die Wahl offen ist, geht nichts anderes
+    expect(act(content, s, { type: 'wait' })).toEqual([]);
+    const events = act(content, s, { type: 'learn', forget: 3 });
+    expect(events).toContainEqual({ type: 'learned', id: 'player', move: 'glutstoss', forgot: 'wasserblase' });
+    expect(s.pendingLearn).toHaveLength(0);
+  });
+
+  it('die neue Fähigkeit kann auch ausgelassen werden', () => {
+    const s = run();
+    s.pendingLearn = [{ id: 'partner', move: 'planschwelle' }];
+    expect(act(content, s, { type: 'learn', forget: null })).toEqual([{ type: 'learnSkipped', id: 'partner', move: 'planschwelle' }]);
+    expect(unitById(s, 'partner')!.moves.map((m) => m.id)).not.toContain('planschwelle');
+  });
+});
+
 describe('Stups', () => {
   it('wartet unbehelligt und schließt sich an, wenn man zu ihm läuft', () => {
     const s = run({ escort: true });
@@ -282,7 +361,17 @@ describe('Auswertung nach dem Ausflug', () => {
     unitById(s, 'player')!.level = 7;
     unitById(s, 'player')!.xp = 12;
     act(content, s, { type: 'giveUp' });
-    expect(settleRun(content, s, {}).team.player).toEqual({ level: 7, xp: 12 });
+    expect(settleRun(content, s, {}).team.player).toMatchObject({ level: 7, xp: 12 });
+  });
+
+  it('gelernte Fähigkeiten bleiben über den Ausflug hinaus erhalten', () => {
+    const s = run();
+    const player = unitById(s, 'player')!;
+    learnMove(content, player, 'wasserblase', undefined, 0);
+    const moves = settleRun(content, s, {}).team.player.moves!;
+    expect(moves).toContain('wasserblase');
+    const next = run({ player: { species: 'dachs', level: 5, xp: 0, moves } });
+    expect(unitById(next, 'player')!.moves.map((m) => m.id)).toEqual(moves);
   });
 
   it('gerettetes Stups macht den Auftrag erfüllt', () => {
