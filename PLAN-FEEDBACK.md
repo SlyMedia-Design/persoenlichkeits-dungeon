@@ -33,6 +33,8 @@ Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt n
 - [x] Zufällige Quest-Belohnungen mit Mindestwert („enttäuscht nie“), mit Tests
 - [x] Quest-Marker über NPCs: orangenes ! → verschwindet bei Annahme → ? bei Erfüllung → weg bei Abgabe
 - [x] Icons für Heilbeere und Geld
+- [x] Beutelgrenze sichtbar (Füllstand, „Beutel voll“), Ablegen und Tauschen im Dungeon
+- [x] Questlog im Menü (Dorf und Dungeon) mit dem nächsten Schritt je Auftrag
 
 ## F – Dorf-Ausbau
 - [ ] Karte erweitern: 5 Gebäude, größerer See mit Angelplatz (Steg, Boot, Eimer, Netze)

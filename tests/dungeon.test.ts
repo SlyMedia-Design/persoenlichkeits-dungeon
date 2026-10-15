@@ -413,6 +413,40 @@ describe('Auswertung nach dem Ausflug', () => {
   });
 });
 
+describe('Beutel', () => {
+  const size = content.dungeon.bag.size;
+
+  it('hat eine feste Grenze: Ist er voll, bleibt ein Fund liegen', () => {
+    const s = run({ bag: Array(size).fill('heilbeere') });
+    const player = unitById(s, 'player')!;
+    s.units = s.units.filter((u) => u.side === 'team');
+    s.floor.tiles = s.floor.tiles.map((row, y) => (y === player.pos.y ? row.slice(0, player.pos.x - 1) + '...' + row.slice(player.pos.x + 2) : row));
+    unitById(s, 'partner')!.pos = { x: player.pos.x - 1, y: player.pos.y };
+    s.floor.items = [{ pos: { x: player.pos.x + 1, y: player.pos.y }, item: 'wurfstein' }];
+    const events = act(content, s, { type: 'move', dir: 'right' });
+    expect(events).toContainEqual({ type: 'bagFull', item: 'wurfstein' });
+    expect(s.bag).toHaveLength(size);
+    expect(s.floor.items).toHaveLength(1);
+  });
+
+  it('Ablegen schafft Platz, auf einem belegten Feld wird getauscht', () => {
+    const s = run({ bag: ['heilbeere', 'sternbeere'] });
+    const player = unitById(s, 'player')!;
+    s.floor.items = [];
+    act(content, s, { type: 'drop', index: 0 });
+    expect(s.bag).toEqual(['sternbeere']);
+    expect(s.floor.items).toEqual([{ pos: player.pos, item: 'heilbeere' }]);
+    const events = act(content, s, { type: 'drop', index: 0 });
+    expect(events).toContainEqual({ type: 'drop', id: 'player', item: 'sternbeere', picked: 'heilbeere' });
+    expect(s.bag).toEqual(['heilbeere']);
+    expect(s.floor.items.map((i) => i.item)).toEqual(['sternbeere']);
+  });
+
+  it('ein zu voller Beutel aus einem alten Spielstand wird beim Aufbruch gekürzt', () => {
+    expect(run({ bag: Array(size + 3).fill('heilbeere') }).bag).toHaveLength(size);
+  });
+});
+
 describe('Quest-Tasche', () => {
   it('Auftragsgegenstände landen in der Quest-Tasche und belegen keinen Beutelplatz', () => {
     const s = run({ moss: true, bag: Array(content.dungeon.bag.size).fill('heilbeere') });

@@ -173,7 +173,11 @@
       "profile": "Mein Profil",
       "share": "Ergebnis teilen",
       "toTitle": "Zum Titelbild",
-      "close": "Weiterspielen"
+      "close": "Weiterspielen",
+      "quests": "Aufträge",
+      "bag": "Beutel",
+      "back": "Zurück",
+      "bagFull": "Der Beutel ist voll. Im Flüsterwald kannst du Gegenstände ablegen, um Platz zu schaffen."
     },
     "examine": {
       "pond": "Im Teich flitzen kleine silberne Fische davon.",
@@ -244,13 +248,30 @@
       "verirrt": {
         "title": "Vermisst: der kleine Stups",
         "text": "Stups ist beim Beerensammeln im Flüsterwald verschwunden. Bitte findet ihn und bringt ihn sicher nach Hause!",
-        "from": "Stups’ Mama"
+        "from": "Stups’ Mama",
+        "log": {
+          "accepted": "Findet Stups auf Etage 2 des Flüsterwalds.",
+          "following": "Stups folgt euch. Bringt ihn sicher zur Treppe!",
+          "rescued": "Stups ist in Sicherheit. Kehrt ins Dorf zurück und erzählt es Fips.",
+          "ready": "Erzählt Fips, dass Stups wieder da ist, und holt euch die Belohnung.",
+          "done": "Stups ist wieder zu Hause."
+        }
       },
       "leuchtmoos": {
         "title": "Gesucht: Leuchtmoos",
         "text": "Für meine Laternen brauche ich drei Büschel Leuchtmoos aus dem Flüsterwald.",
-        "from": "Oma Wurzel"
+        "from": "Oma Wurzel",
+        "log": {
+          "accepted": "Sammelt Leuchtmoos im Flüsterwald: {n}/{needed}.",
+          "ready": "Bringt das Leuchtmoos zu Oma Wurzel und holt euch die Belohnung.",
+          "done": "Oma Wurzels Laternen leuchten wieder."
+        }
       }
+    },
+    "questlog": {
+      "title": "Aufträge",
+      "empty": "Noch keine Aufträge. Schau am Schwarzen Brett vorbei!",
+      "done": "Erledigt"
     },
     "reward": {
       "got": "Ihr erhaltet: {list}.",
@@ -471,7 +492,13 @@
       "cancel": "Abbrechen",
       "info": "Info",
       "ppShort": "{pp}/{max}",
-      "questBag": "Quest-Tasche"
+      "questBag": "Quest-Tasche",
+      "bagButton": "Beutel {n}/{max}",
+      "bagButtonFull": "Beutel voll",
+      "bagFullHint": "Der Beutel ist voll. Lege etwas ab, um Platz zu schaffen.",
+      "drop": "Ablegen",
+      "swap": "Gegen {item} tauschen",
+      "full": "Voll!"
     },
     "log": {
       "attack": "{name} greift an!",
@@ -505,6 +532,8 @@
       "learned": "{name} lernt {move}!",
       "forgot": "{name} vergisst dafür {move}.",
       "skipped": "{name} lernt {move} nicht.",
+      "drop": "{name} legt {item} ab.",
+      "swap": "{name} legt {item} ab und nimmt {other}.",
       "pickup": "{item} eingesteckt.",
       "bagFull": "Der Beutel ist voll – {item} bleibt liegen.",
       "itemSelf": "{name} benutzt {item}.",

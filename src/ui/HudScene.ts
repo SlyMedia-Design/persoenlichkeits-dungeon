@@ -4,6 +4,7 @@ import { addSoundToggle } from './BaseScene';
 import { Button } from './Button';
 import { isFastForwardToggled, toggleFastForward } from './speed';
 import { Typewriter } from './typewriter';
+import type { QuestLogEntry } from '../core/questlog';
 import { COLORS, headingStyle, metrics, textStyle, type Metrics } from './theme';
 
 export interface Dialog {
@@ -296,6 +297,21 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
     container.y = Math.max(8, (height - y) / 2);
     this.layer!.add([this.overlay(), container]);
     return container;
+  }
+
+/** Questlog: angenommene Aufträge mit dem nächsten Schritt, erledigte gedimmt darunter */
+  protected drawQuestLog(entries: QuestLogEntry[], onBack: () => void) {
+    this.drawPanel(t('village.questlog.title'), (b) => {
+      if (entries.length === 0) b.text(t('village.questlog.empty'), { color: COLORS.textDim });
+      for (const e of entries) {
+        const done = e.status === 'done';
+        b.text(t(`village.quests.${e.id}.title`), headingStyle(this.m.small, done ? COLORS.textDim : COLORS.textGold), 'left');
+        const step = t(e.step, e.vars);
+        b.text(done ? `${t('village.questlog.done')}: ${step}` : step, { color: done ? COLORS.textDim : COLORS.text }, 'left');
+        b.gap(4);
+      }
+      b.button(t('village.menu.back'), onBack, { fontSize: this.m.small });
+    }, 420);
   }
 
   private drawChoice(mode: Extract<BaseMode, { kind: 'choice' }>) {

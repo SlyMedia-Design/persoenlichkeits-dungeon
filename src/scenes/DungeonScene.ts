@@ -586,7 +586,17 @@ export class DungeonScene extends Phaser.Scene {
       }
       case 'bagFull':
         this.log('bagFull', { item: bagEntryName(e.item) });
+        this.floatText('player', t('dungeon.ui.full'), '#ffd27a');
         return;
+      case 'drop': {
+        const p = unitById(s, e.id)!.pos;
+        this.items.get(key(p))?.destroy();
+        this.items.delete(key(p));
+        this.addItem(p, e.item);
+        if (e.picked) this.log('swap', { name: this.nameOf(e.id), item: bagEntryName(e.item), other: bagEntryName(e.picked) });
+        else this.log('drop', { name: this.nameOf(e.id), item: bagEntryName(e.item) });
+        return;
+      }
       case 'itemUsed': {
         const item = bagEntryName(e.item);
         const def = bagEntryDef(e.item);

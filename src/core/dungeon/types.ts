@@ -231,6 +231,8 @@ export type Action =
   | { type: 'item'; index: number; target: 'player' | 'partner'; forget?: number }
   /** Offene Fähigkeit aus einem Stufenaufstieg: forget = verlernter Platz, null = nicht lernen (kostet keinen Zug) */
   | { type: 'learn'; forget: number | null }
+  /** Gegenstand auf das eigene Feld legen; liegt dort schon etwas, wird getauscht (kostet einen Zug) */
+  | { type: 'drop'; index: number }
   | { type: 'wait' }
   | { type: 'stairs' }
   | { type: 'giveUp' };
@@ -256,6 +258,8 @@ export type GameEvent =
   | { type: 'learnSkipped'; id: string; move: string }
   | { type: 'pickup'; id: string; item: string }
   | { type: 'bagFull'; item: string }
+  /** picked = dafür aufgehobener Gegenstand (Tausch) */
+  | { type: 'drop'; id: string; item: string; picked?: string }
   | { type: 'itemUsed'; id: string; item: string; target: string }
   | { type: 'trap'; id: string; kind: string; amount: number }
   | { type: 'onStairs' }

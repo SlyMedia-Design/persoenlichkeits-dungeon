@@ -48,8 +48,9 @@ export function startRun(content: Content, opts: RunOptions): DungeonState {
     rng: opts.seed >>> 0,
     floor: undefined as unknown as DungeonState['floor'],
     units: [player, partner],
-    bag: opts.bag.filter((i) => !isQuestItem(content, i)),
-    bagAtStart: opts.bag.filter((i) => !isQuestItem(content, i)),
+    // Der Beutel hat eine feste Grenze (data/dungeon.json, bag.size)
+    bag: opts.bag.filter((i) => !isQuestItem(content, i)).slice(0, content.dungeon.bag.size),
+    bagAtStart: opts.bag.filter((i) => !isQuestItem(content, i)).slice(0, content.dungeon.bag.size),
     // Ältere Spielstände hatten Auftragsgegenstände noch im Beutel
     questBag: [...(opts.questBag ?? []), ...opts.bag.filter((i) => isQuestItem(content, i))],
     questBagAtStart: [...(opts.questBag ?? []), ...opts.bag.filter((i) => isQuestItem(content, i))],
@@ -346,6 +347,25 @@ function afterPlayerStep(content: Content, state: DungeonState, player: Unit, ev
   if (f.stairs && samePos(f.stairs, player.pos)) events.push({ type: 'onStairs' });
 }
 
+/** Ablegen: Der Gegenstand kommt auf das eigene Feld. Liegt dort schon etwas, wird getauscht. */
+function dropItem(content: Content, state: DungeonState, player: Unit, index: number, events: GameEvent[]): boolean {
+  const item = state.bag[index];
+  if (!item) return false;
+  const f = state.floor;
+  const here = f.items.findIndex((it) => samePos(it.pos, player.pos));
+  state.bag.splice(index, 1);
+  let picked: string | undefined;
+  if (here >= 0) {
+    picked = f.items[here].item;
+    f.items.splice(here, 1);
+    if (isQuestItem(content, picked)) (state.questBag ??= []).push(picked);
+    else state.bag.push(picked);
+  }
+  f.items.push({ pos: { ...player.pos }, item });
+  events.push({ type: 'drop', id: player.id, item, picked });
+  return true;
+}
+
 function useItem(content: Content, state: DungeonState, player: Unit, index: number, targetId: 'player' | 'partner', forget: number | undefined, events: GameEvent[]): boolean {
   const item = state.bag[index];
   if (!item) return false;
@@ -568,6 +588,8 @@ function playerAction(content: Content, state: DungeonState, player: Unit, actio
       useMove(content, state, player, slot.id, aim(content, state, player, slot.id), rng, events);
       return true;
     }
+    case 'drop':
+      return dropItem(content, state, player, action.index, events);
     case 'item':
       return useItem(content, state, player, action.index, action.target, action.forget, events);
     case 'wait':

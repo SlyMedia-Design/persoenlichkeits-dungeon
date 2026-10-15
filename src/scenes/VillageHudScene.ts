@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
-import { t, village } from '../content';
+import { dungeonContent, t, village } from '../content';
+import { questLogEntries } from '../core/questlog';
+import { bagEntryName, groupEntries } from '../ui/items';
 import { acceptQuest, questStatus } from '../core/village';
 import { getSave, updateSave } from '../state';
 import { HudScene } from '../ui/HudScene';
@@ -7,7 +9,7 @@ import { itemKey } from '../ui/tiles';
 import { COLORS, headingStyle, textStyle } from '../ui/theme';
 import { shareResult } from './EndingScene';
 
-type Mode = { kind: 'board'; note?: string } | { kind: 'menu' };
+type Mode = { kind: 'board'; note?: string } | { kind: 'menu' } | { kind: 'quests' } | { kind: 'bag' };
 
 const STATUS_LABEL: Record<string, string> = {
   accepted: 'village.board.accepted',
@@ -48,12 +50,43 @@ export class VillageHudScene extends HudScene<Mode> {
 
   protected drawMode(mode: Mode) {
     if (mode.kind === 'board') this.drawBoard(mode.note);
+    else if (mode.kind === 'quests') this.drawQuestLog(this.questEntries(), () => this.setMode({ kind: 'menu' }));
+    else if (mode.kind === 'bag') this.drawBagView();
     else this.drawMenu();
+  }
+
+  private questEntries() {
+    const save = getSave();
+    const { item, needed } = dungeonContent.dungeon.quests.leuchtmoos;
+    const moss = (save.questBag ?? []).filter((i) => i === item).length;
+    return questLogEntries(village.def.quests, save.quests ?? {}, { moss, mossNeeded: needed });
+  }
+
+  /** Beutel im Dorf ansehen: Füllstand, Inhalt und Quest-Tasche */
+  private drawBagView() {
+    const save = getSave();
+    const bag = save.bag ?? [];
+    const size = dungeonContent.dungeon.bag.size;
+    this.drawPanel(t('dungeon.ui.bagCount', { n: bag.length, max: size }), (b) => {
+      if (bag.length === 0) b.text(t('dungeon.ui.bagEmpty'), { color: COLORS.textDim });
+      if (bag.length >= size) b.text(t('village.menu.bagFull'), { color: COLORS.textGold });
+      const listOf = (entries: string[]) => [...groupEntries(entries)].map(([entry, n]) => `${bagEntryName(entry)}${n.length > 1 ? `  ×${n.length}` : ''}`).join('\n');
+      if (bag.length > 0) b.text(listOf(bag), {}, 'left');
+      const quest = save.questBag ?? [];
+      if (quest.length > 0) {
+        b.gap(4);
+        b.text(t('dungeon.ui.questBag'), headingStyle(this.m.small), 'left');
+        b.text(listOf(quest), { color: COLORS.textDim }, 'left');
+      }
+      b.button(t('village.menu.back'), () => this.setMode({ kind: 'menu' }), { fontSize: this.m.small });
+    }, 420);
   }
 
   private drawMenu() {
     let status: Phaser.GameObjects.Text;
     this.drawPanel(t('village.menu.title'), (b) => {
+      b.button(t('village.menu.quests'), () => this.setMode({ kind: 'quests' }));
+      b.button(t('village.menu.bag'), () => this.setMode({ kind: 'bag' }));
       b.button(t('village.menu.profile'), () => this.onLeave?.('Profile', { from: 'Village' }));
       b.button(t('village.menu.share'), () => void shareResult(status));
       b.button(t('village.menu.toTitle'), () => this.onLeave?.('Title'));

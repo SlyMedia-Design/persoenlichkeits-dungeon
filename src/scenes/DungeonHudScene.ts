@@ -1,4 +1,6 @@
-import { dungeonContent, t } from '../content';
+import { dungeonContent, t, village } from '../content';
+import { questLogEntries } from '../core/questlog';
+import { getSave } from '../state';
 import { senses, teamSees } from '../core/dungeon/engine';
 import { knows, parseBagEntry } from '../core/dungeon/stats';
 import type { Action, DungeonState, Unit } from '../core/dungeon/types';
@@ -8,7 +10,7 @@ import { bagEntryDef, bagEntryInfo, bagEntryName, groupEntries } from '../ui/ite
 import { COLORS, headingStyle, textStyle } from '../ui/theme';
 
 /** info = Platz der Fähigkeit, deren Beschreibung gerade aufgeklappt ist */
-type Mode = { kind: 'skills'; info?: number } | { kind: 'bag' } | { kind: 'bagItem'; index: number } | { kind: 'menu' };
+type Mode = { kind: 'skills'; info?: number } | { kind: 'bag' } | { kind: 'bagItem'; index: number } | { kind: 'menu' } | { kind: 'quests' };
 
 const LOG_LINES = 3;
 const LOG_MS = 6000;
@@ -78,6 +80,12 @@ export class DungeonHudScene extends HudScene<Mode> {
     return Math.round(this.m.font * 2.3);
   }
 
+/** Beutel-Knopf mit Füllstand, damit man sieht, wann er voll wird */
+  private bagLabel(s: DungeonState) {
+    const max = dungeonContent.dungeon.bag.size;
+    return s.bag.length >= max ? t('dungeon.ui.bagButtonFull') : t('dungeon.ui.bagButton', { n: s.bag.length, max });
+  }
+
   private nameOf(u: Unit) {
     return this.names[u.id] ?? t(`dungeon.enemies.${u.species}`);
   }
@@ -133,7 +141,7 @@ export class DungeonHudScene extends HudScene<Mode> {
     // Knopfleiste
     const labels: [string, () => void][] = [
       [t('dungeon.ui.skills'), () => this.setMode({ kind: 'skills' })],
-      [t('dungeon.ui.bag'), () => this.setMode({ kind: 'bag' })],
+      [this.bagLabel(s), () => this.setMode({ kind: 'bag' })],
       [t('dungeon.ui.wait'), () => this.onAction?.({ type: 'wait' })],
       [t('dungeon.ui.menu'), () => this.setMode({ kind: 'menu' })],
     ];
@@ -187,6 +195,7 @@ export class DungeonHudScene extends HudScene<Mode> {
     if (mode.kind === 'skills') this.drawSkills(s, mode.info);
     else if (mode.kind === 'bag') this.drawBag(s);
     else if (mode.kind === 'bagItem') this.drawBagItem(s, mode.index);
+    else if (mode.kind === 'quests') this.drawQuestLog(this.questEntries(s), () => this.setMode({ kind: 'menu' }));
     else this.drawMenu();
   }
 
@@ -242,6 +251,7 @@ export class DungeonHudScene extends HudScene<Mode> {
     const size = dungeonContent.dungeon.bag.size;
     this.drawPanel(t('dungeon.ui.bagCount', { n: s.bag.length, max: size }), (b) => {
       if (s.bag.length === 0) b.text(t('dungeon.ui.bagEmpty'));
+      if (s.bag.length >= size) b.text(t('dungeon.ui.bagFullHint'), { color: COLORS.textGold });
       // Gleiche Gegenstände zusammenfassen
       for (const [item, indices] of groupEntries(s.bag)) {
         const label = `${bagEntryName(item)}${indices.length > 1 ? `  ×${indices.length}` : ''}`;
@@ -275,6 +285,11 @@ export class DungeonHudScene extends HudScene<Mode> {
       } else {
         b.text(t('dungeon.ui.questItem'), { color: COLORS.textGold });
       }
+      // Ablegen schafft Platz; liegt auf dem Feld schon etwas, wird getauscht
+      const player = s.units.find((u) => u.id === 'player')!;
+      const here = s.floor.items.find((it) => it.pos.x === player.pos.x && it.pos.y === player.pos.y);
+      const dropLabel = here ? t('dungeon.ui.swap', { item: bagEntryName(here.item) }) : t('dungeon.ui.drop');
+      b.button(dropLabel, () => this.act({ type: 'drop', index }), { fontSize: this.m.small });
       b.button(t('dungeon.ui.close'), () => this.setMode({ kind: 'bag' }), { fontSize: this.m.small });
     });
   }
@@ -302,9 +317,17 @@ export class DungeonHudScene extends HudScene<Mode> {
     }
   }
 
+/** Questlog im Dungeon: mit Stups' Stand und dem Moos aus der Quest-Tasche */
+  private questEntries(s: DungeonState) {
+    const { item, needed } = dungeonContent.dungeon.quests.leuchtmoos;
+    const moss = (s.questBag ?? []).filter((i) => i === item).length;
+    return questLogEntries(village.def.quests, getSave().quests ?? {}, { moss, mossNeeded: needed, escort: s.escort });
+  }
+
   private drawMenu() {
     this.drawPanel(t('dungeon.ui.menu'), (b) => {
       b.button(t('dungeon.ui.resume'), () => this.close());
+      b.button(t('village.menu.quests'), () => this.setMode({ kind: 'quests' }));
       b.button(t('dungeon.ui.giveUp'), () =>
         this.choose(t('dungeon.ui.giveUpConfirm'), [
           { label: t('dungeon.ui.giveUp'), onPick: () => this.onGiveUp?.() },
