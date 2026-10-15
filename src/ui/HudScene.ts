@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
+import { t } from '../content';
 import { addSoundToggle } from './BaseScene';
 import { Button } from './Button';
+import { isFastForwardToggled, toggleFastForward } from './speed';
 import { Typewriter } from './typewriter';
 import { COLORS, headingStyle, metrics, textStyle, type Metrics } from './theme';
 
@@ -167,6 +169,7 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
     this.drawTop();
     const sound = addSoundToggle(this, this.m).on('pointerup', () => this.consume());
     this.layer.add(sound);
+    if (this.sys.game.device.input.touch) this.drawFastForward(sound);
     const mode = this.mode;
     if (mode.kind === 'none') {
       if (this.time.now < this.hintUntil) this.drawHint();
@@ -193,6 +196,18 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
     let size = fontSize;
     while (!label.includes(' ') && button.label.height > size * 1.8 && size > 11) button.label.setFontSize(--size);
     return button;
+  }
+
+  /** Shift-Knopf für Touch-Geräte links neben dem Musik-Schalter: schaltet das Vorspulen ein und aus */
+  private drawFastForward(sound: Phaser.GameObjects.Text) {
+    const { small } = this.m;
+    const w = Math.round(small * 4.2);
+    const h = Math.round(small * 1.9);
+    const button = this.button(sound.x - sound.width - 6 - w / 2, 8 + h / 2, t('common.fastForward'), { width: w, height: h, fontSize: small }, () =>
+      button.setSelected(toggleFastForward()),
+    );
+    button.setSelected(isFastForwardToggled());
+    this.layer!.add(button);
   }
 
   private drawHint() {

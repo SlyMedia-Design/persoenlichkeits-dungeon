@@ -10,7 +10,8 @@
     "confirm": "Bestätigen",
     "cancel": "Abbrechen",
     "soundOn": "♪ an",
-    "soundOff": "♪ aus"
+    "soundOff": "♪ aus",
+    "fastForward": "Shift"
   },
   "title": {
     "start": "Neu beginnen",
@@ -164,7 +165,7 @@
       "„Auf dem Dorfplatz hängt das Schwarze Brett. Dort bitten die Leute um Hilfe.“",
       "„Und Oma Wurzel weiß alles über unser Dorf. Komm, sag ihr Hallo!“"
     ],
-    "hintTouch": "Tippe auf ein Feld, um dorthin zu laufen. Tippe auf jemanden, um zu reden.",
+    "hintTouch": "Tippe auf ein Feld, um dorthin zu laufen. Tippe auf jemanden, um zu reden. Shift oben rechts spult vor.",
     "hintKeys": "Pfeiltasten oder WASD zum Laufen (zwei Tasten zusammen für schräg), Leertaste zum Reden und Untersuchen, Shift halten zum Vorspulen.",
     "menu": {
       "open": "Menü",
@@ -431,7 +432,7 @@
       "stairsPrompt": "Hier führt ein Pfad tiefer in den Wald. Weitergehen?",
       "stairsGo": "Weitergehen",
       "stairsStay": "Noch nicht",
-      "hintTouch": "Tippe neben dich, um zu laufen oder anzugreifen. Unten findest du Fähigkeiten und Beutel.",
+      "hintTouch": "Tippe neben dich, um zu laufen oder anzugreifen. Unten findest du Fähigkeiten und Beutel, oben rechts Shift zum Vorspulen.",
       "hintKeys": "WASD/Pfeiltasten: laufen und angreifen · Leertaste: Angriff · 1–4: Fähigkeiten · B: Beutel · Q: warten · Shift: vorspulen",
       "profile": "Mein Profil"
     },
