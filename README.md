@@ -76,6 +76,8 @@ Jeder Push auf `main` testet, baut und veröffentlicht über `.github/workflows/
 - Deutsche Übersetzung: A. Angleitner, S. Hempel, R. Langert, F. Spinath (Universität Bielefeld)
 - Vergleichsdaten: Open-Source Psychometrics Project
 - Grafik in Dorf und Dungeon: [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) von Pixel-boy und AAA (CC0). Die Wesen sind eigene Pixel-Sprites aus `data/archetypes.json`: 16×16 fürs Spielfeld, 32×32-Porträts für Menüs (erzeugt mit `scripts/draw-creatures.ts`)
+- Musik und Geräusche: Boss-Musik „Tension“ und Warnton „Alert“ aus dem [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) (CC0), eingetragen in `data/audio.json`; die ruhige Hintergrundmusik wird im Spiel erzeugt (`src/ui/ambient.ts`)
+- Eigene Pixel-Grafiken: Element-Icons und Fähigkeitssteine (`data/elements.json`), Quest-Zeichen (`src/ui/markers.ts`)
 - Schrift: „Dorfschrift“, abgeleitet von [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) (SIL Open Font License) – kräftiger, höhere Kleinbuchstaben, mehr Buchstabenabstand. Erzeugt mit `scripts/build-font.ts`, Dateien und Lizenz in `src/ui/fonts/`
 - Engine: [Phaser 3](https://phaser.io/)
 

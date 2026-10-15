@@ -7,6 +7,7 @@ import type { Action, DungeonState, GameEvent, Unit } from '../core/dungeon/type
 import { combineDirs, dirTo, findPath, horizontalOf, samePos, type Dir, type Pos } from '../core/grid';
 import { getSave, updateSave } from '../state';
 import { ambient } from '../ui/ambient';
+import { preloadBossAudio, startBossMusic, stopBossMusic } from '../ui/audio';
 import { stoneTexture } from '../ui/elements';
 import { bagEntryDef, bagEntryName } from '../ui/items';
 import { pixelZoom } from '../ui/camera';
@@ -57,6 +58,7 @@ export class DungeonScene extends Phaser.Scene {
 
   preload() {
     preloadTileset(this);
+    preloadBossAudio(this);
   }
 
   create() {
@@ -93,6 +95,9 @@ export class DungeonScene extends Phaser.Scene {
     this.events.once('shutdown', () => {
       this.scale.off('resize', onResize);
       this.scene.stop('DungeonHud');
+      // Die Szene-Tweens enden mit der Szene: Boss-Musik sofort beenden
+      this.sound.get('boss-music')?.destroy();
+      ambient.duck(false);
     });
     this.cameras.main.fadeIn(500, 14, 26, 18);
     this.time.delayedCall(450, () => this.arrive());
@@ -106,12 +111,15 @@ export class DungeonScene extends Phaser.Scene {
       this.hud.showHint();
     }
     if (this.state.floor.boss && this.state.turn === 0) await this.bossIntro();
+    // Spielstand auf der Lichtung (nach dem Neuladen): Musik ohne Warnton
+    else if (this.state.floor.boss && !this.state.outcome) startBossMusic(this, false);
     // Spielstand mit offener Wahl (z. B. nach dem Neuladen)
     if (this.state.pendingLearn?.length) this.askLearn();
   }
 
   private async bossIntro() {
     this.busy = true;
+    startBossMusic(this, true);
     const cam = this.cameras.main;
     const boss = center(unitById(this.state, 'boss')!.pos);
     // Kamera kurz zum Waldgeist schwenken (die Verfolgung der Spielfigur würde den Schwenk überschreiben)
@@ -646,6 +654,7 @@ export class DungeonScene extends Phaser.Scene {
         return;
       }
       case 'bossCalm': {
+        stopBossMusic(this, 2000);
         const view = this.views.get('boss');
         if (view) await this.tween({ targets: view.sprite, alpha: 0.5, duration: 500 });
         await this.say(t('dungeon.enemies.waldgeist'), t.list('dungeon.boss.calm'), faceKey('forestSpirit'));

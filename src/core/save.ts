@@ -45,6 +45,8 @@ export interface SaveData {
   dungeon?: DungeonState;
   /** Der Waldgeist wurde besänftigt */
   dungeonCleared?: boolean;
+  /** Hinweis „Ende des Prototyps“ mit Feedback-Knopf schon gesehen */
+  prototypeEndSeen?: boolean;
 }
 
 /** Minimale Schnittstelle, damit localStorage in Tests ersetzt werden kann. */

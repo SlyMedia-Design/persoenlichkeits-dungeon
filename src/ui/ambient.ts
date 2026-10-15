@@ -26,6 +26,8 @@ class Ambient {
   private chordIndex = 0;
   private brightness = 0.3;
   muted = readMuted();
+  /** Ausgeblendet, solange eigene Musik läuft (z. B. beim Boss) */
+  private ducked = false;
 
   /** Muss aus einem Klick-/Touch-Handler aufgerufen werden. */
   unlock() {
@@ -42,9 +44,15 @@ class Ambient {
       window.setTimeout(() => this.muted && void this.ctx?.suspend(), 700);
     } else {
       this.unlock();
-      this.fadeTo(0.16, 1.5);
+      if (!this.ducked) this.fadeTo(0.16, 1.5);
     }
     return this.muted;
+  }
+
+  /** Hintergrundmusik aus- bzw. wieder einblenden, z. B. für die Boss-Musik. */
+  duck(on: boolean) {
+    this.ducked = on;
+    if (!this.muted) this.fadeTo(on ? 0 : 0.16, on ? 1 : 2.5);
   }
 
   /** 0 = gedämpft und dunkel, 1 = hell und offen. */
@@ -79,7 +87,7 @@ class Ambient {
     feedback.connect(this.echo);
     this.echo.connect(this.filter);
 
-    this.fadeTo(0.16, 3);
+    if (!this.ducked) this.fadeTo(0.16, 3);
     this.playChord();
     this.timers.push(window.setInterval(() => this.playChord(), CHORD_SECONDS * 1000));
     this.scheduleBell();

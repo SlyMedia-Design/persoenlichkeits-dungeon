@@ -1,0 +1,7 @@
+{
+  "description": "Musik und Geräusche aus dem Ninja Adventure Asset Pack (CC0), Dateien unter public/. Austauschen: andere Datei aus dem Pack nach public/assets/ninja/audio/ kopieren und hier eintragen. volume = Lautstärke 0–1.",
+  "boss": {
+    "music": { "file": "assets/ninja/audio/boss-tension.ogg", "source": "Audio/Musics/28 - Tension.ogg", "volume": 0.5 },
+    "warning": { "file": "assets/ninja/audio/boss-alert.wav", "source": "Audio/Sounds/Alert/Alert.wav", "volume": 0.6 }
+  }
+}

@@ -330,7 +330,7 @@
       "stay": "Noch nicht"
     },
     "afterDungeon": {
-      "mossMissing": "Leuchtmoos im Beutel: {n} von {needed}."
+      "mossMissing": "Leuchtmoos in der Quest-Tasche: {n} von {needed}."
     },
     "intro": {
       "skip": "Antippen oder Taste: überspringen"
@@ -638,8 +638,19 @@
       "Fragebogen: Mini-IPIP (Donnellan et al. 2006), Kurzform der IPIP 50-Item Big-Five Factor Markers (Goldberg; ipip.ori.org, Public Domain)",
       "Deutsche Fassung: A. Angleitner, S. Hempel, R. Langert, F. Spinath (Universität Bielefeld)",
       "Vergleichswerte: Open-Source Psychometrics Project (openpsychometrics.org)",
-      "Grafik: Ninja Adventure Asset Pack von Pixel-boy und AAA (CC0) – Dorf, Dorfbewohner; die Wesen sind eigene Pixel-Sprites",
+      "Grafik: Ninja Adventure Asset Pack von Pixel-boy und AAA (CC0): Dorf, Dorfbewohner, Gegner, Effekte; die Wesen, Element-Icons, Fähigkeitssteine und Quest-Zeichen sind eigene Pixel-Grafiken",
+      "Musik und Geräusche: Ninja Adventure Asset Pack (CC0) – Boss-Musik „Tension“, Warnton „Alert“; die übrige Musik wird im Spiel erzeugt",
       "Schrift: Dorfschrift, abgeleitet von Pixelify Sans (SIL Open Font License)"
     ]
+  },
+  "feedback": {
+    "title": "Ende des Prototyps",
+    "lines": [
+      "Der Waldgeist ist besänftigt. Damit habt ihr alles erlebt, was es in Morgentau bisher gibt.",
+      "Danke fürs Spielen! Wie hat es dir gefallen? Julian freut sich über deine Meinung."
+    ],
+    "button": "Feedback geben",
+    "hint": "Das Formular öffnet sich bei Google in einem neuen Tab. Gesendet wird nur, was du dort selbst eintippst. Deine Testergebnisse bleiben auf diesem Gerät.",
+    "continue": "Weiterspielen"
   }
 }

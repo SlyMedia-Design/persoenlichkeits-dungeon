@@ -4,12 +4,13 @@ import { questLogEntries } from '../core/questlog';
 import { bagEntryName, groupEntries } from '../ui/items';
 import { acceptQuest, questStatus } from '../core/village';
 import { getSave, updateSave } from '../state';
+import { feedbackUrl, openFeedback } from '../ui/feedback';
 import { HudScene } from '../ui/HudScene';
 import { itemKey } from '../ui/tiles';
 import { COLORS, headingStyle, textStyle } from '../ui/theme';
 import { shareResult } from './EndingScene';
 
-type Mode = { kind: 'board'; note?: string } | { kind: 'menu' } | { kind: 'quests' } | { kind: 'bag' };
+type Mode = { kind: 'board'; note?: string } | { kind: 'menu' } | { kind: 'quests' } | { kind: 'bag' } | { kind: 'prototypeEnd' };
 
 const STATUS_LABEL: Record<string, string> = {
   accepted: 'village.board.accepted',
@@ -52,6 +53,7 @@ export class VillageHudScene extends HudScene<Mode> {
     if (mode.kind === 'board') this.drawBoard(mode.note);
     else if (mode.kind === 'quests') this.drawQuestLog(this.questEntries(), () => this.setMode({ kind: 'menu' }));
     else if (mode.kind === 'bag') this.drawBagView();
+    else if (mode.kind === 'prototypeEnd') this.drawPrototypeEnd();
     else this.drawMenu();
   }
 
@@ -82,11 +84,30 @@ export class VillageHudScene extends HudScene<Mode> {
     }, 420);
   }
 
+/** Ende des Prototyps (nach dem Waldgeist): Dank und Feedback-Knopf */
+  openPrototypeEnd() {
+    this.setMode({ kind: 'prototypeEnd' });
+  }
+
+  private drawPrototypeEnd() {
+    this.drawPanel(t('feedback.title'), (b) => {
+      for (const line of t.list('feedback.lines')) b.text(line);
+      b.gap(4);
+      if (feedbackUrl) {
+        b.button(t('feedback.button'), () => openFeedback(), { fill: COLORS.panelLight });
+        b.text(t('feedback.hint'), { color: COLORS.textDim, fontSize: `${Math.round(this.m.small * 0.85)}px` });
+      }
+      b.button(t('feedback.continue'), () => this.close(), { fontSize: this.m.small });
+    }, 420);
+  }
+
   private drawMenu() {
     let status: Phaser.GameObjects.Text;
     this.drawPanel(t('village.menu.title'), (b) => {
       b.button(t('village.menu.quests'), () => this.setMode({ kind: 'quests' }));
       b.button(t('village.menu.bag'), () => this.setMode({ kind: 'bag' }));
+      // Nach dem Waldgeist ist der Prototyp durchgespielt: dann gibt es hier auch den Feedback-Knopf
+      if (getSave().dungeonCleared && feedbackUrl) b.button(t('feedback.button'), () => openFeedback());
       b.button(t('village.menu.profile'), () => this.onLeave?.('Profile', { from: 'Village' }));
       b.button(t('village.menu.share'), () => void shareResult(status));
       b.button(t('village.menu.toTitle'), () => this.onLeave?.('Title'));

@@ -1,0 +1,4 @@
+{
+  "description": "Einstellungen, die Julian selbst pflegt. feedbackUrl = Link zum Google-Formular für Feedback (leer = kein Feedback-Knopf). Es wird nur übertragen, was Spieler dort selbst eintippen.",
+  "feedbackUrl": "https://docs.google.com/forms/d/e/1FAIpQLSdiEITpgJ0Kpi2pSUYsX-BbkqurzSu1Fa1wnujg4jVbAys_qA/viewform"
+}

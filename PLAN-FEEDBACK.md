@@ -44,9 +44,9 @@ Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt n
 - [x] Intro-Kamerafahrt über das Dorf nach der Partnerwahl, überspringbar
 
 ## G – Inszenierung und Abschluss
-- [ ] Boss-Musik + Warnton beim Erscheinen (Ninja-Pack: z. B. „28 - Tension“ oder „14 - Curse“)
-- [ ] Feedback-Knopf am Prototyp-Ende: öffnet das Google-Formular in einem neuen Tab, mit Hinweis „öffnet sich bei Google“, Link als Konfigurationswert, keine Daten automatisch mitsenden
-- [ ] Credits prüfen (pixel-boy, Musik)
+- [x] Boss-Musik + Warnton beim Erscheinen (Ninja-Pack: z. B. „28 - Tension“ oder „14 - Curse“)
+- [x] Feedback-Knopf am Prototyp-Ende: öffnet das Google-Formular in einem neuen Tab, mit Hinweis „öffnet sich bei Google“, Link als Konfigurationswert, keine Daten automatisch mitsenden
+- [x] Credits prüfen (pixel-boy, Musik)
 
 ## Reihenfolge
 A → B → C → D → E → F → G. Pakete A und G sind unabhängig und können vorgezogen werden.

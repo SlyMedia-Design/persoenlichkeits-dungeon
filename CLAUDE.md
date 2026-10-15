@@ -148,6 +148,7 @@ Die Einzelheiten stehen in `CHECKLISTE.md`. **Sie ist die verbindliche Quelle f�
 - **Inszenierung:**
   - Eine überspringbare Kamerafahrt über das Dorf nach der Partnerwahl.
   - Boss-Musik und ein Warnton (Chiptune, aus dem Ninja-Pack).
+  - Umsetzung: Boss-Musik und Warnton stehen in `data/audio.json` und lassen sich dort tauschen. Der Feedback-Link steht in `data/config.json`. Nach dem Waldgeist erscheint im Dorf einmalig „Ende des Prototyps“ mit dem Feedback-Knopf, danach ist der Knopf im Dorf-Menü.
 - **Bedienung:**
   - Weniger Kamera-Zoom.
   - Vorspulen mit Shift (die ganze Welt läuft schneller).

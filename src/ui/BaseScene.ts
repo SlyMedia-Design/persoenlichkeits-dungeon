@@ -66,6 +66,8 @@ export function addSoundToggle(scene: Phaser.Scene, m: Metrics): Phaser.GameObje
   text.on('pointerup', (_p: Phaser.Input.Pointer, _x: number, _y: number, event: Phaser.Types.Input.EventData) => {
     event.stopPropagation();
     ambient.toggle();
+    // Musik und Geräusche aus Dateien (z. B. Boss) folgen dem Schalter
+    scene.sound.mute = ambient.muted;
     text.setText(label());
   });
   return text;

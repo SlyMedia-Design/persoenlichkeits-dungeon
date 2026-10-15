@@ -130,6 +130,12 @@ export class VillageScene extends Phaser.Scene {
    */
   private greet() {
     const save = getSave();
+    // Zurück vom besänftigten Waldgeist: Ende des Prototyps mit Feedback-Knopf (einmalig)
+    if (save.dungeonCleared && !save.prototypeEndSeen) {
+      updateSave({ prototypeEndSeen: true });
+      this.hud.openPrototypeEnd();
+      return;
+    }
     if (save.villageIntroSeen || !save.partnerId) {
       this.hud.showHint();
       return;
