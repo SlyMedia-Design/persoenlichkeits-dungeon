@@ -89,7 +89,7 @@
   },
   "boss": {
     "waldgeist": {
-      "element": "ranke",
+      "element": "glut",
       "sprite": "forestSpirit",
       "base": { "hp": 56, "atk": 5, "def": 3 },
       "growth": { "hp": 3, "atk": 0.5, "def": 0.3 },
