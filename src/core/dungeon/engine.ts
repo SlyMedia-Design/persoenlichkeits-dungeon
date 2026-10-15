@@ -28,6 +28,8 @@ export interface RunOptions {
   z: Profile;
   bonusDefs: Record<string, BonusDef>;
   bag: string[];
+  /** Quest-Tasche (Auftragsgegenstände) */
+  questBag?: string[];
   /** Quest „verirrt“ ist angenommen: Stups wartet auf seiner Etage */
   escort: boolean;
   /** Quest „leuchtmoos“ ist angenommen: Moos liegt auf jeder Etage */
@@ -46,8 +48,11 @@ export function startRun(content: Content, opts: RunOptions): DungeonState {
     rng: opts.seed >>> 0,
     floor: undefined as unknown as DungeonState['floor'],
     units: [player, partner],
-    bag: [...opts.bag],
-    bagAtStart: [...opts.bag],
+    bag: opts.bag.filter((i) => !isQuestItem(content, i)),
+    bagAtStart: opts.bag.filter((i) => !isQuestItem(content, i)),
+    // Ältere Spielstände hatten Auftragsgegenstände noch im Beutel
+    questBag: [...(opts.questBag ?? []), ...opts.bag.filter((i) => isQuestItem(content, i))],
+    questBagAtStart: [...(opts.questBag ?? []), ...opts.bag.filter((i) => isQuestItem(content, i))],
     turn: 0,
     bonuses,
     escort: opts.escort ? 'waiting' : 'none',
@@ -68,6 +73,11 @@ export function startRun(content: Content, opts: RunOptions): DungeonState {
 export function stoneCount(content: Content, rng: Random): number {
   const { min, max, moreAbove } = content.dungeon.stones;
   return content.dungeon.floors.length > moreAbove ? rng.int(min, max) : min;
+}
+
+/** Auftragsgegenstände kommen in die Quest-Tasche statt in den Beutel */
+export function isQuestItem(content: Content, entry: string): boolean {
+  return content.dungeon.items[parseBagEntry(entry).item]?.use === 'quest';
 }
 
 function withRandom<T>(state: DungeonState, fn: (rng: Random) => T): T {
@@ -314,7 +324,11 @@ function afterPlayerStep(content: Content, state: DungeonState, player: Unit, ev
   const idx = f.items.findIndex((it) => samePos(it.pos, player.pos));
   if (idx >= 0) {
     const item = f.items[idx].item;
-    if (state.bag.length < content.dungeon.bag.size) {
+    if (isQuestItem(content, item)) {
+      (state.questBag ??= []).push(item);
+      f.items.splice(idx, 1);
+      events.push({ type: 'pickup', id: player.id, item });
+    } else if (state.bag.length < content.dungeon.bag.size) {
       state.bag.push(item);
       f.items.splice(idx, 1);
       events.push({ type: 'pickup', id: player.id, item });
@@ -603,6 +617,7 @@ function takeStairs(content: Content, state: DungeonState, player: Unit, rng: Ra
 function defeat(state: DungeonState, events: GameEvent[]): GameEvent[] {
   state.outcome = 'defeated';
   state.bag = [...state.bagAtStart];
+  state.questBag = [...(state.questBagAtStart ?? [])];
   events.push({ type: 'defeated' });
   return events;
 }

@@ -10,11 +10,13 @@ import bonusesJson from '../data/bonuses.json';
 import dungeonJson from '../data/dungeon.json';
 import elementsJson from '../data/elements.json';
 import movesJson from '../data/moves.json';
+import rewardsJson from '../data/rewards.json';
 import type { BonusDef } from './core/dungeon/stats';
 import type { Content } from './core/dungeon/types';
 import type { ElementChart } from './core/elements';
 import { createTranslator, type Dictionary } from './core/i18n';
 import type { CreatureElements } from './core/matching';
+import type { RewardTable } from './core/rewards';
 import { selectItems } from './core/scoring';
 import type { Archetype, ItemBank, Norms, PixelSprite } from './core/types';
 import { parseVillage, type VillageDef } from './core/village';
@@ -38,6 +40,8 @@ export const elementLooks = elementsJson as unknown as {
   /** Fähigkeitsstein: eine Form, eine Palette je Element */
   stone: { rows: string[]; palettes: Record<string, Record<string, string>> };
 };
+/** Zufällige Auftragsbelohnungen */
+export const rewardTable = rewardsJson as unknown as RewardTable;
 export const bonusDefs = bonusesJson as unknown as Record<string, BonusDef>;
 
 export function archetypeById(id: string): Archetype {

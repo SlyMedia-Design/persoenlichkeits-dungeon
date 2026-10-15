@@ -28,11 +28,11 @@ Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt n
 - [x] Stein-Icons pro Element (kein Ranke-Stein)
 
 ## E – Items und Quests
-- [ ] Eigene Quest-Tasche, getrennt vom Beutel
-- [ ] Infotexte für Items mit der genauen Wirkung (Heilung, Schaden)
-- [ ] Zufällige Quest-Belohnungen mit Mindestwert („enttäuscht nie“), mit Tests
-- [ ] Quest-Marker über NPCs: orangenes ! → verschwindet bei Annahme → ? bei Erfüllung → weg bei Abgabe
-- [ ] Icons für Heilbeere und Geld
+- [x] Eigene Quest-Tasche, getrennt vom Beutel
+- [x] Infotexte für Items mit der genauen Wirkung (Heilung, Schaden)
+- [x] Zufällige Quest-Belohnungen mit Mindestwert („enttäuscht nie“), mit Tests
+- [x] Quest-Marker über NPCs: orangenes ! → verschwindet bei Annahme → ? bei Erfüllung → weg bei Abgabe
+- [x] Icons für Heilbeere und Geld
 
 ## F – Dorf-Ausbau
 - [ ] Karte erweitern: 5 Gebäude, größerer See mit Angelplatz (Steg, Boot, Eimer, Netze)

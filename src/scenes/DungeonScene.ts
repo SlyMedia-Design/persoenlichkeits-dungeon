@@ -685,6 +685,7 @@ export class DungeonScene extends Phaser.Scene {
       dungeon: undefined,
       team: result.team,
       bag: result.bag,
+      questBag: result.questBag,
       quests: result.quests,
       dungeonCleared: save.dungeonCleared || result.cleared,
       village: { player: { ...village.def.gateExit }, partner: { ...village.def.gatePartner } },

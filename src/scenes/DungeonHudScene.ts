@@ -4,7 +4,7 @@ import { knows, parseBagEntry } from '../core/dungeon/stats';
 import type { Action, DungeonState, Unit } from '../core/dungeon/types';
 import { ELEMENT_ICON_SIZE, elementTexture } from '../ui/elements';
 import { HudScene, type PanelBuilder } from '../ui/HudScene';
-import { bagEntryDef, bagEntryInfo, bagEntryName } from '../ui/items';
+import { bagEntryDef, bagEntryInfo, bagEntryName, groupEntries } from '../ui/items';
 import { COLORS, headingStyle, textStyle } from '../ui/theme';
 
 /** info = Platz der Fähigkeit, deren Beschreibung gerade aufgeklappt ist */
@@ -243,11 +243,17 @@ export class DungeonHudScene extends HudScene<Mode> {
     this.drawPanel(t('dungeon.ui.bagCount', { n: s.bag.length, max: size }), (b) => {
       if (s.bag.length === 0) b.text(t('dungeon.ui.bagEmpty'));
       // Gleiche Gegenstände zusammenfassen
-      const counts = new Map<string, number[]>();
-      s.bag.forEach((item, i) => counts.set(item, [...(counts.get(item) ?? []), i]));
-      for (const [item, indices] of counts) {
+      for (const [item, indices] of groupEntries(s.bag)) {
         const label = `${bagEntryName(item)}${indices.length > 1 ? `  ×${indices.length}` : ''}`;
         b.button(label, () => this.setMode({ kind: 'bagItem', index: indices[0] }), { fontSize: this.m.small });
+      }
+      // Quest-Tasche: Auftragsgegenstände, getrennt vom Beutel
+      const quest = s.questBag ?? [];
+      if (quest.length > 0) {
+        b.gap(4);
+        b.text(t('dungeon.ui.questBag'), headingStyle(this.m.small));
+        const lines = [...groupEntries(quest)].map(([item, indices]) => `${bagEntryName(item)}${indices.length > 1 ? `  ×${indices.length}` : ''}`);
+        b.text(lines.join('\n'), { color: COLORS.textDim });
       }
       b.gap(4);
       b.button(t('dungeon.ui.close'), () => this.close(), { fontSize: this.m.small });
@@ -258,7 +264,7 @@ export class DungeonHudScene extends HudScene<Mode> {
     const item = s.bag[index];
     const def = bagEntryDef(item);
     this.drawPanel(bagEntryName(item), (b) => {
-      b.text(bagEntryInfo(item));
+      b.text(bagEntryInfo(item, s.bonuses.healing));
       if (def.use === 'heal' || def.use === 'pp') {
         b.button(t('dungeon.ui.useSelf'), () => this.act({ type: 'item', index, target: 'player' }), { fontSize: this.m.small });
         b.button(t('dungeon.ui.usePartner', { partner: this.names.partner ?? '' }), () => this.act({ type: 'item', index, target: 'partner' }), { fontSize: this.m.small });

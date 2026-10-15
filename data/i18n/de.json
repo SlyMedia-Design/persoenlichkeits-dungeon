@@ -198,7 +198,7 @@
         ],
         "questReady": [
           "Oh! Ist das … Leuchtmoos? Drei ganze Büschel!",
-          "Jetzt werden meine Laternen wieder leuchten. Hier, nimm meinen Kräutertee und das alte Rezept.",
+          "Jetzt werden meine Laternen wieder leuchten. Hier, nimm das als kleines Dankeschön.",
           "Du bist ein Schatz, {player}."
         ],
         "questDone": [
@@ -220,7 +220,7 @@
         ],
         "questReady": [
           "Stups ist wieder da! Er hat allen erzählt, wie mutig ihr wart!",
-          "Seine Mama hat mir das hier für euch gegeben: ein Glas Waldhonig.",
+          "Seine Mama hat mir etwas für euch mitgegeben.",
           "Ihr seid echte Helden, {player} und {partner}!"
         ],
         "questDone": [
@@ -232,7 +232,7 @@
     "board": {
       "title": "Schwarzes Brett",
       "from": "von {from}",
-      "reward": "Belohnung: {reward}",
+      "reward": "Belohnung: eine Überraschung (Fähigkeitssteine, Münzen oder Heilbeeren)",
       "accept": "Annehmen",
       "accepted": "Angenommen ✓",
       "done": "Erledigt ✓",
@@ -244,16 +244,20 @@
       "verirrt": {
         "title": "Vermisst: der kleine Stups",
         "text": "Stups ist beim Beerensammeln im Flüsterwald verschwunden. Bitte findet ihn und bringt ihn sicher nach Hause!",
-        "from": "Stups’ Mama",
-        "reward": "ein Glas Waldhonig"
+        "from": "Stups’ Mama"
       },
       "leuchtmoos": {
         "title": "Gesucht: Leuchtmoos",
         "text": "Für meine Laternen brauche ich drei Büschel Leuchtmoos aus dem Flüsterwald.",
-        "from": "Oma Wurzel",
-        "reward": "Kräutertee und ein altes Rezept"
+        "from": "Oma Wurzel"
       }
     },
+    "reward": {
+      "got": "Ihr erhaltet: {list}.",
+      "money": "{n} Münzen",
+      "converted": "Im Beutel ist kein Platz mehr für {items}. Dafür gibt es Münzen."
+    },
+    "money": "{n}",
     "gate": {
       "prompt": "In den Flüsterwald aufbrechen?\nDungeon-Stufe {level}\nDein Team: Stufe {team}",
       "go": "Aufbrechen",
@@ -397,15 +401,15 @@
     "items": {
       "heilbeere": {
         "name": "Heilbeere",
-        "info": "Heilt Lebenspunkte (KP)."
+        "info": "Heilt {amount} KP."
       },
       "sternbeere": {
         "name": "Sternbeere",
-        "info": "Gibt allen Fähigkeiten etwas Energie zurück."
+        "info": "Gibt jeder Fähigkeit {amount} Energie zurück."
       },
       "wurfstein": {
         "name": "Wurfstein",
-        "info": "Wird geradeaus geworfen und trifft den ersten Gegner."
+        "info": "Wird geradeaus geworfen (bis {range} Felder weit) und richtet beim ersten Gegner {amount} Schaden an."
       },
       "leuchtmoos": {
         "name": "Leuchtmoos",
@@ -466,7 +470,8 @@
       "dontLearn": "{move} nicht lernen",
       "cancel": "Abbrechen",
       "info": "Info",
-      "ppShort": "{pp}/{max}"
+      "ppShort": "{pp}/{max}",
+      "questBag": "Quest-Tasche"
     },
     "log": {
       "attack": "{name} greift an!",

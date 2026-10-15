@@ -37,6 +37,10 @@ export interface SaveData {
   team?: { player: TeamProgress; partner: TeamProgress };
   /** Beutel zwischen den Ausflügen */
   bag?: string[];
+  /** Quest-Tasche zwischen den Ausflügen */
+  questBag?: string[];
+  /** Münzen (Belohnungen aus Aufträgen) */
+  money?: number;
   /** Laufender Dungeon-Durchgang (wird nach jedem Zug gesichert) */
   dungeon?: DungeonState;
   /** Der Waldgeist wurde besänftigt */

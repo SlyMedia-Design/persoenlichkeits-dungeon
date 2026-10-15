@@ -11,6 +11,8 @@ import {
   isWalkable,
   parseVillage,
   pickDialog,
+  questMarker,
+  type NpcDef,
   type VillageDef,
 } from '../src/core/village';
 
@@ -93,7 +95,7 @@ describe('Dorfkarte', () => {
     const keys = [
       ...Object.values(def.legend).flatMap((tile) => (tile.examine ? [tile.examine] : [])),
       ...def.examine.map((e) => e.text),
-      ...def.quests.flatMap((q) => ['title', 'text', 'from', 'reward'].map((k) => `village.quests.${q.id}.${k}`)),
+      ...def.quests.flatMap((q) => ['title', 'text', 'from'].map((k) => `village.quests.${q.id}.${k}`)),
       ...def.npcs.map((n) => `village.npcs.${n.id}.name`),
     ];
     for (const key of keys) expect(t(key), key).not.toBe(`[${key}]`);
@@ -118,5 +120,20 @@ describe('Dialoge und Aufträge', () => {
   it('acceptQuest nimmt an, überschreibt aber keinen erledigten Auftrag', () => {
     expect(acceptQuest({}, 'verirrt')).toEqual({ verirrt: 'accepted' });
     expect(acceptQuest({ verirrt: 'done' }, 'verirrt')).toEqual({ verirrt: 'done' });
+  });
+
+  it('NPC-Aufträge: ! bis zur Annahme, ? sobald erfüllt, nichts nach der Abgabe', () => {
+    const giver: NpcDef = { id: 'test', x: 0, y: 0, facing: 'down', sprite: 'mouse', gives: 'auftrag', dialogs: [{ lines: 'x' }] };
+    expect(questMarker(giver, {})).toBe('!');
+    expect(questMarker(giver, { auftrag: 'accepted' })).toBeNull();
+    expect(questMarker(giver, { auftrag: 'ready' })).toBe('?');
+    expect(questMarker(giver, { auftrag: 'done' })).toBeNull();
+  });
+
+  it('NPCs ohne eigenen Auftrag (Schwarzes Brett) bekommen kein Zeichen', () => {
+    for (const npc of def.npcs.filter((n) => !n.gives)) {
+      expect(questMarker(npc, {})).toBeNull();
+      expect(questMarker(npc, { leuchtmoos: 'ready', verirrt: 'ready' })).toBeNull();
+    }
   });
 });

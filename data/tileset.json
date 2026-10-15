@@ -68,7 +68,8 @@
     "berryOrange": "assets/ninja/items/berryOrange.png",
     "rock": "assets/ninja/items/rock.png",
     "moss": "assets/ninja/items/moss.png",
-    "spikes": "assets/ninja/items/spikes.png"
+    "spikes": "assets/ninja/items/spikes.png",
+    "coin": "assets/ninja/items/coin.png"
   },
   "fx": {
     "cut": { "sheet": "assets/ninja/fx/cut.png", "frameWidth": 32, "frameHeight": 32, "frames": 4 },

@@ -1,0 +1,10 @@
+{
+  "description": "Zufällige Belohnungen für erledigte Aufträge (Entscheidung vom 15.10.2026). Es werden picks (von, bis) Belohnungen nach weight ausgewürfelt. value = Wert in Münzen. Liegt die Summe unter dem Mindestwert des Auftrags (data/village.json, quests[].reward.minValue), wird mit Münzen aufgefüllt: Kein Auftrag enttäuscht. Passt ein Gegenstand nicht mehr in den Beutel, gibt es seinen Wert in Münzen.",
+  "picks": [1, 2],
+  "options": [
+    { "kind": "money", "min": 20, "max": 60, "weight": 4 },
+    { "kind": "item", "item": "heilbeere", "count": [1, 3], "value": 15, "weight": 3 },
+    { "kind": "item", "item": "sternbeere", "count": [1, 2], "value": 20, "weight": 2 },
+    { "kind": "stone", "value": 80, "weight": 2 }
+  ]
+}

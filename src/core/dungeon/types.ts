@@ -201,6 +201,9 @@ export interface DungeonState {
   bag: string[];
   /** Beutel beim Betreten: nach einer Niederlage wird er wiederhergestellt */
   bagAtStart: string[];
+  /** Quest-Tasche: Auftragsgegenstände, getrennt vom Beutel und ohne Platzgrenze (fehlt bei alten Spielständen) */
+  questBag?: string[];
+  questBagAtStart?: string[];
   turn: number;
   bonuses: Bonuses;
   escort: EscortState;

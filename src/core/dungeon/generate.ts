@@ -123,6 +123,14 @@ export function newId(state: DungeonState, prefix = 'e'): string {
 }
 
 /** Gegner passend zur Etage würfeln */
+/** Zufälliger Fähigkeitsstein: Element zufällig, Fähigkeit zufällig aus dem Element (z. B. „flutstein:wasserblase“) */
+export function randomStone(content: Content, rng: Random): string | undefined {
+  const stones = Object.entries(content.dungeon.items).filter(([, it]) => it.use === 'learn' && it.element && teachableMoves(content, it.element).length > 0);
+  if (stones.length === 0) return undefined;
+  const [id, stone] = rng.pick(stones);
+  return stoneEntry(id, rng.pick(teachableMoves(content, stone.element!)));
+}
+
 export function rollEnemy(content: Content, state: DungeonState, number: number, pos: Pos, rng: Random): Unit {
   const floor = content.dungeon.floors[number - 1];
   const [species] = rng.weighted(floor.enemies, (e) => e[1]);
@@ -163,13 +171,11 @@ export function enterFloor(content: Content, state: DungeonState, number: number
     if (p) items.push({ pos: p, item: rng.weighted(findable, ([, it]) => it.weight)[0] });
   }
   // Fähigkeitssteine, die für diese Etage ausgewürfelt wurden: Element zufällig, Fähigkeit zufällig aus dem Element
-  const stones = Object.entries(def.items).filter(([, it]) => it.use === 'learn' && it.element);
   for (const planned of state.stonePlan ?? []) {
-    if (planned !== number || stones.length === 0) continue;
-    const [id, stone] = rng.pick(stones);
-    const moves = teachableMoves(content, stone.element!);
+    if (planned !== number) continue;
+    const stone = randomStone(content, rng);
     const p = freeSpot(floor, taken, rng);
-    if (p && moves.length > 0) items.push({ pos: p, item: stoneEntry(id, rng.pick(moves)) });
+    if (p && stone) items.push({ pos: p, item: stone });
   }
   if (state.mossActive) {
     for (let i = 0; i < def.quests.leuchtmoos.perFloor; i++) {

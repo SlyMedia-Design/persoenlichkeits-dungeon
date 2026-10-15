@@ -1,10 +1,15 @@
 import Phaser from 'phaser';
-import { archetypeById, bonusDefs, dungeonContent, t, village, withNames } from '../content';
+import { archetypeById, bonusDefs, dungeonContent, rewardTable, t, village, withNames } from '../content';
 import { startRun } from '../core/dungeon/engine';
 import { canStep, combineDirs, dirTo, findPath, horizontalOf, samePos, step, type Dir, type Pos } from '../core/grid';
-import { approachTiles, completeQuest, interactionAt, isWalkable, pickDialog, type Placement } from '../core/village';
+import { randomStone } from '../core/dungeon/generate';
+import { createRandom } from '../core/dungeon/random';
+import { grantReward, rollReward } from '../core/rewards';
+import { acceptQuest, approachTiles, completeQuest, interactionAt, isWalkable, pickDialog, questMarker, type Placement } from '../core/village';
 import { getSave, updateSave } from '../state';
 import { ambient } from '../ui/ambient';
+import { bagEntryName, groupEntries } from '../ui/items';
+import { markerTexture } from '../ui/markers';
 import { pixelZoom } from '../ui/camera';
 import { bindFastForward } from '../ui/speed';
 import { creatureTexture, fieldTexture, shadowTexture } from '../ui/sprites';
@@ -41,6 +46,8 @@ export class VillageScene extends Phaser.Scene {
   private player!: Actor;
   private partner!: Actor;
   private npcs = new Map<string, Actor>();
+  /** ! und ? über NPCs mit eigenem Auftrag */
+  private markers = new Map<string, Phaser.GameObjects.Image>();
   private hud!: VillageHudScene;
   private moving = false;
   private path: Dir[] = [];
@@ -74,6 +81,7 @@ export class VillageScene extends Phaser.Scene {
     this.pendingTarget = undefined;
     this.heldSince = 0;
     this.npcs.clear();
+    this.markers.clear();
     ambient.setBrightness(1);
     this.cameras.main.setBackgroundColor(COLORS.night);
 
@@ -86,6 +94,7 @@ export class VillageScene extends Phaser.Scene {
     this.partner = this.addCreature(save.village?.partner ?? def.partnerSpawn, start.facing, save.partnerId);
     for (const npc of def.npcs) this.npcs.set(npc.id, this.addActor(npc, npc.facing, actorKey(npc.sprite)));
     [this.player, this.partner, ...this.npcs.values()].forEach((actor, i) => this.idle(actor, 200 + i * 350));
+    this.refreshMarkers();
 
     const cam = this.cameras.main;
     cam.setBounds(-b, -b, village.width * TILE + 2 * b, village.height * TILE + 2 * b);
@@ -339,8 +348,13 @@ export class VillageScene extends Phaser.Scene {
       if (npc && back) this.face(npc, back);
       const rule = pickDialog(interaction.npc, save.quests ?? {});
       const lines = t.list(rule.lines).map((l) => withNames(l, names));
-      // Erfüllter Auftrag: Nach dem Gespräch ist die Belohnung übergeben
-      const onDone = rule.complete ? () => updateSave({ quests: completeQuest(getSave().quests ?? {}, rule.complete!) }) : undefined;
+      const onDone = () => {
+        // Erfüllter Auftrag: Nach dem Gespräch gibt es die zufällige Belohnung
+        if (rule.complete) this.completeWithReward(rule.complete);
+        // Auftrag, den der NPC selbst vergibt: Nach dem Gespräch ist er angenommen
+        if (rule.accept) updateSave({ quests: acceptQuest(getSave().quests ?? {}, rule.accept) });
+        this.refreshMarkers();
+      };
       this.hud.say(t(`village.npcs.${interaction.npc.id}.name`), lines, onDone, faceKey(interaction.npc.sprite));
     } else if (interaction.kind === 'board') {
       this.hud.openBoard();
@@ -352,6 +366,44 @@ export class VillageScene extends Phaser.Scene {
       ]);
     } else {
       this.hud.say(undefined, [withNames(t(interaction.text), names)]);
+    }
+  }
+
+/** Auftrag abschließen und die zufällige Belohnung (mit Mindestwert) in Beutel und Geldbörse legen */
+  private completeWithReward(id: string) {
+    const save = getSave();
+    const log = save.quests ?? {};
+    if (log[id] !== 'ready') return;
+    const minValue = village.def.quests.find((q) => q.id === id)?.reward.minValue ?? 0;
+    const rng = createRandom(Math.floor(Math.random() * 2 ** 31));
+    const reward = rollReward(rewardTable, minValue, rng, (r) => randomStone(dungeonContent, r)!);
+    const granted = grantReward(rewardTable, reward, save.bag ?? [], save.money ?? 0, dungeonContent.dungeon.bag.size);
+    updateSave({ quests: completeQuest(log, id), bag: granted.bag, money: granted.money });
+    const things = [...groupEntries(reward.items)].map(([item, n]) => (n.length > 1 ? `${n.length}× ${bagEntryName(item)}` : bagEntryName(item)));
+    if (reward.money > 0) things.push(t('village.reward.money', { n: reward.money }));
+    const lines = [t('village.reward.got', { list: things.join(', ') })];
+    if (granted.converted.length > 0) lines.push(t('village.reward.converted', { items: granted.converted.map(bagEntryName).join(', ') }));
+    // Die Münzanzeige zeichnet sich mit dem Dialog neu
+    this.hud.say(undefined, lines);
+  }
+
+  /** Zeichen über NPCs mit eigenem Auftrag neu setzen (! offen, ? erfüllt) */
+  private refreshMarkers() {
+    const log = getSave().quests ?? {};
+    for (const npc of village.def.npcs) {
+      const actor = this.npcs.get(npc.id);
+      if (!actor) continue;
+      const mark = questMarker(npc, log);
+      const old = this.markers.get(npc.id);
+      if (old && (!mark || old.texture.key !== markerTexture(this, mark))) {
+        old.destroy();
+        this.markers.delete(npc.id);
+      }
+      if (!mark || this.markers.has(npc.id)) continue;
+      const marker = this.add.image(0, FEET_Y - 18, markerTexture(this, mark)).setOrigin(0.5, 1);
+      actor.body.add(marker);
+      this.tweens.add({ targets: marker, y: marker.y - 2, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.markers.set(npc.id, marker);
     }
   }
 
@@ -369,6 +421,7 @@ export class VillageScene extends Phaser.Scene {
       bonusDefs,
       // Für den allerersten Ausflug gibt Oma Wurzel zwei Heilbeeren mit
       bag: save.bag ?? ['heilbeere', 'heilbeere'],
+      questBag: save.questBag,
       escort: quests.verirrt === 'accepted',
       moss: quests.leuchtmoos === 'accepted',
     });

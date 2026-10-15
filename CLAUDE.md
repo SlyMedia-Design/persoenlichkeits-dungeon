@@ -136,6 +136,7 @@ Die Einzelheiten stehen in `CHECKLISTE.md`. **Sie ist die verbindliche Quelle f�
 - **Quests:**
   - Belohnungen werden zufällig erwürfelt (Steine, Geld, Heilitems), sind aber immer lohnend.
   - Quest-Items kommen in eine eigene Quest-Tasche.
+  - Umsetzung: Die Belohnungen stehen in `data/rewards.json`, der Mindestwert pro Auftrag in `data/village.json`. Passt nichts mehr in den Beutel, gibt es den Wert als Münzen. „Münzen“ ist ein Platzhalter-Name für die Währung. ! und ? erscheinen nur bei NPCs mit eigenem Auftrag (`gives` in `data/village.json`).
   - NPC-Quests zeigen ein orangenes ! (offen) und ein ? (erfüllt, abgeben).
 - **Dorf:**
   - 5 Gebäude: Partnerhaus, Gildenhaus mit Schwarzem Brett, Gemeindehaus, Heilkräuterladen (im Prototyp nur Optik) und das kaputte Haus des Spielers.

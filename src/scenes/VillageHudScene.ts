@@ -3,6 +3,7 @@ import { t, village } from '../content';
 import { acceptQuest, questStatus } from '../core/village';
 import { getSave, updateSave } from '../state';
 import { HudScene } from '../ui/HudScene';
+import { itemKey } from '../ui/tiles';
 import { COLORS, headingStyle, textStyle } from '../ui/theme';
 import { shareResult } from './EndingScene';
 
@@ -38,6 +39,11 @@ export class VillageHudScene extends HudScene<Mode> {
       if (!this.busy) this.setMode({ kind: 'menu' });
     });
     this.layer!.add(menu);
+    // Münzen neben dem Menü-Knopf
+    const coinX = 12 + 100 + 14;
+    const coin = this.add.image(coinX, 10 + font, itemKey('coin')).setOrigin(0, 0.5).setScale(3);
+    const money = this.add.text(coin.x + coin.displayWidth + 6, coin.y, t('village.money', { n: getSave().money ?? 0 }), textStyle(small)).setOrigin(0, 0.5);
+    this.layer!.add([coin, money]);
   }
 
   protected drawMode(mode: Mode) {
@@ -87,7 +93,7 @@ export class VillageHudScene extends HudScene<Mode> {
       const meta = this.add.text(
         tx,
         y,
-        `${t('village.board.from', { from: t(`village.quests.${id}.from`) })}\n${t('village.board.reward', { reward: t(`village.quests.${id}.reward`) })}`,
+        `${t('village.board.from', { from: t(`village.quests.${id}.from`) })}\n${t('village.board.reward')}`,
         { ...textStyle(small, COLORS.textDim), wordWrap: wrap, lineSpacing: 3 },
       );
       y = meta.y + meta.height + gap * 0.7;

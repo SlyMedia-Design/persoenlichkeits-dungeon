@@ -398,16 +398,45 @@ describe('Auswertung nach dem Ausflug', () => {
     expect(settleRun(content, s, { verirrt: 'accepted' }).quests.verirrt).toBe('ready');
   });
 
-  it('drei Leuchtmoose erfüllen den Auftrag und werden abgegeben, weniger bleiben im Beutel', () => {
+  it('drei Leuchtmoose erfüllen den Auftrag und werden abgegeben, weniger bleiben in der Quest-Tasche', () => {
     const s = run({ moss: true });
-    s.bag = ['leuchtmoos', 'heilbeere', 'leuchtmoos', 'leuchtmoos', 'leuchtmoos'];
+    s.bag = ['heilbeere'];
+    s.questBag = ['leuchtmoos', 'leuchtmoos', 'leuchtmoos', 'leuchtmoos'];
     const done = settleRun(content, s, { leuchtmoos: 'accepted' });
     expect(done.quests.leuchtmoos).toBe('ready');
-    expect(done.bag).toEqual(['heilbeere', 'leuchtmoos']);
-    s.bag = ['leuchtmoos', 'leuchtmoos'];
+    expect(done.bag).toEqual(['heilbeere']);
+    expect(done.questBag).toEqual(['leuchtmoos']);
+    s.questBag = ['leuchtmoos', 'leuchtmoos'];
     const partial = settleRun(content, s, { leuchtmoos: 'accepted' });
     expect(partial.quests.leuchtmoos).toBe('accepted');
     expect(partial.moss).toBe(2);
+  });
+});
+
+describe('Quest-Tasche', () => {
+  it('Auftragsgegenstände landen in der Quest-Tasche und belegen keinen Beutelplatz', () => {
+    const s = run({ moss: true, bag: Array(content.dungeon.bag.size).fill('heilbeere') });
+    const player = unitById(s, 'player')!;
+    s.floor.items.push({ pos: { x: player.pos.x + 1, y: player.pos.y }, item: 'leuchtmoos' });
+    s.floor.tiles = s.floor.tiles.map((row, y) => (y === player.pos.y ? row.slice(0, player.pos.x - 1) + '...' + row.slice(player.pos.x + 2) : row));
+    s.units = s.units.filter((u) => u.side === 'team');
+    unitById(s, 'partner')!.pos = { x: player.pos.x - 1, y: player.pos.y };
+    act(content, s, { type: 'move', dir: 'right' });
+    expect(s.questBag).toContain('leuchtmoos');
+    expect(s.bag).toHaveLength(content.dungeon.bag.size);
+  });
+
+  it('alte Spielstände mit Moos im Beutel werden beim Aufbruch umsortiert', () => {
+    const s = run({ bag: ['heilbeere', 'leuchtmoos'] });
+    expect(s.bag).toEqual(['heilbeere']);
+    expect(s.questBag).toEqual(['leuchtmoos']);
+  });
+
+  it('nach einer Niederlage ist die Quest-Tasche wie beim Aufbruch', () => {
+    const s = run({ questBag: ['leuchtmoos'] });
+    s.questBag!.push('leuchtmoos');
+    act(content, s, { type: 'giveUp' });
+    expect(s.questBag).toEqual(['leuchtmoos']);
   });
 });
 
