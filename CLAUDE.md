@@ -42,7 +42,7 @@ public/assets/          # Platzhalter-Grafiken und Sounds
 - **Stil:** Pixel-Art von schräg oben, **16×16-Kacheln**, wie Mystery Dungeon auf GBA/DS
 - **Platzhalter:** [Ninja Adventure Asset Pack von pixel-boy](https://pixel-boy.itch.io/ninja-adventure-asset-pack) (CC0). Wo es kein passendes Wesen gibt: einfache Farbkreise mit Augen, ein Farbcode pro Wesen. Den Credit für pixel-boy trotzdem in den Credits nennen.
 - **Stand Meilenstein 2:** Das Pack liegt entpackt in `D:Projekte
-inja-adventure` (außerhalb des Repos). Ins Projekt kopiert werden nur die genutzten Bilder nach `public/assets/ninja/`; welche Kachel wofür steht, regelt `data/tileset.json`. Dorfbewohner nutzen Figuren aus dem Pack (Oma Wurzel = Pilz, Fips = Maus), unsere Wesen bleiben eigene Sprites.
+inja-adventure` (außerhalb des Repos). Ins Projekt kopiert werden nur die genutzten Bilder nach `public/assets/ninja/`; welche Kachel wofür steht, regelt `data/tileset.json`. Dorfbewohner nutzen Figuren aus dem Pack (Oma Wurzel = Pilz, Fips = Maus, Paula = Panda, Brummbart = Bär, Käpt’n Kiesel = Kappa), unsere Wesen bleiben eigene Sprites.
 - **Farben:** Das Dorf warm und pastellig. Jeder Dungeon bekommt eine eigene, kräftigere Farbwelt (Wald grün, Höhle violett …).
 - **Wesen:** Tierähnlich mit Fantasy-Note, rund, großer Kopf, kurze Beine
 - **Formsprache für die Big Five** (gilt für alle Wesen):
@@ -144,6 +144,7 @@ Die Einzelheiten stehen in `CHECKLISTE.md`. **Sie ist die verbindliche Quelle f�
   - Dazu ein Angelplatz als Deko, dafür wird der See vergrößert.
   - 5 NPCs, Figuren aus dem Ninja-Pack.
   - Nur der NPC im Gemeindehaus gibt eine Quest, die zweite kommt vom Schwarzen Brett.
+  - Umsetzung (abgestimmt am 15.10.2026, Namen sind Platzhalter): Vor dem Gemeindehaus steht Fips (Maus). Im Eingang des Gemeindehauses steht Bürgermeisterin Paula (Panda), sie vergibt „Stups vermisst“ mit !. Fips nimmt den Auftrag mit ? ab. Am Brett des Gildenhauses steht Gildenmeister Brummbart (Bär). Am Tresen des Kräuterladens steht Oma Wurzel (Pilz), ihr Leuchtmoos-Auftrag hängt am Brett. Am Steg steht Käpt’n Kiesel (Kappa). Es gibt keine Innenräume.
 - **Inszenierung:**
   - Eine überspringbare Kamerafahrt über das Dorf nach der Partnerwahl.
   - Boss-Musik und ein Warnton (Chiptune, aus dem Ninja-Pack).

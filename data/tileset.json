@@ -6,7 +6,8 @@
     "nature": "assets/ninja/tilesets/TilesetNature.png",
     "house": "assets/ninja/tilesets/TilesetHouse.png",
     "element": "assets/ninja/tilesets/TilesetElement.png",
-    "detail": "assets/ninja/tilesets/TilesetFloorDetail.png"
+    "detail": "assets/ninja/tilesets/TilesetFloorDetail.png",
+    "abandoned": "assets/ninja/tilesets/TilesetVillageAbandoned.png"
   },
   "grass": {
     "base": { "sheet": "floor", "x": 0, "y": 12 },
@@ -33,7 +34,14 @@
     "board": [{ "sheet": "element", "x": 1, "y": 2 }],
     "sign": [{ "sheet": "element", "x": 0, "y": 2 }],
     "well": [{ "sheet": "element", "x": 6, "y": 2 }],
-    "gate": [{ "sheet": "house", "x": 8, "y": 3 }]
+    "gate": [{ "sheet": "house", "x": 8, "y": 3 }],
+    "dock": [{ "sheet": "water", "x": 5, "y": 13 }],
+    "boatL": [{ "sheet": "water", "x": 26, "y": 0 }],
+    "boatR": [{ "sheet": "water", "x": 27, "y": 0 }],
+    "bucket": [{ "sheet": "element", "x": 5, "y": 0 }],
+    "barrel": [{ "sheet": "element", "x": 1, "y": 0 }],
+    "counterL": [{ "sheet": "element", "x": 11, "y": 1 }],
+    "counterR": [{ "sheet": "element", "x": 13, "y": 1 }]
   },
   "trees": [
     { "sheet": "nature", "x": 0, "y": 0, "w": 2, "h": 2 },
@@ -42,11 +50,22 @@
   ],
   "buildings": {
     "houseOrange": { "sheet": "house", "x": 0, "y": 0, "w": 4, "h": 3, "door": { "x": 1, "y": 2 } },
-    "houseRed": { "sheet": "house", "x": 12, "y": 0, "w": 4, "h": 3, "door": { "x": 1, "y": 2 } }
+    "houseRed": { "sheet": "house", "x": 12, "y": 0, "w": 4, "h": 3, "door": { "x": 1, "y": 2 } },
+    "houseBeige": { "sheet": "house", "x": 4, "y": 0, "w": 4, "h": 3, "door": { "x": 1, "y": 2 } },
+    "townhall": { "sheet": "house", "x": 23, "y": 0, "w": 3, "h": 3, "door": { "x": 1, "y": 2 } },
+    "guild": { "sheet": "house", "x": 19, "y": 0, "w": 4, "h": 3, "door": { "x": 2, "y": 2 } },
+    "herbShop": { "sheet": "house", "x": 16, "y": 0, "w": 3, "h": 3, "door": { "x": 1, "y": 2 } },
+    "ruin": { "sheet": "abandoned", "x": 11, "y": 0, "w": 3, "h": 3, "door": { "x": 1, "y": 2 } }
+  },
+  "props": {
+    "fishNet": "assets/ninja/props/FishNet.png"
   },
   "actors": {
     "mouse": { "sheet": "assets/ninja/actors/Mouse.png", "face": "assets/ninja/actors/MouseFace.png" },
     "mushroom": { "sheet": "assets/ninja/actors/Mushroom.png", "face": "assets/ninja/actors/MushroomFace.png" },
+    "panda": { "sheet": "assets/ninja/actors/Panda.png", "face": "assets/ninja/actors/PandaFace.png" },
+    "bear": { "sheet": "assets/ninja/actors/Bear.png", "face": "assets/ninja/actors/BearFace.png" },
+    "kappa": { "sheet": "assets/ninja/actors/Kappa.png", "face": "assets/ninja/actors/KappaFace.png" },
     "slime": { "sheet": "assets/ninja/actors/slime.png" },
     "larva": { "sheet": "assets/ninja/actors/larva.png" },
     "butterfly": { "sheet": "assets/ninja/actors/butterfly.png" },

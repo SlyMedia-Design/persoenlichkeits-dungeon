@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 import { pixelTexture } from './sprites';
 
-/** Pixel-Zeichen über NPCs mit eigenem Auftrag: orange mit dunklem Rand */
-const PALETTE = { o: '#4a2410', r: '#ff9a3c', y: '#ffd27a' };
+/** Pixel-Zeichen über NPCs mit eigenem Auftrag: orange mit hellem Rand, damit es auch vor dunklen Türen auffällt */
+const PALETTE = { o: '#fff8ea', r: '#ff8a1c', y: '#ffc04a' };
 
 const GLYPHS: Record<'!' | '?', string[]> = {
   '!': ['.ooo.', 'oryro', 'orrro', 'orrro', '.oro.', '.oro.', '.ooo.', '.....', '.ooo.', '.oro.', '.ooo.'],

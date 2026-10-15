@@ -1,5 +1,5 @@
 {
-  "description": "Das Dorf als Textraster. Jedes Zeichen in map ist ein Feld (16×16 Pixel), seine Bedeutung steht in legend. x zählt von links, y von oben, beide ab 0. Texte (examine, lines) sind i18n-Schlüssel aus data/i18n/de.json. buildings setzt fertige Häuser aus data/tileset.json auf die H/D-Felder; die Tür muss auf einem D liegen. sprite verweist auf actors in data/tileset.json.",
+  "description": "Das Dorf als Textraster. Jedes Zeichen in map ist ein Feld (16×16 Pixel), seine Bedeutung steht in legend. x zählt von links, y von oben, beide ab 0. Texte (examine, lines) sind i18n-Schlüssel aus data/i18n/de.json. buildings setzt fertige Häuser aus data/tileset.json auf die H/D-Felder; die Tür muss auf einem D liegen. sprite verweist auf actors in data/tileset.json. props: Einzelbilder (Fischernetz). quests: board = hängt am Schwarzen Brett; sonst vergibt ihn ein NPC (gives) mit ! und ?.",
   "legend": {
     ".": { "ground": "grass" },
     ",": { "ground": "grass", "object": "flowers" },
@@ -7,43 +7,121 @@
     "T": { "ground": "grass", "object": "tree", "solid": true },
     "~": { "ground": "water", "solid": true, "examine": "village.examine.pond" },
     "D": { "ground": "grass", "object": "building", "solid": true, "examine": "village.examine.door" },
-    "f": { "ground": "grass", "object": "hedge", "solid": true },
     "B": { "ground": "path", "object": "board", "solid": true, "board": true },
     "S": { "ground": "grass", "object": "sign", "solid": true, "examine": "village.examine.sign" },
     "w": { "ground": "path", "object": "well", "solid": true, "examine": "village.examine.well" },
     "G": { "ground": "path", "object": "gate", "solid": true, "dungeon": "fluesterwald" },
-    "H": { "ground": "grass", "object": "building", "solid": true }
+    "H": { "ground": "grass", "object": "building", "solid": true },
+    "=": { "ground": "water", "object": "dock", "examine": "village.examine.dock" },
+    "b": { "ground": "water", "object": "boatL", "solid": true, "examine": "village.examine.boat" },
+    "q": { "ground": "water", "object": "boatR", "solid": true, "examine": "village.examine.boat" },
+    "e": { "ground": "grass", "object": "bucket", "solid": true, "examine": "village.examine.bucket" },
+    "k": { "ground": "grass", "object": "barrel", "solid": true, "examine": "village.examine.barrel" },
+    "N": { "ground": "grass", "solid": true, "examine": "village.examine.net" },
+    "[": { "ground": "path", "object": "counterL", "solid": true, "examine": "village.examine.counter" },
+    "]": { "ground": "path", "object": "counterR", "solid": true, "examine": "village.examine.counter" }
   },
   "map": [
-    "TTTTTTTTTTTTTGGTTTTTTTTTTTTT",
-    "TT,.........T::T.......,..TT",
-    "T..HHHH.....S::.....,.....,T",
-    "T..HHHH......::.....HHHH...T",
-    "T..HDHH......::.....HHHH...T",
-    "T.,.:........::.....HDHH...T",
-    "T...::::::::::::::::::.....T",
-    "T.,.........,::,.....,.....T",
-    "T.........::::::::.........T",
-    "T..,......:B:::w::......,..T",
-    "T.........::::::::.........T",
-    "T.,.......::::::::......,..T",
-    "T............::............T",
-    "T..fffff.....::....~~~~~~..T",
-    "T..f,,,f.....::....~~~~~~..T",
-    "T..f,,,f.....::....~~~~~~..T",
-    "T..ff.ff.....::....~~~~~~..T",
-    "T.,..........::.........,..T",
-    "TT...,.......::.......,...TT",
-    "TTTTTTTTTTTTT::TTTTTTTTTTTTT"
+    "TTTTTTTTTTTTTTTGGTTTTTTTTTTTTTTT",
+    "TT.............::.............TT",
+    "T...HHH.....,.S::.....HHHH.....T",
+    "T.,.HHH..,.....::..,..HHHH.....T",
+    "T...HDH........::...:BHHDH..,..T",
+    "T....:.........::...::..:......T",
+    "T..:::::::::::::::::::::::::...T",
+    "T....:.........::..............T",
+    "T..,.:.....::::::::::......,...T",
+    "T....:...,.::::::::::.,........T",
+    "T...HHH....::w:::::::........,.T",
+    "T.T.HHH....::::::::::..........T",
+    "T.T.HDH........::......,....N..T",
+    "T....:[].......:::::::::e:kNNN.T",
+    "T..::::::::::::::.....~~~=~~~~.T",
+    "T..............::.....~~~=~~~~.T",
+    "T.........HHHH.::.HHH.~~~=~~~~.T",
+    "T.,.......HHHH.::.HHH.~~~=bq~~.T",
+    "T......,..HDHH.::.HDH.~~~~~~~~.T",
+    "T........:::::::::::::~~~~~~~~.T",
+    "T..............................T",
+    "T..,....TT...,............,TT..T",
+    "TT............................TT",
+    "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
   ],
-  "buildings": [{ "x": 3, "y": 2, "style": "houseOrange" }, { "x": 20, "y": 3, "style": "houseRed" }],
-  "spawn": { "x": 13, "y": 17, "facing": "up" },
-  "partnerSpawn": { "x": 13, "y": 18 },
+  "buildings": [
+    { "x": 4, "y": 2, "style": "townhall" },
+    { "x": 22, "y": 2, "style": "guild" },
+    { "x": 4, "y": 10, "style": "herbShop" },
+    { "x": 10, "y": 16, "style": "houseBeige" },
+    { "x": 18, "y": 16, "style": "ruin" }
+  ],
+  "spawn": { "x": 19, "y": 19, "facing": "up" },
+  "partnerSpawn": { "x": 20, "y": 19 },
   "npcs": [
     {
-      "id": "wurzel",
-      "x": 8,
+      "id": "paula",
+      "x": 5,
       "y": 5,
+      "facing": "down",
+      "sprite": "panda",
+      "gives": "verirrt",
+      "dialogs": [
+        {
+          "when": { "quest": "verirrt", "status": "open" },
+          "lines": "village.npcs.paula.questOffer",
+          "accept": "verirrt"
+        },
+        {
+          "when": { "quest": "verirrt", "status": "accepted" },
+          "lines": "village.npcs.paula.questAccepted"
+        },
+        {
+          "when": { "quest": "verirrt", "status": "ready" },
+          "lines": "village.npcs.paula.questReady"
+        },
+        { "lines": "village.npcs.paula.default" }
+      ]
+    },
+    {
+      "id": "fips",
+      "x": 7,
+      "y": 5,
+      "facing": "left",
+      "dialogs": [
+        {
+          "when": { "quest": "verirrt", "status": "ready" },
+          "lines": "village.npcs.fips.questReady",
+          "complete": "verirrt"
+        },
+        {
+          "when": { "quest": "verirrt", "status": "accepted" },
+          "lines": "village.npcs.fips.questAccepted"
+        },
+        {
+          "when": { "quest": "verirrt", "status": "done" },
+          "lines": "village.npcs.fips.questDone"
+        },
+        { "lines": "village.npcs.fips.default" }
+      ],
+      "sprite": "mouse"
+    },
+    {
+      "id": "brummbart",
+      "x": 20,
+      "y": 4,
+      "facing": "right",
+      "sprite": "bear",
+      "dialogs": [
+        {
+          "when": { "quest": "leuchtmoos", "status": "done" },
+          "lines": "village.npcs.brummbart.questDone"
+        },
+        { "lines": "village.npcs.brummbart.default" }
+      ]
+    },
+    {
+      "id": "wurzel",
+      "x": 5,
+      "y": 13,
       "facing": "down",
       "dialogs": [
         {
@@ -55,37 +133,48 @@
           "when": { "quest": "leuchtmoos", "status": "accepted" },
           "lines": "village.npcs.wurzel.questAccepted"
         },
-        { "when": { "quest": "leuchtmoos", "status": "done" }, "lines": "village.npcs.wurzel.questDone" },
+        {
+          "when": { "quest": "leuchtmoos", "status": "done" },
+          "lines": "village.npcs.wurzel.questDone"
+        },
         { "lines": "village.npcs.wurzel.default" }
       ],
       "sprite": "mushroom"
     },
     {
-      "id": "fips",
-      "x": 9,
-      "y": 9,
-      "facing": "right",
+      "id": "kiesel",
+      "x": 25,
+      "y": 17,
+      "facing": "up",
+      "sprite": "kappa",
       "dialogs": [
-        {
-          "when": { "quest": "verirrt", "status": "ready" },
-          "lines": "village.npcs.fips.questReady",
-          "complete": "verirrt"
-        },
-        { "when": { "quest": "verirrt", "status": "accepted" }, "lines": "village.npcs.fips.questAccepted" },
-        { "when": { "quest": "verirrt", "status": "done" }, "lines": "village.npcs.fips.questDone" },
-        { "lines": "village.npcs.fips.default" }
-      ],
-      "sprite": "mouse"
+        { "lines": "village.npcs.kiesel.default" }
+      ]
     }
   ],
   "examine": [
-    { "x": 4, "y": 4, "text": "village.examine.wurzelDoor" },
-    { "x": 21, "y": 5, "text": "village.examine.innDoor" }
+    { "x": 24, "y": 4, "text": "village.examine.guildDoor" },
+    { "x": 11, "y": 18, "text": "village.examine.partnerDoor" },
+    { "x": 19, "y": 18, "text": "village.examine.ruinDoor" }
   ],
   "quests": [
-    { "id": "verirrt", "reward": { "minValue": 80 } },
-    { "id": "leuchtmoos", "reward": { "minValue": 60 } }
+    {
+      "id": "verirrt",
+      "reward": {
+        "minValue": 80
+      }
+    },
+    {
+      "id": "leuchtmoos",
+      "board": true,
+      "reward": {
+        "minValue": 60
+      }
+    }
   ],
-  "gateExit": { "x": 13, "y": 1, "facing": "down" },
-  "gatePartner": { "x": 14, "y": 1 }
+  "gateExit": { "x": 15, "y": 1, "facing": "down" },
+  "gatePartner": { "x": 16, "y": 1 },
+  "props": [
+    { "x": 28, "y": 13, "style": "fishNet" }
+  ]
 }

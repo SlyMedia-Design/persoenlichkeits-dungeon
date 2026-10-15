@@ -21,6 +21,7 @@ export const actorKey = (id: string) => `actor-${id}`;
 export const faceKey = (id: string) => `face-${id}`;
 export const itemKey = (sprite: string) => `item-${sprite}`;
 export const fxKey = (id: string) => `fx-${id}`;
+const propKey = (id: string) => `prop-${id}`;
 
 /** Lädt alle Kachelbilder und Figuren (nur, was noch nicht geladen ist). */
 export function preloadTileset(scene: Phaser.Scene) {
@@ -35,6 +36,9 @@ export function preloadTileset(scene: Phaser.Scene) {
   }
   for (const [id, path] of Object.entries(tileset.items)) {
     if (!scene.textures.exists(itemKey(id))) scene.load.image(itemKey(id), base + path);
+  }
+  for (const [id, path] of Object.entries(tileset.props)) {
+    if (!scene.textures.exists(propKey(id))) scene.load.image(propKey(id), base + path);
   }
   for (const [id, fx] of Object.entries(tileset.fx)) {
     if (!scene.textures.exists(fxKey(id))) scene.load.spritesheet(fxKey(id), base + fx.sheet, { frameWidth: fx.frameWidth, frameHeight: fx.frameHeight });
@@ -115,8 +119,12 @@ export function villageMapTexture(scene: Phaser.Scene, map: VillageMap): string 
     }
   }
 
-  // 3. Häuser
+  // 3. Häuser und Einzelbilder (unten mittig auf ihrem Feld)
   for (const b of map.def.buildings) blit(tileset.buildings[b.style], b);
+  for (const p of map.def.props ?? []) {
+    const img = scene.textures.get(propKey(p.style)).getSourceImage() as HTMLImageElement;
+    ctx.drawImage(img, Math.round((p.x + BORDER + 0.5) * TILE - img.width / 2), (p.y + BORDER + 1) * TILE - img.height);
+  }
 
   // 4. Bäume: große Bäume auf zusammenhängenden Flächen, sonst Büsche
   const trees = planTrees(isTree, from, to);

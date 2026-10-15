@@ -122,18 +122,34 @@ describe('Dialoge und Aufträge', () => {
     expect(acceptQuest({ verirrt: 'done' }, 'verirrt')).toEqual({ verirrt: 'done' });
   });
 
-  it('NPC-Aufträge: ! bis zur Annahme, ? sobald erfüllt, nichts nach der Abgabe', () => {
-    const giver: NpcDef = { id: 'test', x: 0, y: 0, facing: 'down', sprite: 'mouse', gives: 'auftrag', dialogs: [{ lines: 'x' }] };
-    expect(questMarker(giver, {})).toBe('!');
-    expect(questMarker(giver, { auftrag: 'accepted' })).toBeNull();
-    expect(questMarker(giver, { auftrag: 'ready' })).toBe('?');
-    expect(questMarker(giver, { auftrag: 'done' })).toBeNull();
+  it('NPC-Aufträge: ! bis zur Annahme, ? bei der Abgabe-Stelle, nichts nach der Abgabe', () => {
+    const giver: NpcDef = { id: 'a', x: 0, y: 0, facing: 'down', sprite: 'mouse', gives: 'auftrag', dialogs: [{ lines: 'x' }] };
+    const taker: NpcDef = { id: 'b', x: 0, y: 0, facing: 'down', sprite: 'mouse', dialogs: [{ when: { quest: 'auftrag', status: 'ready' }, lines: 'y', complete: 'auftrag' }, { lines: 'x' }] };
+    const npcs = [giver, taker];
+    expect(questMarker(giver, {}, npcs)).toBe('!');
+    expect(questMarker(taker, {}, npcs)).toBeNull();
+    expect(questMarker(giver, { auftrag: 'accepted' }, npcs)).toBeNull();
+    expect(questMarker(giver, { auftrag: 'ready' }, npcs)).toBeNull();
+    expect(questMarker(taker, { auftrag: 'ready' }, npcs)).toBe('?');
+    expect(questMarker(taker, { auftrag: 'done' }, npcs)).toBeNull();
   });
 
-  it('NPCs ohne eigenen Auftrag (Schwarzes Brett) bekommen kein Zeichen', () => {
-    for (const npc of def.npcs.filter((n) => !n.gives)) {
-      expect(questMarker(npc, {})).toBeNull();
-      expect(questMarker(npc, { leuchtmoos: 'ready', verirrt: 'ready' })).toBeNull();
-    }
+  it('im Dorf: Paula vergibt „Stups vermisst“ (!), Fips nimmt ihn ab (?)', () => {
+    const npc = (id: string) => def.npcs.find((n) => n.id === id)!;
+    expect(questMarker(npc('paula'), {}, def.npcs)).toBe('!');
+    expect(questMarker(npc('fips'), { verirrt: 'ready' }, def.npcs)).toBe('?');
+    expect(pickDialog(npc('paula'), {}).accept).toBe('verirrt');
+    expect(pickDialog(npc('fips'), { verirrt: 'ready' }).complete).toBe('verirrt');
+  });
+
+  it('Brett-Aufträge bekommen kein Zeichen, nur ein Auftrag hängt am Brett', () => {
+    for (const npc of def.npcs) expect(questMarker(npc, { verirrt: 'done', leuchtmoos: 'ready' }, def.npcs)).toBeNull();
+    expect(def.quests.filter((q) => q.board).map((q) => q.id)).toEqual(['leuchtmoos']);
+    expect(def.npcs.filter((n) => n.gives).map((n) => n.id)).toEqual(['paula']);
+  });
+
+  it('5 Dorfbewohner, und Häuser für alle fünf Gebäude', () => {
+    expect(def.npcs.map((n) => n.id).sort()).toEqual(['brummbart', 'fips', 'kiesel', 'paula', 'wurzel']);
+    expect(def.buildings).toHaveLength(5);
   });
 });

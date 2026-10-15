@@ -60,6 +60,8 @@ export class VillageScene extends Phaser.Scene {
   private queuedHorizontal?: 'left' | 'right';
   /** Seit wann eine Richtungstaste gehalten wird (0 = keine) */
   private heldSince = 0;
+  /** Kamerafahrt über das Dorf beim ersten Besuch (überspringbar) */
+  private intro?: Phaser.Tweens.Tween;
 
   constructor() {
     super('Village');
@@ -89,9 +91,12 @@ export class VillageScene extends Phaser.Scene {
     this.add.image(-b, -b, villageMapTexture(this, village)).setOrigin(0).setDepth(-1);
 
     const def = village.def;
-    const start: Placement = save.village?.player ?? def.spawn;
+    // Ältere Spielstände können auf Feldern stehen, die es so nicht mehr gibt: dann zum Startpunkt
+    const saved = save.village;
+    const valid = saved && walkable(saved.player) && walkable(saved.partner);
+    const start: Placement = valid ? saved.player : def.spawn;
     this.player = this.addCreature(start, start.facing, save.archetypeId);
-    this.partner = this.addCreature(save.village?.partner ?? def.partnerSpawn, start.facing, save.partnerId);
+    this.partner = this.addCreature(valid ? saved.partner : def.partnerSpawn, start.facing, save.partnerId);
     for (const npc of def.npcs) this.npcs.set(npc.id, this.addActor(npc, npc.facing, actorKey(npc.sprite)));
     [this.player, this.partner, ...this.npcs.values()].forEach((actor, i) => this.idle(actor, 200 + i * 350));
     this.refreshMarkers();
@@ -119,14 +124,58 @@ export class VillageScene extends Phaser.Scene {
     this.time.delayedCall(450, () => this.greet());
   }
 
-  /** Begrüßung beim ersten Besuch, danach der Steuerungshinweis */
+  /**
+   * Erster Besuch: Der Partner will sein Dorf zeigen, die Kamera fährt einmal von links nach rechts
+   * über das Dorf (überspringbar), danach erzählt der Partner weiter. Sonst nur der Steuerungshinweis.
+   */
   private greet() {
     const save = getSave();
-    if (!save.villageIntroSeen && save.partnerId) {
-      const portrait = creatureTexture(this, archetypeById(save.partnerId));
-      this.hud.say(save.partnerName, t.list('village.arrival'), () => updateSave({ villageIntroSeen: true }), portrait);
+    if (save.villageIntroSeen || !save.partnerId) {
+      this.hud.showHint();
+      return;
     }
-    this.hud.showHint();
+    const portrait = creatureTexture(this, archetypeById(save.partnerId));
+    this.hud.say(save.partnerName, t.list('village.arrival'), () =>
+      this.introPan(() => {
+        updateSave({ villageIntroSeen: true });
+        this.hud.say(save.partnerName, t.list('village.arrivalAfter'), undefined, portrait);
+        this.hud.showHint();
+      }),
+    portrait);
+  }
+
+  private introPan(onDone: () => void) {
+    const cam = this.cameras.main;
+    cam.stopFollow();
+    const y = (village.height * TILE) / 2;
+    const glide = { x: 0 };
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      this.intro?.stop();
+      this.input.off('pointerup', finish);
+      this.input.keyboard?.off('keydown', finish);
+      this.hud.showBanner(undefined);
+      cam.startFollow(this.player.body, true, 0.18, 0.18);
+      // Erst im nächsten Moment freigeben, damit der Tipp zum Überspringen nicht gleich als Laufziel zählt
+      this.time.delayedCall(80, () => (this.intro = undefined));
+      onDone();
+    };
+    this.intro = this.tweens.add({
+      targets: glide,
+      x: village.width * TILE,
+      duration: 7000,
+      ease: 'Sine.easeInOut',
+      onUpdate: () => cam.centerOn(glide.x, y),
+      onComplete: finish,
+    });
+    this.hud.showBanner(t('village.intro.skip'));
+    // Antippen oder eine Taste überspringt die Fahrt
+    this.time.delayedCall(200, () => {
+      this.input.once('pointerup', finish);
+      this.input.keyboard?.once('keydown', finish);
+    });
   }
 
   private applyZoom() {
@@ -177,7 +226,7 @@ export class VillageScene extends Phaser.Scene {
       const horizontal: Record<string, 'left' | 'right'> = { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
       kb.on('keydown', (e: KeyboardEvent) => {
         // Bei offenem Dialog gehört die Taste der Oberfläche
-        if (this.hud.busy || this.leaving) return;
+        if (this.intro || this.hud.busy || this.leaving) return;
         if (e.code === 'Space' || e.code === 'Enter' || e.code === 'KeyE') this.queuedAction = true;
         this.queuedVertical = vertical[e.code] ?? this.queuedVertical;
         this.queuedHorizontal = horizontal[e.code] ?? this.queuedHorizontal;
@@ -185,7 +234,7 @@ export class VillageScene extends Phaser.Scene {
     }
     this.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
       ambient.unlock();
-      if (this.hud.busy || this.hud.consumed(pointer) || this.leaving) return;
+      if (this.intro || this.hud.busy || this.hud.consumed(pointer) || this.leaving) return;
       // Ziehen (z. B. Scrollen) ist kein Antippen
       if (pointer.getDistance() > 12) return;
       this.tapTile({ x: Math.floor(pointer.worldX / TILE), y: Math.floor(pointer.worldY / TILE) });
@@ -210,7 +259,7 @@ export class VillageScene extends Phaser.Scene {
   }
 
   update(time: number) {
-    if (!this.player || this.leaving) return;
+    if (!this.player || this.leaving || this.intro) return;
     if (this.hud?.busy) {
       this.clearQueue();
       return;
@@ -393,14 +442,14 @@ export class VillageScene extends Phaser.Scene {
     for (const npc of village.def.npcs) {
       const actor = this.npcs.get(npc.id);
       if (!actor) continue;
-      const mark = questMarker(npc, log);
+      const mark = questMarker(npc, log, village.def.npcs);
       const old = this.markers.get(npc.id);
       if (old && (!mark || old.texture.key !== markerTexture(this, mark))) {
         old.destroy();
         this.markers.delete(npc.id);
       }
       if (!mark || this.markers.has(npc.id)) continue;
-      const marker = this.add.image(0, FEET_Y - 18, markerTexture(this, mark)).setOrigin(0.5, 1);
+      const marker = this.add.image(0, FEET_Y - 19, markerTexture(this, mark)).setOrigin(0.5, 1);
       actor.body.add(marker);
       this.tweens.add({ targets: marker, y: marker.y - 2, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.markers.set(npc.id, marker);

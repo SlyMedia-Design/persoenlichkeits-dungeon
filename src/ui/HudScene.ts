@@ -53,6 +53,8 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
   private typewriter?: Typewriter;
   private hintUntil = 0;
   private hintPending = false;
+  /** Dauerhafter Hinweis am unteren Rand (z. B. „überspringen“ während der Kamerafahrt) */
+  private bannerText?: string;
   /** Zuletzt von der Oberfläche verbrauchte Berührung (dasselbe Browser-Ereignis sieht auch die Karte) */
   private consumedEvent?: Event;
   /** Wird von der Kartenszene gesetzt: Szene verlassen (Profil, Titel …) */
@@ -97,6 +99,12 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
 
   close() {
     this.setMode({ kind: 'none' });
+  }
+
+  /** Hinweis am unteren Rand zeigen (undefined = ausblenden) */
+  showBanner(text?: string) {
+    this.bannerText = text;
+    this.render();
   }
 
   /** Steuerungshinweis für einige Sekunden (wartet, bis nichts anderes offen ist). */
@@ -173,7 +181,8 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
     if (this.sys.game.device.input.touch) this.drawFastForward(sound);
     const mode = this.mode;
     if (mode.kind === 'none') {
-      if (this.time.now < this.hintUntil) this.drawHint();
+      if (this.bannerText) this.drawBanner(this.bannerText);
+      else if (this.time.now < this.hintUntil) this.drawHint();
     } else if (mode.kind === 'dialog') this.drawDialog((mode as { dialog: Dialog }).dialog);
     else if (mode.kind === 'choice') this.drawChoice(mode as Extract<BaseMode, { kind: 'choice' }>);
     else this.drawMode(mode as Extra);
@@ -212,9 +221,13 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
   }
 
   private drawHint() {
+    this.drawBanner(this.hintText(this.sys.game.device.input.touch));
+  }
+
+  private drawBanner(text: string) {
     const { cx, height, contentWidth, small } = this.m;
     const hint = this.add
-      .text(cx, height - this.hintBottom(), this.hintText(this.sys.game.device.input.touch), {
+      .text(cx, height - this.hintBottom(), text, {
         ...textStyle(small),
         align: 'center',
         wordWrap: { width: contentWidth - 24, useAdvancedWrap: true },

@@ -16,6 +16,8 @@ export interface TilesetDef {
   objects: Record<string, TileRef[]>;
   trees: TileRef[];
   buildings: Record<string, TileRef & { w: number; h: number; door: Pos }>;
+  /** Einzelbilder ohne Kachelraster (z. B. Fischernetz), Pfad unter public/ */
+  props: Record<string, string>;
   actors: Record<string, ActorDef>;
   items: Record<string, string>;
   fx: Record<string, FxDef>;

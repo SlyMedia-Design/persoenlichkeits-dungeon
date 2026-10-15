@@ -161,9 +161,7 @@
   "village": {
     "name": "Morgentau",
     "arrival": [
-      "„Willkommen in Morgentau! Hier wohne ich.“",
-      "„Auf dem Dorfplatz hängt das Schwarze Brett. Dort bitten die Leute um Hilfe.“",
-      "„Und Oma Wurzel weiß alles über unser Dorf. Komm, sag ihr Hallo!“"
+      "„Da sind wir: Morgentau! Hier bin ich zu Hause. Komm, ich zeig dir unser Dorf!“"
     ],
     "hintTouch": "Tippe auf ein Feld, um dorthin zu laufen. Tippe auf jemanden, um zu reden. Shift oben rechts spult vor.",
     "hintKeys": "Pfeiltasten oder WASD zum Laufen (zwei Tasten zusammen für schräg), Leertaste zum Reden und Untersuchen, Shift halten zum Vorspulen.",
@@ -180,20 +178,81 @@
       "bagFull": "Der Beutel ist voll. Im Flüsterwald kannst du Gegenstände ablegen, um Platz zu schaffen."
     },
     "examine": {
-      "pond": "Im Teich flitzen kleine silberne Fische davon.",
+      "pond": "Im See flitzen kleine silberne Fische davon.",
       "door": "Die Tür ist verschlossen.",
-      "wurzelDoor": "Oma Wurzels Haus. Es duftet nach Kräutertee.",
-      "innDoor": "Das Gasthaus „Zum Kupferkessel“. Heute ist noch geschlossen.",
+      "guildDoor": "Das Gildenhaus. Es riecht nach Holz und Abenteuer.",
+      "partnerDoor": "{partner}s Haus. Gemütlich, mit einem Kissen auf jeder Stufe.",
+      "ruinDoor": "Ein altes, kaputtes Haus. Das Dach ist voller Moos. Vielleicht kann man es eines Tages wieder herrichten …",
       "sign": "Nach Norden: Flüsterwald. Bitte nicht allein gehen!",
-      "well": "Ein alter Brunnen. Ganz unten glitzert etwas."
+      "well": "Ein alter Brunnen. Ganz unten glitzert etwas.",
+      "dock": "Der Steg knarzt leise unter deinen Füßen.",
+      "boat": "Ein kleines Ruderboot. Käpt’n Kiesel lässt niemanden damit fahren.",
+      "bucket": "Ein Eimer mit Wasser. Darin schwimmt … nichts. Noch nicht.",
+      "barrel": "Ein Fass voller Angelschnur und Haken.",
+      "net": "Ein Fischernetz zum Trocknen. Es riecht nach See.",
+      "counter": "Ein kleiner Tresen voller Kräutersäckchen."
     },
     "npcs": {
+      "paula": {
+        "name": "Paula",
+        "questOffer": [
+          "Oh, gut, dass ihr da seid! Ich bin Paula, ich kümmere mich hier um alles und jeden.",
+          "Der kleine Stups ist beim Beerensammeln im Flüsterwald verschwunden. Seine Mama ist ganz aufgelöst.",
+          "Würdet ihr ihn suchen? Er ist bestimmt auf der zweiten Etage. Bringt ihn sicher zur Treppe, kämpfen kann er noch nicht.",
+          "Danke, ihr zwei. Fips wartet hier vorne auf Neuigkeiten."
+        ],
+        "questAccepted": [
+          "Stups ist bestimmt irgendwo auf der zweiten Etage des Flüsterwalds.",
+          "Passt gut auf euch auf. Und auf ihn."
+        ],
+        "questReady": [
+          "Ich habe es schon gehört: Stups ist wieder da! Ich bin so erleichtert.",
+          "Fips platzt gleich vor Neugier. Erzählt ihm alles, er hat etwas von Stups’ Mama für euch."
+        ],
+        "default": [
+          "Schön, dich zu sehen, {player}. Morgentau ist klein, aber wir halten zusammen.",
+          "Wenn du Hilfe brauchst, komm zu mir. Und wenn wir Hilfe brauchen, kommen wir zu dir!"
+        ]
+      },
+      "fips": {
+        "name": "Fips",
+        "default": [
+          "Hey, hey! Ich bin Fips. Ich weiß alles, was in Morgentau so passiert!",
+          "Brummbart am Gildenhaus hängt die Aufträge ans Schwarze Brett. Und Oma Wurzel hat Kräuter für alles.",
+          "Und unten am See sitzt Käpt’n Kiesel. Frag ihn bloß nicht nach dem großen Fisch … dann redet er stundenlang!"
+        ],
+        "questAccepted": [
+          "Ihr sucht den kleinen Stups? Danke, danke, danke!",
+          "Wenn ihr ihn findet, kommt sofort zu mir. Ich will alles hören!"
+        ],
+        "questReady": [
+          "Stups ist wieder da! Er hat allen erzählt, wie mutig ihr wart!",
+          "Seine Mama hat mir etwas für euch mitgegeben.",
+          "Ihr seid echte Helden, {player} und {partner}!"
+        ],
+        "questDone": [
+          "Stups will jetzt auch Abenteurer werden. Oje …",
+          "Wer weiß, was als Nächstes passiert. Ich halte die Ohren offen!"
+        ]
+      },
+      "brummbart": {
+        "name": "Brummbart",
+        "default": [
+          "Hm. Neu hier? Ich bin Brummbart. Das Gildenhaus ist mein Revier.",
+          "Wer Hilfe braucht, schreibt einen Zettel, und ich hänge ihn ans Brett. Wer helfen will, nimmt ihn sich.",
+          "Und kommt heil zurück, verstanden? Ich mag es nicht, wenn Zettel hängen bleiben."
+        ],
+        "questDone": [
+          "Oma Wurzels Laternen brennen wieder. Gute Arbeit, ihr zwei.",
+          "Hm. Ich habe ja gleich gesagt, dass ihr das schafft. Oder so ähnlich."
+        ]
+      },
       "wurzel": {
         "name": "Oma Wurzel",
         "default": [
-          "Ein neues Gesicht in Morgentau! Willkommen, {player}.",
+          "Ein neues Gesicht in Morgentau! Willkommen in meinem Kräuterladen, {player}.",
           "Du bist mit {partner} gekommen? Dann bist du hier zu Hause. Wem {partner} vertraut, dem vertrauen wir auch.",
-          "Wenn du helfen möchtest: Am Schwarzen Brett auf dem Dorfplatz hängen die Bitten der Dorfleute. Eine davon ist von mir."
+          "Am Schwarzen Brett beim Gildenhaus hängt übrigens eine Bitte von mir."
         ],
         "questAccepted": [
           "Du hilfst mir mit dem Leuchtmoos? Wie lieb von dir!",
@@ -210,26 +269,12 @@
           "Komm jederzeit auf einen Tee vorbei, {player}."
         ]
       },
-      "fips": {
-        "name": "Fips",
+      "kiesel": {
+        "name": "Käpt’n Kiesel",
         "default": [
-          "Hey, hey! Ich bin Fips. Ich kümmere mich um das Schwarze Brett!",
-          "Jeder im Dorf kann dort einen Zettel aufhängen. Und wer helfen will, nimmt ihn einfach an.",
-          "Schau doch mal rein – gleich hier neben mir!"
-        ],
-        "questAccepted": [
-          "Du suchst den kleinen Stups? Danke, danke, danke!",
-          "Er wollte nur Beeren sammeln und ist nicht zurückgekommen. Seine Mama macht sich große Sorgen.",
-          "Wenn ihr ihn findet, bringt ihn sicher zum Ausgang. Kämpfen kann er noch nicht."
-        ],
-        "questReady": [
-          "Stups ist wieder da! Er hat allen erzählt, wie mutig ihr wart!",
-          "Seine Mama hat mir etwas für euch mitgegeben.",
-          "Ihr seid echte Helden, {player} und {partner}!"
-        ],
-        "questDone": [
-          "Stups will jetzt auch Abenteurer werden. Oje …",
-          "Schau ruhig wieder am Schwarzen Brett vorbei!"
+          "Psst … nicht so laut. Die Fische hören alles.",
+          "Ich bin Käpt’n Kiesel. Früher bin ich über alle Seen gefahren, heute reicht mir dieser hier.",
+          "Ganz unten im Wasser wohnt ein Fisch, so groß wie das Gemeindehaus. Wirklich! Na ja … fast."
         ]
       }
     },
@@ -286,7 +331,14 @@
     },
     "afterDungeon": {
       "mossMissing": "Leuchtmoos im Beutel: {n} von {needed}."
-    }
+    },
+    "intro": {
+      "skip": "Antippen oder Taste: überspringen"
+    },
+    "arrivalAfter": [
+      "„Das Haus mit dem hellen Dach ist meins. Und das alte daneben … das steht schon lange leer. Vielleicht wird es ja mal deins?“",
+      "„Am Gildenhaus hängt das Schwarze Brett, und vor dem Gemeindehaus steht Paula, unsere Bürgermeisterin. Ich glaube, sie sucht Hilfe!“"
+    ]
   },
   "elements": {
     "glut": "Glut",

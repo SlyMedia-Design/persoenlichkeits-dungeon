@@ -110,7 +110,8 @@ export class VillageHudScene extends HudScene<Mode> {
     items.push(title);
     y += title.height + gap;
 
-    for (const { id } of village.def.quests) {
+    // Am Brett hängen nur Brett-Aufträge; die anderen vergeben NPCs selbst
+    for (const { id } of village.def.quests.filter((q) => q.board)) {
       const status = questStatus(log, id);
       const cardTop = y;
       const cardPad = Math.round(pad * 0.75);

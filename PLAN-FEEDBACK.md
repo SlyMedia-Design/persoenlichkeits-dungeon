@@ -37,11 +37,11 @@ Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt n
 - [x] Questlog im Menü (Dorf und Dungeon) mit dem nächsten Schritt je Auftrag
 
 ## F – Dorf-Ausbau
-- [ ] Karte erweitern: 5 Gebäude, größerer See mit Angelplatz (Steg, Boot, Eimer, Netze)
-- [ ] Schwarzes Brett am Gildenhaus, der zuständige NPC steht daneben
-- [ ] 5 NPCs ausarbeiten (Name, Tierart, Rolle, Persönlichkeit, Dialoge, Figur aus dem Ninja-Pack). **Ich mache Vorschläge, Julian entscheidet.**
-- [ ] 2 Aufträge: Quest des NPCs im Gemeindehaus + Auftrag vom Schwarzen Brett
-- [ ] Intro-Kamerafahrt über das Dorf nach der Partnerwahl, überspringbar
+- [x] Karte erweitern: 5 Gebäude, größerer See mit Angelplatz (Steg, Boot, Eimer, Netze)
+- [x] Schwarzes Brett am Gildenhaus, der zuständige NPC steht daneben
+- [x] 5 NPCs ausarbeiten (Name, Tierart, Rolle, Persönlichkeit, Dialoge, Figur aus dem Ninja-Pack). **Ich mache Vorschläge, Julian entscheidet.**
+- [x] 2 Aufträge: Quest des NPCs im Gemeindehaus + Auftrag vom Schwarzen Brett
+- [x] Intro-Kamerafahrt über das Dorf nach der Partnerwahl, überspringbar
 
 ## G – Inszenierung und Abschluss
 - [ ] Boss-Musik + Warnton beim Erscheinen (Ninja-Pack: z. B. „28 - Tension“ oder „14 - Curse“)

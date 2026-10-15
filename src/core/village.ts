@@ -57,13 +57,15 @@ export interface VillageDef {
   legend: Record<string, TileDef>;
   map: string[];
   buildings: BuildingPlacement[];
+  /** Einzelbilder (data/tileset.json, props), unten mittig auf dem Feld x,y; die Felder darunter sind in map fest */
+  props?: { x: number; y: number; style: string }[];
   spawn: Placement;
   partnerSpawn: Pos;
   npcs: NpcDef[];
   /** Untersuchungstexte für einzelne Felder (überschreiben die Legende) */
   examine: (Pos & { text: string })[];
   /** Aufträge; reward.minValue = Mindestwert der zufälligen Belohnung in Münzen */
-  quests: { id: string; reward: { minValue: number } }[];
+  quests: { id: string; reward: { minValue: number }; board?: boolean }[];
   /** Wo das Team nach der Rückkehr aus dem Dungeon steht */
   gateExit: Placement;
   gatePartner: Pos;
@@ -145,15 +147,15 @@ export function pickDialog(npc: NpcDef, log: QuestLog): DialogRule {
 }
 
 /**
- * Zeichen über dem Kopf eines NPCs, der selbst einen Auftrag vergibt:
- * ! = Auftrag wartet, verschwindet bei Annahme; ? = Auftrag erfüllt, verschwindet bei Abgabe.
+ * Zeichen über dem Kopf bei Aufträgen, die NPCs selbst vergeben (nicht über das Schwarze Brett):
+ * ! über dem Auftraggeber, bis der Auftrag angenommen ist;
+ * ? über dem NPC, bei dem der erfüllte Auftrag abgegeben wird, bis zur Abgabe.
  */
-export function questMarker(npc: NpcDef, log: QuestLog): '!' | '?' | null {
-  if (!npc.gives) return null;
-  const status = questStatus(log, npc.gives);
-  if (status === 'open') return '!';
-  if (status === 'ready') return '?';
-  return null;
+export function questMarker(npc: NpcDef, log: QuestLog, npcs: readonly NpcDef[]): '!' | '?' | null {
+  if (npc.gives && questStatus(log, npc.gives) === 'open') return '!';
+  const npcQuests = new Set(npcs.flatMap((n) => (n.gives ? [n.gives] : [])));
+  const handIn = npc.dialogs.some((r) => r.complete && npcQuests.has(r.complete) && questStatus(log, r.complete) === 'ready');
+  return handIn ? '?' : null;
 }
 
 /** Schließt einen erfüllten Auftrag ab (nur aus dem Status ready). */
