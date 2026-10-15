@@ -14,8 +14,8 @@ export function statsAt(species: SpeciesDef, level: number): Stats {
 }
 
 export function xpToNext(content: Content, level: number): number {
-  const { base, perLevel } = content.battle.xpToNext;
-  return base + perLevel * level;
+  const { base, exponent } = content.battle.xpToNext;
+  return Math.round(base * level ** exponent);
 }
 
 /** Fähigkeiten, die ein Team-Wesen auf dieser Stufe kennt (die zuletzt gelernten, höchstens maxMoves). */
@@ -30,6 +30,16 @@ export function movesAt(content: Content, species: SpeciesDef, level: number): s
 function slot(content: Content, id: string, extraPp: number): MoveSlot {
   const maxPp = content.moves.moves[id].pp + extraPp;
   return { id, pp: maxPp, maxPp };
+}
+
+/** Erfahrung für einen besiegten Gegner: steigt mit seiner Stufe */
+export function xpYield(content: Content, species: SpeciesDef, level: number): number {
+  return Math.max(1, Math.round((species.xp ?? 3) * level * content.battle.xpYield.perLevel));
+}
+
+/** Schadensfaktor der Stufe des Angreifers */
+export function levelDamage(content: Content, level: number): number {
+  return 1 + content.battle.damage.levelScale * (level - 1);
 }
 
 export function speciesDef(content: Content, side: Side, species: string): SpeciesDef {

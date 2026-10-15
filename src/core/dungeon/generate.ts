@@ -124,8 +124,9 @@ export function newId(state: DungeonState, prefix = 'e'): string {
 
 /** Gegner passend zur Etage würfeln */
 export function rollEnemy(content: Content, state: DungeonState, number: number, pos: Pos, rng: Random): Unit {
-  const table = content.dungeon.floors[number - 1].enemies;
-  const [species, min, max] = rng.weighted(table, (e) => e[3]);
+  const floor = content.dungeon.floors[number - 1];
+  const [species] = rng.weighted(floor.enemies, (e) => e[1]);
+  const [min, max] = floor.enemyLevel;
   return makeUnit(content, { id: newId(state), side: 'enemy', species, level: rng.int(min, max), pos });
 }
 

@@ -255,7 +255,7 @@
       }
     },
     "gate": {
-      "prompt": "In den Flüsterwald aufbrechen?",
+      "prompt": "In den Flüsterwald aufbrechen?\nDungeon-Stufe {level}\nDein Team: Stufe {team}",
       "go": "Aufbrechen",
       "stay": "Noch nicht"
     },

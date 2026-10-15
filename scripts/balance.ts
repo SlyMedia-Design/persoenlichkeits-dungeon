@@ -46,31 +46,37 @@ function chooseAction(s: DungeonState, rng: ReturnType<typeof createRandom>): Ac
   return { type: 'wait' };
 }
 
-let cleared = 0;
-const reached = [0, 0, 0, 0, 0];
-let turns = 0;
-let levels = 0;
-for (let i = 0; i < RUNS; i++) {
-  const rng = createRandom(1000 + i);
-  const z = Object.fromEntries(DIMENSIONS.map((d) => [d, rng.next() * 2 - 1])) as Record<(typeof DIMENSIONS)[number], number>;
-  const s = startRun(content, {
-    seed: 5000 + i,
-    player: { species: species[i % 4], level: battleJson.startLevel, xp: 0 },
-    partner: { species: species[(i + 1 + (i >> 2)) % 4], level: battleJson.startLevel, xp: 0 },
-    z,
-    bonusDefs: bonusesJson as unknown as Record<string, BonusDef>,
-    bag: ['heilbeere', 'heilbeere'],
-    escort: true,
-    moss: true,
-  });
-  let guard = 0;
-  while (!s.outcome && guard++ < 3000) act(content, s, chooseAction(s, rng));
-  reached[s.floor.number - 1]++;
-  if (s.outcome === 'cleared') cleared++;
-  turns += s.turn;
-  levels += unitById(s, 'player')!.level;
+/** Viele Durchgänge mit einem Team der Stufe level (erster Ausflug = Startstufe, spätere mit mehr Erfahrung) */
+function simulate(level: number) {
+  let cleared = 0;
+  const reached = [0, 0, 0, 0, 0];
+  let turns = 0;
+  let levels = 0;
+  for (let i = 0; i < RUNS; i++) {
+    const rng = createRandom(1000 + i);
+    const z = Object.fromEntries(DIMENSIONS.map((d) => [d, rng.next() * 2 - 1])) as Record<(typeof DIMENSIONS)[number], number>;
+    const s = startRun(content, {
+      seed: 5000 + i,
+      player: { species: species[i % 4], level, xp: 0 },
+      partner: { species: species[(i + 1 + (i >> 2)) % 4], level, xp: 0 },
+      z,
+      bonusDefs: bonusesJson as unknown as Record<string, BonusDef>,
+      bag: ['heilbeere', 'heilbeere'],
+      escort: true,
+      moss: true,
+    });
+    let guard = 0;
+    while (!s.outcome && guard++ < 3000) act(content, s, chooseAction(s, rng));
+    reached[s.floor.number - 1]++;
+    if (s.outcome === 'cleared') cleared++;
+    turns += s.turn;
+    levels += unitById(s, 'player')!.level;
+  }
+  console.log(`
+Team auf Stufe ${level} (Dungeon-Stufe ${content.dungeon.level}, Boss Stufe ${content.dungeon.boss.level}), ${RUNS} Durchgänge`);
+  console.log(`Boss besänftigt: ${((cleared / RUNS) * 100).toFixed(0)} %`);
+  console.log(`Letzte erreichte Etage: ${reached.map((n, i) => `${i < 3 ? 'E' + (i + 1) : 'Boss'} ${n}`).slice(0, 4).join(' · ')}`);
+  console.log(`Ø Züge ${(turns / RUNS).toFixed(0)}, Ø Stufen-Gewinn Spieler ${(levels / RUNS - level).toFixed(1)}`);
 }
-console.log(`Durchgänge: ${RUNS}`);
-console.log(`Boss besänftigt: ${((cleared / RUNS) * 100).toFixed(0)} %`);
-console.log(`Letzte erreichte Etage: ${reached.map((n, i) => `${i < 3 ? 'E' + (i + 1) : 'Boss'} ${n}`).slice(0, 4).join(' · ')}`);
-console.log(`Ø Züge ${(turns / RUNS).toFixed(0)}, Ø Endstufe Spieler ${(levels / RUNS).toFixed(1)}`);
+
+for (const level of [battleJson.startLevel, battleJson.startLevel + 2, battleJson.startLevel + 4]) simulate(level);

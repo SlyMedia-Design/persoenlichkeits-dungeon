@@ -43,7 +43,12 @@ export interface SpeciesDef {
 export interface BattleData {
   startLevel: number;
   maxMoves: number;
-  xpToNext: { base: number; perLevel: number };
+  /** Erfahrung bis zur nächsten Stufe: base × Stufe^exponent (wächst immer steiler, wie in Mystery Dungeon) */
+  xpToNext: { base: number; exponent: number };
+  /** Erfahrung für einen besiegten Gegner: xp der Art × Stufe des Gegners × perLevel */
+  xpYield: { perLevel: number };
+  /** Schaden wächst mit der Stufe des Angreifers: × (1 + levelScale × (Stufe − 1)) */
+  damage: { levelScale: number };
   team: Record<string, SpeciesDef>;
   enemies: Record<string, SpeciesDef>;
   boss: Record<string, SpeciesDef>;
@@ -63,8 +68,10 @@ export interface ItemDef {
 }
 
 export interface FloorDef {
-  /** [Art, Stufe von, Stufe bis, Gewicht] */
-  enemies: [string, number, number, number][];
+  /** Stufe der Gegner auf dieser Etage (von, bis); steigt von Etage zu Etage */
+  enemyLevel: [number, number];
+  /** [Art, Gewicht] */
+  enemies: [string, number][];
   enemyCount: [number, number];
   items: number;
   traps: number;
@@ -72,6 +79,8 @@ export interface FloorDef {
 
 export interface DungeonDef {
   id: string;
+  /** Schwierigkeit, wird vor dem Betreten angezeigt */
+  level: number;
   size: { width: number; height: number };
   rooms: { cols: number; rows: number; minSize: number; maxWidth: number; maxHeight: number };
   bag: { size: number };

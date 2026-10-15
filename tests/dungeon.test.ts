@@ -11,7 +11,7 @@ import { act, startRun, unitById, type RunOptions } from '../src/core/dungeon/en
 import { generateLayout, isFloorTile } from '../src/core/dungeon/generate';
 import { createRandom } from '../src/core/dungeon/random';
 import { settleRun } from '../src/core/dungeon/settle';
-import { computeBonuses, gainXp, makeUnit, movesAt, statsAt, type BonusDef } from '../src/core/dungeon/stats';
+import { computeBonuses, gainXp, levelDamage, makeUnit, movesAt, statsAt, xpToNext, xpYield, type BonusDef } from '../src/core/dungeon/stats';
 import type { Action, Content, DungeonState } from '../src/core/dungeon/types';
 
 const content = { dungeon: dungeonJson, battle: battleJson, moves: movesJson, elements: elementsJson } as unknown as Content;
@@ -41,6 +41,27 @@ describe('Etagen', () => {
       expect(walk(start)).toBe(true);
       expect(findPath(start, [floor.stairs!], walk, 5000), `Seed ${seed}`).not.toBeNull();
       for (const room of floor.rooms) expect(findPath(start, [{ x: room.x, y: room.y }], walk, 5000), `Seed ${seed}`).not.toBeNull();
+    }
+  });
+
+  it('jedes Betreten (neuer Startwert) ergibt ein anderes Layout', () => {
+    const layouts = new Set([1, 2, 3, 4, 5].map((seed) => run({ seed }).floor.tiles.join('')));
+    expect(layouts.size).toBe(5);
+  });
+
+  it('Gegner-Stufen steigen von Etage zu Etage', () => {
+    const floors = content.dungeon.floors;
+    for (let i = 1; i < floors.length; i++) {
+      expect(floors[i].enemyLevel[0]).toBeGreaterThanOrEqual(floors[i - 1].enemyLevel[0]);
+      expect(floors[i].enemyLevel[1]).toBeGreaterThan(floors[i - 1].enemyLevel[1]);
+    }
+    for (let seed = 1; seed <= 10; seed++) {
+      const s = run({ seed });
+      const [min, max] = floors[0].enemyLevel;
+      for (const u of s.units.filter((u) => u.side === 'enemy')) {
+        expect(u.level).toBeGreaterThanOrEqual(min);
+        expect(u.level).toBeLessThanOrEqual(max);
+      }
     }
   });
 
@@ -78,6 +99,21 @@ describe('Werte und Stufen', () => {
     expect(u.level).toBeGreaterThan(8);
     expect(events.some((e) => e.type === 'levelUp' && e.learned === 'planschwelle')).toBe(true);
     expect(u.moves.length).toBeLessThanOrEqual(4);
+  });
+
+  it('die Erfahrungskurve wird immer steiler, starke Gegner bringen mehr', () => {
+    for (let level = 1; level < 20; level++) {
+      expect(xpToNext(content, level + 1) - xpToNext(content, level)).toBeGreaterThan(0);
+    }
+    const larve = battleJson.enemies.larve;
+    expect(xpYield(content, larve, 6)).toBeGreaterThan(xpYield(content, larve, 3));
+    // Auf Startstufe braucht es mehrere Gegner der ersten Etage für eine Stufe
+    expect(xpToNext(content, battleJson.startLevel) / xpYield(content, larve, content.dungeon.floors[0].enemyLevel[1])).toBeGreaterThan(5);
+  });
+
+  it('der Schaden wächst mit der Stufe des Angreifers', () => {
+    expect(levelDamage(content, 1)).toBe(1);
+    expect(levelDamage(content, 10)).toBeGreaterThan(levelDamage(content, 5));
   });
 
   it('jeder Pol einer Dimension bringt einen Bonus (kein Profil ist schwächer)', () => {
@@ -230,6 +266,8 @@ describe('Boss', () => {
     expect(s.floor.boss).toBe(true);
     const boss = unitById(s, 'boss')!;
     expect(boss).toBeDefined();
+    // Die Boss-Stufe ist fest vorgegeben und hängt nicht vom Team ab
+    expect(boss.level).toBe(content.dungeon.boss.level);
     boss.hp = 1;
     const player = unitById(s, 'player')!;
     boss.pos = { x: player.pos.x, y: player.pos.y - 1 };

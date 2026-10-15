@@ -8,7 +8,7 @@ import { DIRS, canStep, dirTo, findPath, samePos, step, type Dir, type Pos } fro
 import type { Profile } from '../types';
 import { enterBossFloor, enterFloor, isFloorTile, newId, rollEnemy } from './generate';
 import { createRandom, type Random } from './random';
-import { computeBonuses, gainXp, makeUnit, speciesDef, type BonusDef } from './stats';
+import { computeBonuses, gainXp, levelDamage, makeUnit, speciesDef, xpYield, type BonusDef } from './stats';
 import type { Action, Content, DungeonState, GameEvent, MoveDef, Unit } from './types';
 
 const chebyshev = (a: Pos, b: Pos) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
@@ -208,7 +208,7 @@ function damageTo(content: Content, state: DungeonState, user: Unit, target: Uni
   const b = state.bonuses;
   let power = def.power;
   if (isAttack && user.id === 'player') power += b.attackPower;
-  let dmg = (user.atk + power) * (0.85 + rng.next() * 0.15) - target.def * 0.6;
+  let dmg = ((user.atk + power) * (0.85 + rng.next() * 0.15) - target.def * 0.6) * levelDamage(content, user.level);
   if (user.id === 'partner') {
     const player = unitById(state, 'player');
     if (player && chebyshev(player.pos, user.pos) <= 1) dmg *= 1 + b.teamPower;
@@ -277,7 +277,7 @@ function faint(content: Content, state: DungeonState, unit: Unit, by: Unit, even
   }
   if (unit.side !== 'enemy' || by.side !== 'team') return;
   const def = speciesDef(content, 'enemy', unit.species);
-  const amount = (def.xp ?? 3) + unit.level * 3;
+  const amount = xpYield(content, def, unit.level);
   for (const member of state.units.filter((u) => u.side === 'team' && u.hp > 0)) {
     events.push(...gainXp(content, member, amount, member.id === 'player' ? state.bonuses.extraPp : 0));
   }

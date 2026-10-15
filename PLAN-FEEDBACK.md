@@ -14,12 +14,12 @@ Jedes Paket ist für sich spielbar und wird einzeln committet. Die Logik kommt n
 - [x] Icons für die 5 Elemente (16×16)
 
 ## C – Fortschritt und Balance
-- [ ] EP-Kurve nach dem Prinzip von Mystery Dungeon, insgesamt weniger EP
-- [ ] Schaden skaliert mit der Stufe
-- [ ] Gegner-Stufe steigt pro Etage, die Boss-Stufe ist fest (in `dungeon.json`)
-- [ ] Dungeon-Stufe vor dem Betreten anzeigen
-- [ ] Prüfen, dass das Layout bei jedem Betreten neu erzeugt wird (sonst fixen)
-- [ ] Balance-Check per Simulation (Test oder Skript)
+- [x] EP-Kurve nach dem Prinzip von Mystery Dungeon, insgesamt weniger EP
+- [x] Schaden skaliert mit der Stufe
+- [x] Gegner-Stufe steigt pro Etage, die Boss-Stufe ist fest (in `dungeon.json`)
+- [x] Dungeon-Stufe vor dem Betreten anzeigen
+- [x] Prüfen, dass das Layout bei jedem Betreten neu erzeugt wird (sonst fixen)
+- [x] Balance-Check per Simulation (Test oder Skript)
 
 ## D – Fähigkeiten und Fähigkeitssteine
 - [ ] Maximal 4 aktive Fähigkeiten, Austausch-Logik in `src/core`

@@ -1,8 +1,10 @@
 {
-  "description": "Kampfwerte. Wert auf Stufe L = base + growth × (L − 1), abgerundet. learn: Stufe → Fähigkeit (ein Wesen kennt höchstens 4, die zuletzt gelernten). xp = Erfahrung, die das Besiegen auf Stufe 1 bringt (plus 3 je Stufe). sprite verweist auf actors in data/tileset.json. element = Element der Art (siehe data/elements.json).",
+  "description": "Kampfwerte. Wert auf Stufe L = base + growth × (L − 1), abgerundet. learn: Stufe → Fähigkeit (ein Wesen kennt höchstens 4, die zuletzt gelernten). xp = Erfahrungswert der Art; ein besiegter Gegner bringt xp × seine Stufe × xpYield.perLevel. xpToNext: Erfahrung bis zur nächsten Stufe = base × Stufe^exponent (nach dem Prinzip von Mystery Dungeon). damage.levelScale: Schaden × (1 + levelScale × (Stufe − 1)). sprite verweist auf actors in data/tileset.json. element = Element der Art (siehe data/elements.json).",
   "startLevel": 5,
   "maxMoves": 4,
-  "xpToNext": { "base": 10, "perLevel": 8 },
+  "xpToNext": { "base": 3, "exponent": 2 },
+  "xpYield": { "perLevel": 0.7 },
+  "damage": { "levelScale": 0.02 },
   "team": {
     "otter": {
       "element": "flut",

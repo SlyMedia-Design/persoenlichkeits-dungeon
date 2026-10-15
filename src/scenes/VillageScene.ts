@@ -345,7 +345,8 @@ export class VillageScene extends Phaser.Scene {
     } else if (interaction.kind === 'board') {
       this.hud.openBoard();
     } else if (interaction.kind === 'dungeon') {
-      this.hud.choose(t('village.gate.prompt'), [
+      const level = { level: dungeonContent.dungeon.level, team: save.team?.player.level ?? dungeonContent.battle.startLevel };
+      this.hud.choose(t('village.gate.prompt', level), [
         { label: t('village.gate.go'), onPick: () => this.enterDungeon() },
         { label: t('village.gate.stay'), onPick: () => {} },
       ]);
