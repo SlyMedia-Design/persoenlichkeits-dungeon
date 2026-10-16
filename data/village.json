@@ -145,7 +145,7 @@
       "id": "kiesel",
       "x": 25,
       "y": 17,
-      "facing": "up",
+      "facing": "right",
       "sprite": "kappa",
       "dialogs": [
         { "lines": "village.npcs.kiesel.default" }

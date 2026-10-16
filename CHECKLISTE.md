@@ -138,10 +138,10 @@ Kurzbild: Test 5/5 und 5/5, Länge „genau richtig“ (2×), Wesen passt 3/5 un
 - [x] Schrift ist schwer zu lesen, besonders die Zahlen sind kaum zu unterscheiden → neue Pixelschrift DotGothic16 (16.10.2026)
 
 ### Dorf-Bewohner erkennbar machen
-- [ ] Nicht alle Bewohner sind als Personen zu erkennen
-- [ ] Käpt’n Kiesel auf dem Steg ist von hinten nicht als Person zu erkennen
-- [ ] Oma Wurzel (Pilz) wirkt nicht lebendig
-- [ ] Idee: Namensschild oder kleines Symbol über NPCs, leichte Idle-Animation, Blickrichtung zum Spieler
+- [x] Nicht alle Bewohner sind als Personen zu erkennen
+- [x] Käpt’n Kiesel auf dem Steg ist von hinten nicht als Person zu erkennen (steht jetzt seitlich)
+- [x] Oma Wurzel (Pilz) wirkt nicht lebendig
+- [x] Umgesetzt: Namensschild beim Näherkommen, Bewohner drehen sich zum Spieler und schauen ab und zu umher
 
 ### Dungeon
 - [ ] Alles sieht sehr ähnlich aus, man verläuft sich leicht → mehr Orientierung (abwechslungsreichere Räume, Deko, deutlichere Minikarte)

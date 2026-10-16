@@ -14,7 +14,7 @@ import { pixelZoom } from '../ui/camera';
 import { bindFastForward } from '../ui/speed';
 import { creatureTexture, fieldTexture, shadowTexture } from '../ui/sprites';
 import { BORDER, TILE, actorFrame, actorKey, faceKey, preloadTileset, villageMapTexture } from '../ui/tiles';
-import { COLORS } from '../ui/theme';
+import { COLORS, FONT } from '../ui/theme';
 import type { VillageHudScene } from './VillageHudScene';
 
 /** Dauer eines Schritts in Millisekunden */
@@ -48,6 +48,8 @@ export class VillageScene extends Phaser.Scene {
   private npcs = new Map<string, Actor>();
   /** ! und ? über NPCs mit eigenem Auftrag */
   private markers = new Map<string, Phaser.GameObjects.Image>();
+  /** Namensschilder über den Bewohnern (erscheinen, wenn man näher kommt) */
+  private nameTags = new Map<string, Phaser.GameObjects.Text>();
   private hud!: VillageHudScene;
   private moving = false;
   private path: Dir[] = [];
@@ -84,6 +86,7 @@ export class VillageScene extends Phaser.Scene {
     this.heldSince = 0;
     this.npcs.clear();
     this.markers.clear();
+    this.nameTags.clear();
     ambient.setBrightness(1);
     this.cameras.main.setBackgroundColor(COLORS.night);
 
@@ -99,7 +102,9 @@ export class VillageScene extends Phaser.Scene {
     this.partner = this.addCreature(valid ? saved.partner : def.partnerSpawn, start.facing, save.partnerId);
     for (const npc of def.npcs) this.npcs.set(npc.id, this.addActor(npc, npc.facing, actorKey(npc.sprite)));
     [this.player, this.partner, ...this.npcs.values()].forEach((actor, i) => this.idle(actor, 200 + i * 350));
+    for (const npc of def.npcs) this.addNameTag(npc.id);
     this.refreshMarkers();
+    this.time.addEvent({ delay: 200, loop: true, callback: () => this.npcLife() });
 
     const cam = this.cameras.main;
     cam.setBounds(-b, -b, village.width * TILE + 2 * b, village.height * TILE + 2 * b);
@@ -442,6 +447,64 @@ export class VillageScene extends Phaser.Scene {
     this.hud.say(undefined, lines);
   }
 
+  private addNameTag(id: string) {
+    const actor = this.npcs.get(id)!;
+    const tag = this.add
+      .text(0, 0, t(`village.npcs.${id}.name`), { fontFamily: FONT, fontSize: '6px', color: COLORS.text, backgroundColor: '#1a1830cc', padding: { x: 2, y: 1 }, resolution: 8 })
+      .setOrigin(0.5, 1)
+      .setAlpha(0);
+    actor.body.add(tag);
+    this.nameTags.set(id, tag);
+  }
+
+  /**
+   * Bewohner wirken lebendig: Kommt man näher, drehen sie sich zu einem um und zeigen ihren Namen.
+   * Sonst schauen sie ab und zu kurz umher und wippen dabei.
+   */
+  private npcLife() {
+    if (!this.player || this.intro) return;
+    for (const npc of village.def.npcs) {
+      const actor = this.npcs.get(npc.id);
+      const tag = this.nameTags.get(npc.id);
+      if (!actor || !tag) continue;
+      const dx = this.player.pos.x - actor.pos.x;
+      const dy = this.player.pos.y - actor.pos.y;
+      const dist = Math.max(Math.abs(dx), Math.abs(dy));
+      const show = dist <= 3;
+      if (show !== tag.getData('shown')) {
+        tag.setData('shown', show);
+        this.tweens.add({ targets: tag, alpha: show ? 1 : 0, duration: 250 });
+      }
+      if (this.hud.busy) continue;
+      if (dist <= 2) {
+        const toward: Dir = Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : dy < 0 ? 'up' : 'down';
+        if (actor.facing !== toward) this.face(actor, toward);
+      } else if (actor.facing !== npc.facing && !actor.body.getData('glancing')) {
+        this.face(actor, npc.facing);
+      } else if (Math.random() < 0.02 && !actor.body.getData('glancing')) {
+        this.glance(actor, npc.facing);
+      }
+    }
+  }
+
+  /** Kurz in eine andere Richtung schauen und dabei leicht wippen */
+  private glance(actor: Actor, home: Dir) {
+    const options = (['down', 'left', 'right', 'up'] as const).filter((d) => d !== home);
+    actor.body.setData('glancing', true);
+    this.face(actor, options[Math.floor(Math.random() * options.length)]);
+    this.tweens.add({ targets: actor.sprite, y: FEET_Y - 2, duration: 120, yoyo: true, ease: 'Sine.easeOut' });
+    this.time.delayedCall(1400, () => {
+      actor.body.setData('glancing', false);
+      this.face(actor, home);
+    });
+  }
+
+  /** Namensschild über dem Zeichen ! oder ? (falls vorhanden), sonst direkt über dem Kopf */
+  private placeNameTag(id: string) {
+    const tag = this.nameTags.get(id);
+    if (tag) tag.y = FEET_Y - 17 - (this.markers.has(id) ? 10 : 0);
+  }
+
   /** Zeichen über NPCs mit eigenem Auftrag neu setzen (! offen, ? erfüllt) */
   private refreshMarkers() {
     const log = getSave().quests ?? {};
@@ -454,11 +517,13 @@ export class VillageScene extends Phaser.Scene {
         old.destroy();
         this.markers.delete(npc.id);
       }
+      this.placeNameTag(npc.id);
       if (!mark || this.markers.has(npc.id)) continue;
       const marker = this.add.image(0, FEET_Y - 19, markerTexture(this, mark)).setOrigin(0.5, 1);
       actor.body.add(marker);
       this.tweens.add({ targets: marker, y: marker.y - 2, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.markers.set(npc.id, marker);
+      this.placeNameTag(npc.id);
     }
   }
 
