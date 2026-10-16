@@ -44,6 +44,8 @@ export class DungeonScene extends Phaser.Scene {
   private traps = new Map<string, Phaser.GameObjects.Image>();
   private floorImage?: Phaser.GameObjects.Image;
   private fog!: Phaser.GameObjects.Graphics;
+  /** Wippender Pfeil über der Treppe, sobald sie entdeckt ist */
+  private stairsArrow?: Phaser.GameObjects.Image;
   private busy = false;
   private ended = false;
   private autoPath: Dir[] = [];
@@ -148,6 +150,8 @@ export class DungeonScene extends Phaser.Scene {
     for (const i of this.traps.values()) i.destroy();
     this.traps.clear();
     this.floorImage?.destroy();
+    this.stairsArrow?.destroy();
+    this.stairsArrow = undefined;
 
     const f = this.state.floor;
     const b = BORDER * TILE;
@@ -156,6 +160,12 @@ export class DungeonScene extends Phaser.Scene {
     for (const it of f.items) this.addItem(it.pos, it.item);
     for (const trap of f.traps) this.addTrap(trap.pos, trap.kind, trap.revealed);
     for (const u of this.state.units) if (u.hp > 0) this.addView(u);
+    if (f.stairs) {
+      const c = center(f.stairs);
+      // Über dem Nebel, damit man die Treppe auch aus dem Halbdunkel wiederfindet
+      this.stairsArrow = this.add.image(c.x, c.y - 11, arrowTexture(this)).setDepth(501).setVisible(false);
+      this.tweens.add({ targets: this.stairsArrow, y: c.y - 14, duration: 650, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
 
     const cam = this.cameras.main;
     cam.setBounds(-b, -b, f.width * TILE + 2 * b, f.height * TILE + 2 * b);
@@ -240,6 +250,7 @@ export class DungeonScene extends Phaser.Scene {
       else view.body.setVisible(false);
     }
     for (const trap of f.traps) this.traps.get(key(trap.pos))?.setVisible(trap.revealed);
+    if (f.stairs) this.stairsArrow?.setVisible(f.explored[f.stairs.y][f.stairs.x] === '1');
   }
 
   // ---------- Eingabe ----------
@@ -715,4 +726,16 @@ export class DungeonScene extends Phaser.Scene {
     this.cameras.main.fadeOut(500, 26, 24, 48);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Village'));
   }
+}
+
+/** Kleiner goldener Pfeil nach unten mit dunklem Rand */
+function arrowTexture(scene: Phaser.Scene): string {
+  const key = 'stairs-arrow';
+  if (scene.textures.exists(key)) return key;
+  const g = scene.make.graphics({}, false);
+  g.fillStyle(0x120f22, 1).fillTriangle(0, 0, 10, 0, 5, 7);
+  g.fillStyle(0xffd27a, 1).fillTriangle(2, 1, 8, 1, 5, 5);
+  g.generateTexture(key, 10, 8);
+  g.destroy();
+  return key;
 }

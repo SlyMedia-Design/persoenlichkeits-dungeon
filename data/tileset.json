@@ -57,9 +57,7 @@
     "herbShop": { "sheet": "house", "x": 16, "y": 0, "w": 3, "h": 3, "door": { "x": 1, "y": 2 } },
     "ruin": { "sheet": "abandoned", "x": 11, "y": 0, "w": 3, "h": 3, "door": { "x": 1, "y": 2 } }
   },
-  "props": {
-    "fishNet": "assets/ninja/props/FishNet.png"
-  },
+  "props": { "fishNet": "assets/ninja/props/FishNet.png" },
   "actors": {
     "mouse": { "sheet": "assets/ninja/actors/Mouse.png", "face": "assets/ninja/actors/MouseFace.png" },
     "mushroom": { "sheet": "assets/ninja/actors/Mushroom.png", "face": "assets/ninja/actors/MushroomFace.png" },
@@ -115,6 +113,43 @@
       { "sheet": "nature", "x": 0, "y": 0, "w": 2, "h": 2 }
     ],
     "bush": [{ "sheet": "nature", "x": 1, "y": 10 }, { "sheet": "nature", "x": 6, "y": 10 }],
-    "stairs": { "sheet": "element", "x": 8, "y": 11 }
+    "rooms": [
+      {
+        "id": "laub",
+        "ground": "path",
+        "density": 0.14,
+        "decor": [
+          { "sheet": "detail", "x": 0, "y": 0 },
+          { "sheet": "detail", "x": 1, "y": 0 },
+          { "sheet": "detail", "x": 5, "y": 0 },
+          { "sheet": "detail", "x": 6, "y": 0 },
+          { "sheet": "detail", "x": 7, "y": 0 }
+        ]
+      },
+      {
+        "id": "lichtung",
+        "ground": "grass",
+        "density": 0.2,
+        "decor": [
+          { "sheet": "detail", "x": 2, "y": 0 },
+          { "sheet": "detail", "x": 3, "y": 0 },
+          { "sheet": "detail", "x": 5, "y": 2 },
+          { "sheet": "detail", "x": 0, "y": 2 },
+          { "sheet": "detail", "x": 3, "y": 2 },
+          { "sheet": "detail", "x": 6, "y": 2 }
+        ]
+      },
+      {
+        "id": "beeren",
+        "ground": "path",
+        "density": 0.1,
+        "decor": [
+          { "sheet": "detail", "x": 4, "y": 0 },
+          { "sheet": "detail", "x": 7, "y": 2 },
+          { "sheet": "detail", "x": 1, "y": 2 },
+          { "sheet": "detail", "x": 4, "y": 2 }
+        ]
+      }
+    ]
   }
 }

@@ -139,6 +139,23 @@ export function villageMapTexture(scene: Phaser.Scene, map: VillageMap): string 
  * Malt eine Dungeon-Etage: dunkles Waldgras, Erdboden für Räume und Gänge, Bäume als Wände, die Treppe.
  * Jede Etage bekommt eine eigene Textur; die vorige wird entfernt.
  */
+/** Treppe nach unten: Steinrahmen, Stufen, die hell beginnen und im Dunkeln verschwinden */
+function drawStairs(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  ctx.fillStyle = '#2a2236';
+  ctx.fillRect(x, y + 1, 16, 15);
+  ctx.fillStyle = '#9a90ad';
+  ctx.fillRect(x + 1, y + 1, 14, 2);
+  ctx.fillStyle = '#6c6380';
+  ctx.fillRect(x + 1, y + 3, 2, 12);
+  ctx.fillRect(x + 13, y + 3, 2, 12);
+  ctx.fillStyle = '#0d0a14';
+  ctx.fillRect(x + 3, y + 3, 10, 12);
+  ['#f2e3c6', '#c9b48f', '#93805f', '#5c4f3c'].forEach((c, i) => {
+    ctx.fillStyle = c;
+    ctx.fillRect(x + 3, y + 3 + i * 3, 10, 2);
+  });
+}
+
 export function dungeonFloorTexture(scene: Phaser.Scene, floor: Floor, id: string): string {
   const key = `dungeon-${id}`;
   if (scene.textures.exists(key)) return key;
@@ -155,13 +172,23 @@ export function dungeonFloorTexture(scene: Phaser.Scene, floor: Floor, id: strin
     ctx.drawImage(img, (ref.x + offset.x) * TILE, (ref.y + offset.y) * TILE, w, h, (at.x + BORDER) * TILE, (at.y + BORDER) * TILE, w, h);
   };
   const open = (p: Pos) => p.y >= 0 && p.y < floor.height && p.x >= 0 && p.x < floor.width && floor.tiles[p.y][p.x] === '.';
+  // Jeder Raum bekommt eine Stimmung; Gänge bleiben Erdwege
+  const themeAt = (p: Pos) => {
+    const i = floor.rooms.findIndex((r) => p.x >= r.x && p.x < r.x + r.w && p.y >= r.y && p.y < r.y + r.h);
+    if (i < 0) return undefined;
+    const r = floor.rooms[i];
+    return pick(d.rooms, r.x, r.y, 15 + floor.number);
+  };
+  const isPath = (p: Pos) => open(p) && themeAt(p)?.ground !== 'grass';
   const from = { x: -BORDER, y: -BORDER };
   const to = { x: floor.width + BORDER - 1, y: floor.height + BORDER - 1 };
   for (let y = from.y; y <= to.y; y++) {
     for (let x = from.x; x <= to.x; x++) {
       blit(hash(x, y, 11) < 0.2 ? pick(d.grassVariants, x, y, 12) : d.grass, { x, y });
-      if (!open({ x, y })) continue;
-      const same = (dx: number, dy: number) => open({ x: x + dx, y: y + dy });
+      // Lichtungen: hellere Wiese wie im Dorf, damit sie sich vom Waldboden abheben
+      if (open({ x, y }) && !isPath({ x, y })) blit(hash(x, y, 18) < 0.25 ? pick(tileset.grass.variants, x, y, 19) : tileset.grass.base, { x, y });
+      if (!isPath({ x, y })) continue;
+      const same = (dx: number, dy: number) => isPath({ x: x + dx, y: y + dy });
       const nb = { n: same(0, -1), s: same(0, 1), w: same(-1, 0), e: same(1, 0), nw: same(-1, -1), ne: same(1, -1), sw: same(-1, 1), se: same(1, 1) };
       blit(d.path, { x, y }, autotileOffset(nb, d.path.innerCorners));
     }
@@ -169,7 +196,13 @@ export function dungeonFloorTexture(scene: Phaser.Scene, floor: Floor, id: strin
   const trees = planTrees((p) => !open(p), from, to);
   for (const p of trees.small) blit(pick(d.bush, p.x, p.y, 13), p);
   for (const p of trees.big) blit(pick(d.trees, p.x, p.y, 14), p);
-  if (floor.stairs) blit(d.stairs, floor.stairs);
+  for (let y = 0; y < floor.height; y++) {
+    for (let x = 0; x < floor.width; x++) {
+      const theme = open({ x, y }) ? themeAt({ x, y }) : undefined;
+      if (theme && hash(x, y, 16) < theme.density) blit(pick(theme.decor, x, y, 17), { x, y });
+    }
+  }
+  if (floor.stairs) drawStairs(ctx, (floor.stairs.x + BORDER) * TILE, (floor.stairs.y + BORDER) * TILE);
   canvas.refresh();
   return key;
 }

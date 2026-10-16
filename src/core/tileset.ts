@@ -27,7 +27,8 @@ export interface TilesetDef {
     path: TileRef & { innerCorners: boolean };
     trees: TileRef[];
     bush: TileRef[];
-    stairs: TileRef;
+    /** Stimmungen der Räume, damit man sich besser zurechtfindet: Boden (Erdweg oder Wiese) und flache Deko */
+    rooms: { id: string; ground: 'path' | 'grass'; density: number; decor: TileRef[] }[];
   };
 }
 

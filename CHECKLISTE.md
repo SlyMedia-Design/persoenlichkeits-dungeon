@@ -144,8 +144,8 @@ Kurzbild: Test 5/5 und 5/5, Länge „genau richtig“ (2×), Wesen passt 3/5 un
 - [x] Umgesetzt: Namensschild beim Näherkommen, Bewohner drehen sich zum Spieler und schauen ab und zu umher
 
 ### Dungeon
-- [ ] Alles sieht sehr ähnlich aus, man verläuft sich leicht → mehr Orientierung (abwechslungsreichere Räume, Deko, deutlichere Minikarte)
-- [ ] Die Treppe sieht nicht wie eine Treppe aus → deutlicheres Treppen-Symbol
+- [x] Alles sieht sehr ähnlich aus, man verläuft sich leicht → Räume haben jetzt Stimmungen (Laub, Lichtung mit heller Wiese, Beerenecke) mit Deko
+- [x] Die Treppe sieht nicht wie eine Treppe aus → eigene Treppe mit Stufen und wippendem Pfeil, sobald entdeckt
 
 ## 2. Das brauche ich
 
