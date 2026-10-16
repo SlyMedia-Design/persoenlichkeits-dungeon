@@ -170,3 +170,11 @@ Kurzbild: Test 5/5 und 5/5, Länge „genau richtig“ (2×), Wesen passt 3/5 un
 - [x] Nach 4 Dungeon-Ausflügen sind die Pflanzen ausgewachsen und können geerntet werden
 - [x] Neue Schadens-Beere: Erhöht für eine Etage den Schaden der Fähigkeiten im eigenen Element des Wesens, auch im Bosskampf. Fähigkeiten anderer Elemente (z. B. per Stein gelernt) werden nicht verstärkt.
 - [x] Umsetzung: 3 Beete links unter dem Kräuterladen, jede Pflanze trägt 3 Beeren (passt nicht alles in den Beutel, bleibt der Rest an der Pflanze). Als Ausflug zählt jede Rückkehr aus dem Flüsterwald, auch nach einer Niederlage. Die Kraftbeere stärkt um 30 % (einstellbar in data/dungeon.json).
+
+## Persönliches Feedback von Julian (16.10.2026)
+- [x] Die Einführung ins Dorf wurde nicht abgespielt (ein Tipp oder eine Taste direkt nach dem Dialog hat sie sofort übersprungen). Jetzt: kleiner Film vor dem Betreten mit Kinobalken, die Kamera zieht wie ein Sidescroller von links nach rechts über das Dorf. Überspringen nur mit dem Knopf oder Escape.
+- [x] Minimap im Dungeon zu klein: deutlich größer, kräftigere Farben, Punkte mit Rand; Antippen oder M zeigt die Karte groß in der Mitte
+- [x] Gegner zu schwach: Gegner-Stufen angehoben (Etage 1: 4–5, Etage 2: 5–7, Etage 3: 7–8; vorher 2–3, 3–5, 5–6)
+- [x] Boss: 50 Lebenspunkte mehr (Grundwert 56 → 106, auf Stufe 10 jetzt 133 statt 83 KP)
+- [x] Testläufe mit `npm run balance`: zwei Bots, je 200 Kampagnen (ganzes Spiel bis zum Sieg) – Ergebnisse siehe Chat vom 16.10.2026
+

@@ -61,7 +61,7 @@ Aufbruch am Nordtor des Dorfs. Rundenbasiert wie bei *Mystery Dungeon*: Jeder Sc
 - **Speichern:** Der Durchgang wird nach jedem Zug gesichert und lässt sich über das Titelbild fortsetzen.
 - **Steuerung:** am Handy neben die Figur tippen (laufen/angreifen) oder auf ein bekanntes Feld (hinlaufen), Knöpfe für Fähigkeiten, Beutel, Warten und Menü; am Rechner WASD/Pfeiltasten (zwei Tasten für schräg), Leertaste Angriff, 1–4 Fähigkeiten, B Beutel, Q Warten, Enter Treppe.
 
-Die gesamte Logik liegt Phaser-frei in `src/core/dungeon/` und ist getestet, darunter ein Härtetest mit 400 Zufallszügen. Die Werte lassen sich in den JSON-Dateien anpassen; `npm run balance` zeigt danach, wie oft ein einfacher Bot den Waldgeist besänftigt (derzeit etwa ein Drittel; echte Spieler schneiden besser ab).
+Die gesamte Logik liegt Phaser-frei in `src/core/dungeon/` und ist getestet, darunter ein Härtetest mit 400 Zufallszügen. Die Werte lassen sich in den JSON-Dateien anpassen; `npm run balance` lässt danach zwei Bots (einfach und geübt) einzelne Ausflüge und ganze Kampagnen spielen: Wie oft wird der Waldgeist beim ersten Ausflug besänftigt, und wie viele Ausflüge braucht es im Schnitt (Stand 16.10.2026, geübter Bot: 19 % beim ersten Ausflug, im Schnitt 2,5 Ausflüge, alle Kampagnen geschafft).
 
 ## Datenschutz
 

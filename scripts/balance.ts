@@ -1,42 +1,109 @@
 /**
- * Schwierigkeits-Check: Ein einfacher Bot spielt den Flüsterwald viele Male durch.
+ * Schwierigkeits-Check: Bots spielen den Flüsterwald viele Male durch.
  *
  *   npm run balance
  *
- * Der Bot greift benachbarte Gegner an (manchmal mit Fähigkeit), isst bei wenig KP eine Heilbeere
- * und läuft sonst zur Treppe bzw. zum Boss. Echte Spieler spielen klüger; das Ergebnis zeigt,
- * ob der Dungeon grob machbar und nicht zu leicht ist.
+ * Zwei Spielweisen:
+ * - einfach: greift benachbarte Gegner an (manchmal mit Fähigkeit), isst bei wenig KP eine Heilbeere
+ *   und läuft sonst zur Treppe bzw. zum Boss.
+ * - geübt: spielt eher wie ein Mensch: kämpft gegen Gegner in der Nähe (Erfahrung), sammelt gesehene
+ *   Gegenstände ein, wählt immer den stärksten Treffer (mit Element-Vorteil und Rundum-Angriffen),
+ *   heilt rechtzeitig auch den Partner und nutzt Sternbeeren, wenn die Energie ausgeht.
+ *
+ * Danach die ganze Kampagne: Ein neues Team (Startstufe) zieht immer wieder los, Stufen, Fähigkeiten
+ * und Beutel bleiben wie im Spiel erhalten, bis der Waldgeist besänftigt ist.
  */
 import battleJson from '../data/battle.json';
 import bonusesJson from '../data/bonuses.json';
 import dungeonJson from '../data/dungeon.json';
-import movesJson from '../data/moves.json';
 import elementsJson from '../data/elements.json';
-import { DIMENSIONS } from '../src/core/types';
-import { findPath, type Pos } from '../src/core/grid';
+import movesJson from '../data/moves.json';
 import { act, canStrike, startRun, unitById } from '../src/core/dungeon/engine';
 import { isFloorTile } from '../src/core/dungeon/generate';
-import { createRandom } from '../src/core/dungeon/random';
+import { createRandom, type Random } from '../src/core/dungeon/random';
+import { settleRun } from '../src/core/dungeon/settle';
 import type { BonusDef } from '../src/core/dungeon/stats';
-import type { Action, Content, DungeonState } from '../src/core/dungeon/types';
+import type { Action, Content, DungeonState, Unit } from '../src/core/dungeon/types';
+import { elementFactor } from '../src/core/elements';
+import { findPath, type Pos } from '../src/core/grid';
+import { DIMENSIONS } from '../src/core/types';
 
 const content = { dungeon: dungeonJson, battle: battleJson, moves: movesJson, elements: elementsJson } as unknown as Content;
 const species = ['otter', 'eule', 'dachs', 'capybara'];
 const RUNS = 200;
+const CAMPAIGNS = 200;
+/** Nach so vielen erfolglosen Ausflügen gibt der Bot die Kampagne auf */
+const MAX_TRIPS = 10;
 
-function chooseAction(s: DungeonState, rng: ReturnType<typeof createRandom>): Action {
-  // Neue Fähigkeit bei vollen Plätzen: der Bot ersetzt die älteste
-  if (s.pendingLearn?.length) return { type: 'learn', forget: 0 };
+type Style = 'einfach' | 'geübt';
+
+const chebyshev = (a: Pos, b: Pos) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+
+function adjacentFoes(s: DungeonState, u: Unit): Unit[] {
+  return s.units.filter((e) => e.side === 'enemy' && e.hp > 0 && chebyshev(e.pos, u.pos) === 1 && canStrike(s, u.pos, e.pos));
+}
+
+/** Erwarteter Schaden eines Zugs gegen die benachbarten Gegner (grob, für die Auswahl) */
+function score(player: Unit, moveId: string | null, foes: Unit[]): number {
+  const def = moveId ? content.moves.moves[moveId] : content.moves.attack;
+  if (def.power <= 0) return 0;
+  const element = def.element;
+  const factor = (foe: Unit) => elementFactor(content.elements, element, (content.battle.enemies[foe.species] ?? content.battle.boss[foe.species])?.element);
+  const hits = def.target === 'around' ? foes : [foes[0]];
+  return hits.reduce((sum, foe) => sum + (player.atk + def.power) * factor(foe) * (def.accuracy / 100), 0);
+}
+
+function chooseAction(s: DungeonState, rng: Random, style: Style): Action {
   const player = unitById(s, 'player')!;
-  const adjacent = s.units.find((u) => u.side === 'enemy' && u.hp > 0 && Math.max(Math.abs(u.pos.x - player.pos.x), Math.abs(u.pos.y - player.pos.y)) === 1 && canStrike(s, player.pos, u.pos));
-  const berry = s.bag.indexOf('heilbeere');
-  if (player.hp < player.maxHp * 0.4 && berry >= 0) return { type: 'item', index: berry, target: 'player' };
   const partner = unitById(s, 'partner')!;
-  if (partner.hp < partner.maxHp * 0.3 && berry >= 0) return { type: 'item', index: berry, target: 'partner' };
-  if (adjacent) {
-    const usable = player.moves.findIndex((m, i) => i > 0 && m.pp > 0 && content.moves.moves[m.id].power > 0);
-    if (usable >= 0 && rng.chance(40)) return { type: 'skill', index: usable };
-    return { type: 'attack' };
+  // Neue Fähigkeit bei vollen Plätzen: die schwächste ersetzen
+  if (s.pendingLearn?.length) {
+    const unit = unitById(s, s.pendingLearn[0].id)!;
+    const weakest = unit.moves.reduce((best, m, i) => ((content.moves.moves[m.id]?.power ?? 0) < (content.moves.moves[unit.moves[best].id]?.power ?? 0) ? i : best), 0);
+    return { type: 'learn', forget: style === 'geübt' ? weakest : 0 };
+  }
+  const berry = s.bag.indexOf('heilbeere');
+  const healAt = style === 'geübt' ? 0.45 : 0.4;
+  if (player.hp < player.maxHp * healAt && berry >= 0) return { type: 'item', index: berry, target: 'player' };
+  if (partner.hp < partner.maxHp * (style === 'geübt' ? 0.35 : 0.3) && berry >= 0) return { type: 'item', index: berry, target: 'partner' };
+  const foes = adjacentFoes(s, player);
+  if (foes.length > 0) {
+    if (style === 'einfach') {
+      const usable = player.moves.findIndex((m, i) => i > 0 && m.pp > 0 && content.moves.moves[m.id].power > 0);
+      if (usable >= 0 && rng.chance(40)) return { type: 'skill', index: usable };
+      return { type: 'attack' };
+    }
+    // Ohne Energie: Sternbeere essen, wenn vorhanden und ein Kampf läuft
+    const star = s.bag.indexOf('sternbeere');
+    if (star >= 0 && player.moves.every((m) => m.pp === 0 || content.moves.moves[m.id].power === 0)) return { type: 'item', index: star, target: 'player' };
+    let best: Action = { type: 'attack' };
+    let bestScore = score(player, null, foes);
+    player.moves.forEach((m, i) => {
+      if (m.pp <= 0) return;
+      const value = score(player, m.id, foes);
+      if (value > bestScore) {
+        bestScore = value;
+        best = { type: 'skill', index: i };
+      }
+    });
+    return best;
+  }
+  const walkable = (p: Pos) => isFloorTile(s.floor, p) && !s.units.some((u) => u.hp > 0 && u.side !== 'team' && u.pos.x === p.x && u.pos.y === p.y);
+  if (style === 'geübt' && !unitById(s, 'boss')) {
+    // Wie ein Mensch: gesehene Gegner bekämpfen (Erfahrung), solange es dem Team gut geht …
+    const healthy = player.hp > player.maxHp * 0.6 && partner.hp > partner.maxHp * 0.4;
+    const visible = s.units.filter((e) => e.side === 'enemy' && e.hp > 0 && chebyshev(e.pos, player.pos) <= 5);
+    if (healthy && visible.length > 0) {
+      const spots = visible.flatMap((e) => [-1, 0, 1].flatMap((dx) => [-1, 0, 1].map((dy) => ({ x: e.pos.x + dx, y: e.pos.y + dy }))));
+      const path = findPath(player.pos, spots, walkable, 2000);
+      if (path && path.length > 0) return { type: 'move', dir: path[0] };
+    }
+    // … und erkundete Gegenstände einsammeln, wenn noch Platz im Beutel ist
+    const items = s.floor.items.filter((it) => s.floor.explored[it.pos.y][it.pos.x] === '1').map((it) => it.pos);
+    if (items.length > 0 && s.bag.length < content.dungeon.bag.size) {
+      const path = findPath(player.pos, items, walkable, 3000);
+      if (path && path.length > 0 && path.length <= 20) return { type: 'move', dir: path[0] };
+    }
   }
   if (s.floor.stairs && player.pos.x === s.floor.stairs.x && player.pos.y === s.floor.stairs.y) return { type: 'stairs' };
   const boss = unitById(s, 'boss');
@@ -48,37 +115,92 @@ function chooseAction(s: DungeonState, rng: ReturnType<typeof createRandom>): Ac
   return { type: 'wait' };
 }
 
-/** Viele Durchgänge mit einem Team der Stufe level (erster Ausflug = Startstufe, spätere mit mehr Erfahrung) */
-function simulate(level: number) {
-  let cleared = 0;
-  const reached = [0, 0, 0, 0, 0];
-  let turns = 0;
-  let levels = 0;
-  for (let i = 0; i < RUNS; i++) {
-    const rng = createRandom(1000 + i);
-    const z = Object.fromEntries(DIMENSIONS.map((d) => [d, rng.next() * 2 - 1])) as Record<(typeof DIMENSIONS)[number], number>;
-    const s = startRun(content, {
-      seed: 5000 + i,
-      player: { species: species[i % 4], level, xp: 0 },
-      partner: { species: species[(i + 1 + (i >> 2)) % 4], level, xp: 0 },
-      z,
-      bonusDefs: bonusesJson as unknown as Record<string, BonusDef>,
-      bag: ['heilbeere', 'heilbeere'],
-      escort: true,
-      moss: true,
-    });
-    let guard = 0;
-    while (!s.outcome && guard++ < 3000) act(content, s, chooseAction(s, rng));
-    reached[s.floor.number - 1]++;
-    if (s.outcome === 'cleared') cleared++;
-    turns += s.turn;
-    levels += unitById(s, 'player')!.level;
-  }
-  console.log(`
-Team auf Stufe ${level} (Dungeon-Stufe ${content.dungeon.level}, Boss Stufe ${content.dungeon.boss.level}), ${RUNS} Durchgänge`);
-  console.log(`Boss besänftigt: ${((cleared / RUNS) * 100).toFixed(0)} %`);
-  console.log(`Letzte erreichte Etage: ${reached.map((n, i) => `${i < 3 ? 'E' + (i + 1) : 'Boss'} ${n}`).slice(0, 4).join(' · ')}`);
-  console.log(`Ø Züge ${(turns / RUNS).toFixed(0)}, Ø Stufen-Gewinn Spieler ${(levels / RUNS - level).toFixed(1)}`);
+interface Trip {
+  player: { level: number; xp: number; moves?: string[] };
+  partner: { level: number; xp: number; moves?: string[] };
+  bag: string[];
 }
 
-for (const level of [battleJson.startLevel, battleJson.startLevel + 2, battleJson.startLevel + 4]) simulate(level);
+/** Ein Ausflug; gibt den Endstand zurück */
+function playTrip(i: number, trip: Trip, style: Style, z: Record<string, number>): DungeonState {
+  const rng = createRandom(9000 + i);
+  const s = startRun(content, {
+    seed: 5000 + i,
+    player: { species: species[i % 4], ...trip.player },
+    partner: { species: species[(i + 1 + (i >> 2)) % 4], ...trip.partner },
+    z: z as never,
+    bonusDefs: bonusesJson as unknown as Record<string, BonusDef>,
+    bag: trip.bag,
+    escort: true,
+    moss: true,
+  });
+  let guard = 0;
+  while (!s.outcome && guard++ < 3000) act(content, s, chooseAction(s, rng, style));
+  return s;
+}
+
+function randomProfile(seed: number) {
+  const rng = createRandom(seed);
+  return Object.fromEntries(DIMENSIONS.map((d) => [d, rng.next() * 2 - 1]));
+}
+
+const percent = (n: number, of: number) => `${((n / of) * 100).toFixed(0)} %`;
+
+/** Viele einzelne Ausflüge mit einem Team der Stufe level */
+function simulate(level: number, style: Style) {
+  let cleared = 0;
+  const reached = [0, 0, 0, 0];
+  for (let i = 0; i < RUNS; i++) {
+    const start = { level, xp: 0 };
+    const s = playTrip(i, { player: start, partner: start, bag: ['heilbeere', 'heilbeere'] }, style, randomProfile(1000 + i));
+    reached[Math.min(3, s.floor.number - 1)]++;
+    if (s.outcome === 'cleared') cleared++;
+  }
+  console.log(`  Stufe ${level}: Boss besänftigt ${percent(cleared, RUNS)} · gescheitert auf E1 ${reached[0]}, E2 ${reached[1]}, E3 ${reached[2]}, beim Boss ${reached[3] - cleared}`);
+}
+
+/** Ganze Kampagnen: neues Team, so viele Ausflüge wie nötig */
+function campaigns(style: Style) {
+  const tries: number[] = [];
+  let gaveUp = 0;
+  let defeats = 0;
+  let bossDefeats = 0;
+  let finalLevel = 0;
+  for (let c = 0; c < CAMPAIGNS; c++) {
+    const z = randomProfile(2000 + c);
+    const start = { level: battleJson.startLevel, xp: 0 };
+    let trip: Trip = { player: start, partner: start, bag: ['heilbeere', 'heilbeere'] };
+    let done = false;
+    for (let n = 1; n <= MAX_TRIPS; n++) {
+      const s = playTrip(c * 31 + n, trip, style, z);
+      const result = settleRun(content, s, {});
+      if (result.cleared) {
+        tries.push(n);
+        finalLevel += result.team.player.level;
+        done = true;
+        break;
+      }
+      defeats++;
+      if (s.floor.boss) bossDefeats++;
+      // Wie im Spiel: Stufen bleiben, der Beutel ist wieder wie vor dem Aufbruch; Oma Wurzel gibt nichts nach
+      trip = { player: result.team.player, partner: result.team.partner, bag: result.bag.length > 0 ? result.bag : ['heilbeere'] };
+    }
+    if (!done) gaveUp++;
+  }
+  const won = tries.length;
+  const first = tries.filter((n) => n === 1).length;
+  const avg = won ? tries.reduce((a, b) => a + b, 0) / won : 0;
+  const dist = [1, 2, 3, 4, 5].map((n) => `${n}. Versuch ${tries.filter((x) => x === n).length}`).join(' · ');
+  console.log(`  ${CAMPAIGNS} Kampagnen: durchgespielt ${won} (${percent(won, CAMPAIGNS)}), aufgegeben nach ${MAX_TRIPS} Versuchen ${gaveUp}`);
+  console.log(`  Beim 1. Ausflug geschafft: ${first} (${percent(first, CAMPAIGNS)}) · Ø Ausflüge bis zum Sieg ${avg.toFixed(1)}`);
+  console.log(`  Verteilung: ${dist} · später ${tries.filter((x) => x > 5).length}`);
+  console.log(`  Niederlagen insgesamt ${defeats}, davon beim Boss ${bossDefeats} · Ø Spielerstufe beim Sieg ${won ? (finalLevel / won).toFixed(1) : '-'}`);
+}
+
+console.log(`Flüsterwald: Dungeon-Stufe ${content.dungeon.level}, Boss Stufe ${content.dungeon.boss.level}, Startstufe ${battleJson.startLevel}`);
+for (const style of ['einfach', 'geübt'] as Style[]) {
+  console.log(`\nBot „${style}“, einzelne Ausflüge (${RUNS} je Stufe):`);
+  for (const level of [battleJson.startLevel, battleJson.startLevel + 2, battleJson.startLevel + 4]) simulate(level, style);
+  console.log(`Bot „${style}“, ganzes Spiel:`);
+  campaigns(style);
+}
