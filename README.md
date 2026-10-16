@@ -53,9 +53,10 @@ Grafik: `data/tileset.json` ordnet jeder Bedeutung (Gras, Weg, Wasser, Hecke, Ha
 Aufbruch am Nordtor des Dorfs. Rundenbasiert wie bei *Mystery Dungeon*: Jeder Schritt oder Angriff ist ein Zug, danach handeln Partner, Begleiter und Gegner.
 
 - **Etagen:** 3 zufällig erzeugte Etagen (Räume und Gänge, `src/core/dungeon/generate.ts`), danach die handgebaute Lichtung des Waldgeists (Textraster in `data/dungeon.json`).
-- **Kampf:** Jedes Wesen kennt bis zu 4 Fähigkeiten mit Energie (`data/moves.json`), sammelt Erfahrung und steigt Stufen auf; mit Stufe 8 lernt es eine vierte Fähigkeit (`data/battle.json`). Statuseffekte: geblendet, schläft, festgehalten, geschützt, konzentriert.
+- **Kampf:** Jedes Wesen kennt bis zu 4 Fähigkeiten mit Energie (`data/moves.json`), sammelt Erfahrung und steigt Stufen auf; mit Stufe 8 lernt es eine vierte Fähigkeit (`data/battle.json`). Statuseffekte: geblendet, schläft, festgehalten, geschützt, konzentriert, gestärkt.
 - **Persönlichkeit:** Die z-Werte des Tests geben passive Boni; jeder Pol einer Dimension hat einen eigenen Vorteil (`data/bonuses.json`).
 - **Aufträge:** Stups wartet auf Etage 2 und folgt euch bis zur Treppe; Leuchtmoos liegt auf jeder Etage. Belohnungen gibt es danach bei Fips bzw. Oma Wurzel.
+- **Beerenfeld:** Nach dem Leuchtmoos-Auftrag gehört das Beet neben Oma Wurzels Laden dem Spieler. Samen gibt es von ihr (Heilbeere, Sternbeere, Kraftbeere); nach 4 Ausflügen sind die Pflanzen reif (`src/core/garden.ts`, Werte in `data/village.json` unter `garden`). Die Kraftbeere stärkt bis zur nächsten Etage die Fähigkeiten im eigenen Element.
 - **Niederlage:** zurück ins Dorf; Stufen bleiben, der Beutel ist wieder wie vor dem Aufbruch.
 - **Speichern:** Der Durchgang wird nach jedem Zug gesichert und lässt sich über das Titelbild fortsetzen.
 - **Steuerung:** am Handy neben die Figur tippen (laufen/angreifen) oder auf ein bekanntes Feld (hinlaufen), Knöpfe für Fähigkeiten, Beutel, Warten und Menü; am Rechner WASD/Pfeiltasten (zwei Tasten für schräg), Leertaste Angriff, 1–4 Fähigkeiten, B Beutel, Q Warten, Enter Treppe.

@@ -163,6 +163,8 @@ Die Einzelheiten stehen in `CHECKLISTE.md`. **Sie ist die verbindliche Quelle f�
 4. 1 Dungeon mit **3 Etagen** und 1 Boss, mit Elementen und Fähigkeitssteinen
 5. Kurzes Kapitelende mit Feedback-Knopf
 
+**Erweiterung nach Runde 2 (16.10.2026):** Beerenfeld im Dorf (Oma Wurzel, nach dem Leuchtmoos-Auftrag, 3 Beete, reif nach 4 Ausflügen) mit Heilbeere, Sternbeere und der neuen Kraftbeere (stärkt bis zur nächsten Etage nur Fähigkeiten im eigenen Element des Wesens, auch im Bosskampf). Rundum-Angriffe treffen das ganze 1-Feld-Umfeld, auch schräg um Ecken. Das Haus des Spielers bleibt kaputt. Einzelheiten in `CHECKLISTE.md` unter „Runde 2“.
+
 **Nicht im Prototyp:** Freundschaftsstufen (auch nicht der Aufbau des kaputten Hauses), Handel im Laden, Angeln, Partnertausch, Endlos-Modus, weitere Wesen, spielbare Ranke-Wesen
 
 ## 8. Bau-Reihenfolge

@@ -5,6 +5,7 @@ import { canStep, combineDirs, dirTo, findPath, horizontalOf, samePos, step, typ
 import { randomStone } from '../core/dungeon/generate';
 import { createRandom } from '../core/dungeon/random';
 import { grantReward, rollReward } from '../core/rewards';
+import { gardenUnlocked, harvest, isRipe, normalizeGarden, plant, runsLeft, type Garden } from '../core/garden';
 import { acceptQuest, approachTiles, completeQuest, interactionAt, isWalkable, pickDialog, questMarker, type Placement } from '../core/village';
 import { getSave, updateSave } from '../state';
 import { ambient } from '../ui/ambient';
@@ -13,7 +14,7 @@ import { markerTexture } from '../ui/markers';
 import { pixelZoom } from '../ui/camera';
 import { bindFastForward } from '../ui/speed';
 import { creatureTexture, fieldTexture, shadowTexture } from '../ui/sprites';
-import { BORDER, TILE, actorFrame, actorKey, faceKey, preloadTileset, villageMapTexture } from '../ui/tiles';
+import { BORDER, TILE, actorFrame, actorKey, faceKey, itemKey, preloadTileset, tileTexture, tileset, villageMapTexture } from '../ui/tiles';
 import { COLORS, FONT } from '../ui/theme';
 import type { VillageHudScene } from './VillageHudScene';
 
@@ -50,6 +51,8 @@ export class VillageScene extends Phaser.Scene {
   private markers = new Map<string, Phaser.GameObjects.Image>();
   /** Namensschilder über den Bewohnern (erscheinen, wenn man näher kommt) */
   private nameTags = new Map<string, Phaser.GameObjects.Text>();
+  /** Pflanzen auf dem Beerenfeld */
+  private plants: Phaser.GameObjects.GameObject[] = [];
   private hud!: VillageHudScene;
   private moving = false;
   private path: Dir[] = [];
@@ -87,6 +90,7 @@ export class VillageScene extends Phaser.Scene {
     this.npcs.clear();
     this.markers.clear();
     this.nameTags.clear();
+    this.plants = [];
     ambient.setBrightness(1);
     this.cameras.main.setBackgroundColor(COLORS.night);
 
@@ -102,6 +106,7 @@ export class VillageScene extends Phaser.Scene {
     this.partner = this.addCreature(valid ? saved.partner : def.partnerSpawn, start.facing, save.partnerId);
     for (const npc of def.npcs) this.npcs.set(npc.id, this.addActor(npc, npc.facing, actorKey(npc.sprite)));
     [this.player, this.partner, ...this.npcs.values()].forEach((actor, i) => this.idle(actor, 200 + i * 350));
+    this.drawGarden();
     for (const npc of def.npcs) this.addNameTag(npc.id);
     this.refreshMarkers();
     this.time.addEvent({ delay: 200, loop: true, callback: () => this.npcLife() });
@@ -414,6 +419,7 @@ export class VillageScene extends Phaser.Scene {
         // Auftrag, den der NPC selbst vergibt: Nach dem Gespräch ist er angenommen
         if (rule.accept) updateSave({ quests: acceptQuest(getSave().quests ?? {}, rule.accept) });
         this.refreshMarkers();
+        this.drawGarden();
       };
       this.hud.say(t(`village.npcs.${interaction.npc.id}.name`), lines, onDone, faceKey(interaction.npc.sprite));
     } else if (interaction.kind === 'board') {
@@ -424,9 +430,77 @@ export class VillageScene extends Phaser.Scene {
         { label: t('village.gate.go'), onPick: () => this.enterDungeon() },
         { label: t('village.gate.stay'), onPick: () => {} },
       ]);
+    } else if (interaction.kind === 'plot') {
+      this.usePlot(interaction.index);
     } else {
       this.hud.say(undefined, [withNames(t(interaction.text), names)]);
     }
+  }
+
+  // ---------- Beerenfeld ----------
+
+  private garden(): Garden {
+    return normalizeGarden(village.def.garden, getSave().garden);
+  }
+
+  /** Samen, wachsende Sprossen oder reife Pflanze mit Beere je Beet */
+  private drawGarden() {
+    for (const p of this.plants) p.destroy();
+    this.plants = [];
+    const def = village.def.garden;
+    if (!gardenUnlocked(def, getSave().quests ?? {})) return;
+    this.garden().forEach((plot, i) => {
+      if (!plot) return;
+      const x = def.plots[i].x * TILE + TILE / 2;
+      const y = def.plots[i].y * TILE + TILE / 2;
+      const depth = y - 1;
+      const sprouts = tileset.garden.sprouts;
+      if (plot.runs === 0) {
+        this.plants.push(this.add.image(x, y + 1, itemKey(tileset.garden.seeds[plot.berry])).setDepth(depth));
+        return;
+      }
+      const stage = Math.min(sprouts.length - 1, Math.floor(((plot.runs - 1) * sprouts.length) / Math.max(1, def.growRuns - 1)));
+      this.plants.push(this.add.image(x, y - 1, tileTexture(this, sprouts[isRipe(def, plot) ? sprouts.length - 1 : stage])).setDepth(depth));
+      if (isRipe(def, plot)) {
+        const berry = this.add.image(x, y - 4, itemKey(dungeonContent.dungeon.items[plot.berry].sprite)).setDepth(depth + 0.5).setScale(0.8);
+        this.tweens.add({ targets: berry, y: y - 6, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: i * 200 });
+        this.plants.push(berry);
+      }
+    });
+  }
+
+  private usePlot(index: number) {
+    const def = village.def.garden;
+    const save = getSave();
+    if (!gardenUnlocked(def, save.quests ?? {})) return this.hud.say(undefined, [t('village.garden.fallow')]);
+    const garden = this.garden();
+    const plot = garden[index];
+    const berryName = (id: string) => t(`dungeon.items.${id}.name`);
+    if (!plot) {
+      this.hud.choose(t('village.garden.choose'), [
+        ...def.seeds.map((berry) => ({
+          label: t('village.garden.seed', { berry: berryName(berry) }),
+          onPick: () => {
+            updateSave({ garden: plant(def, garden, index, berry) });
+            this.drawGarden();
+            this.hud.say(undefined, [t('village.garden.planted', { berry: berryName(berry), n: def.growRuns })]);
+          },
+        })),
+        { label: t('village.garden.cancel'), onPick: () => {} },
+      ]);
+      return;
+    }
+    if (!isRipe(def, plot)) {
+      const n = runsLeft(def, plot);
+      return this.hud.say(undefined, [t(n === 1 ? 'village.garden.growingOne' : 'village.garden.growing', { berry: berryName(plot.berry), n })]);
+    }
+    const result = harvest(def, garden, index, save.bag ?? [], dungeonContent.dungeon.bag.size);
+    if (result.picked === 0) return this.hud.say(undefined, [t('village.garden.bagFull')]);
+    updateSave({ garden: result.garden, bag: result.bag });
+    this.drawGarden();
+    const lines = [t('village.garden.harvested', { n: result.picked, berry: berryName(plot.berry) })];
+    if (result.left > 0) lines.push(t('village.garden.partial', { left: result.left }));
+    this.hud.say(undefined, lines);
   }
 
 /** Auftrag abschließen und die zufällige Belohnung (mit Mindestwert) in Beutel und Geldbörse legen */

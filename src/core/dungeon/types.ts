@@ -3,7 +3,8 @@ import type { ElementChart } from '../elements';
 import type { Dir, Pos } from '../grid';
 
 export type MoveTarget = 'front' | 'line' | 'around' | 'self' | 'team';
-export type StatusKind = 'blind' | 'sleep' | 'root' | 'guard' | 'focus';
+/** power = gestärkt durch eine Kraftbeere (bis zur nächsten Etage) */
+export type StatusKind = 'blind' | 'sleep' | 'root' | 'guard' | 'focus' | 'power';
 
 export interface MoveDef {
   power: number;
@@ -61,7 +62,8 @@ export interface MovesData {
 
 export interface ItemDef {
   weight: number;
-  use: 'heal' | 'pp' | 'throw' | 'quest' | 'learn';
+  /** power: verstärkt bis zur nächsten Etage die Fähigkeiten im eigenen Element um amount Prozent */
+  use: 'heal' | 'pp' | 'throw' | 'quest' | 'learn' | 'power';
   /** Fähigkeitsstein: Element der Fähigkeit, die er lehrt */
   element?: string;
   amount?: number;

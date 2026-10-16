@@ -35,6 +35,7 @@
   "items": {
     "heilbeere": { "weight": 5, "use": "heal", "amount": 30, "sprite": "berryRed" },
     "sternbeere": { "weight": 2, "use": "pp", "amount": 5, "sprite": "berryOrange" },
+    "kraftbeere": { "weight": 0, "use": "power", "amount": 30, "sprite": "berryWhite" },
     "wurfstein": { "weight": 3, "use": "throw", "amount": 10, "range": 8, "sprite": "rock" },
     "leuchtmoos": { "weight": 0, "use": "quest", "sprite": "moss" },
     "glutstein": { "weight": 0, "use": "learn", "element": "glut", "sprite": "stone" },

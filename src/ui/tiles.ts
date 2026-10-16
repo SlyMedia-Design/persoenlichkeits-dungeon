@@ -20,6 +20,18 @@ const sheetKey = (name: string) => `tiles-${name}`;
 export const actorKey = (id: string) => `actor-${id}`;
 export const faceKey = (id: string) => `face-${id}`;
 export const itemKey = (sprite: string) => `item-${sprite}`;
+
+/** Eine einzelne Kachel als eigene Textur (z. B. für Pflanzen, die sich ändern) */
+export function tileTexture(scene: Phaser.Scene, ref: TileRef): string {
+  const key = `tile-${ref.sheet}-${ref.x}-${ref.y}`;
+  if (scene.textures.exists(key)) return key;
+  const canvas = scene.textures.createCanvas(key, TILE, TILE)!;
+  const ctx = canvas.getContext();
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(scene.textures.get(sheetKey(ref.sheet)).getSourceImage() as CanvasImageSource, ref.x * TILE, ref.y * TILE, TILE, TILE, 0, 0, TILE, TILE);
+  canvas.refresh();
+  return key;
+}
 export const fxKey = (id: string) => `fx-${id}`;
 const propKey = (id: string) => `prop-${id}`;
 
@@ -119,6 +131,20 @@ export function villageMapTexture(scene: Phaser.Scene, map: VillageMap): string 
     }
   }
 
+  // Beete des Beerenfelds: eine Zeile hoch, aus oberer und unterer Hälfte des 3×3-Blocks zusammengesetzt
+  const bed = tileset.garden.bed;
+  const fieldImg = scene.textures.get(sheetKey(bed.sheet)).getSourceImage() as CanvasImageSource;
+  for (let y = 0; y < map.height; y++) {
+    for (let x = 0; x < map.width; x++) {
+      if (!tileAt(map, { x, y })?.plot) continue;
+      const col = bed.x + (tileAt(map, { x: x - 1, y })?.plot ? (tileAt(map, { x: x + 1, y })?.plot ? 1 : 2) : tileAt(map, { x: x + 1, y })?.plot ? 0 : 1);
+      const dx = (x + BORDER) * TILE;
+      const dy = (y + BORDER) * TILE;
+      ctx.drawImage(fieldImg, col * TILE, bed.y * TILE, TILE, TILE / 2, dx, dy, TILE, TILE / 2);
+      ctx.drawImage(fieldImg, col * TILE, (bed.y + 2) * TILE + TILE / 2, TILE, TILE / 2, dx, dy + TILE / 2, TILE, TILE / 2);
+    }
+  }
+
   // 3. Häuser und Einzelbilder (unten mittig auf ihrem Feld)
   for (const b of map.def.buildings) blit(tileset.buildings[b.style], b);
   for (const p of map.def.props ?? []) {
@@ -135,10 +161,6 @@ export function villageMapTexture(scene: Phaser.Scene, map: VillageMap): string 
   return key;
 }
 
-/**
- * Malt eine Dungeon-Etage: dunkles Waldgras, Erdboden für Räume und Gänge, Bäume als Wände, die Treppe.
- * Jede Etage bekommt eine eigene Textur; die vorige wird entfernt.
- */
 /** Treppe nach unten: Steinrahmen, Stufen, die hell beginnen und im Dunkeln verschwinden */
 function drawStairs(ctx: CanvasRenderingContext2D, x: number, y: number) {
   ctx.fillStyle = '#2a2236';
@@ -156,6 +178,10 @@ function drawStairs(ctx: CanvasRenderingContext2D, x: number, y: number) {
   });
 }
 
+/**
+ * Malt eine Dungeon-Etage: dunkles Waldgras, Erdboden für Räume und Gänge, Bäume als Wände, die Treppe.
+ * Jede Etage bekommt eine eigene Textur; die vorige wird entfernt.
+ */
 export function dungeonFloorTexture(scene: Phaser.Scene, floor: Floor, id: string): string {
   const key = `dungeon-${id}`;
   if (scene.textures.exists(key)) return key;

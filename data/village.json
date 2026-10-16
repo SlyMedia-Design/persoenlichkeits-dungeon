@@ -19,7 +19,8 @@
     "k": { "ground": "grass", "object": "barrel", "solid": true, "examine": "village.examine.barrel" },
     "N": { "ground": "grass", "solid": true, "examine": "village.examine.net" },
     "[": { "ground": "path", "object": "counterL", "solid": true, "examine": "village.examine.counter" },
-    "]": { "ground": "path", "object": "counterR", "solid": true, "examine": "village.examine.counter" }
+    "]": { "ground": "path", "object": "counterR", "solid": true, "examine": "village.examine.counter" },
+    "p": { "ground": "grass", "solid": true, "plot": true, "examine": "village.garden.fallow" }
   },
   "map": [
     "TTTTTTTTTTTTTTTGGTTTTTTTTTTTTTTT",
@@ -38,7 +39,7 @@
     "T....:[].......:::::::::e:kNNN.T",
     "T..::::::::::::::.....~~~=~~~~.T",
     "T..............::.....~~~=~~~~.T",
-    "T.........HHHH.::.HHH.~~~=~~~~.T",
+    "T..ppp....HHHH.::.HHH.~~~=~~~~.T",
     "T.,.......HHHH.::.HHH.~~~=bq~~.T",
     "T......,..HDHH.::.HDH.~~~~~~~~.T",
     "T........:::::::::::::~~~~~~~~.T",
@@ -70,14 +71,8 @@
           "lines": "village.npcs.paula.questOffer",
           "accept": "verirrt"
         },
-        {
-          "when": { "quest": "verirrt", "status": "accepted" },
-          "lines": "village.npcs.paula.questAccepted"
-        },
-        {
-          "when": { "quest": "verirrt", "status": "ready" },
-          "lines": "village.npcs.paula.questReady"
-        },
+        { "when": { "quest": "verirrt", "status": "accepted" }, "lines": "village.npcs.paula.questAccepted" },
+        { "when": { "quest": "verirrt", "status": "ready" }, "lines": "village.npcs.paula.questReady" },
         { "lines": "village.npcs.paula.default" }
       ]
     },
@@ -92,14 +87,8 @@
           "lines": "village.npcs.fips.questReady",
           "complete": "verirrt"
         },
-        {
-          "when": { "quest": "verirrt", "status": "accepted" },
-          "lines": "village.npcs.fips.questAccepted"
-        },
-        {
-          "when": { "quest": "verirrt", "status": "done" },
-          "lines": "village.npcs.fips.questDone"
-        },
+        { "when": { "quest": "verirrt", "status": "accepted" }, "lines": "village.npcs.fips.questAccepted" },
+        { "when": { "quest": "verirrt", "status": "done" }, "lines": "village.npcs.fips.questDone" },
         { "lines": "village.npcs.fips.default" }
       ],
       "sprite": "mouse"
@@ -111,10 +100,7 @@
       "facing": "right",
       "sprite": "bear",
       "dialogs": [
-        {
-          "when": { "quest": "leuchtmoos", "status": "done" },
-          "lines": "village.npcs.brummbart.questDone"
-        },
+        { "when": { "quest": "leuchtmoos", "status": "done" }, "lines": "village.npcs.brummbart.questDone" },
         { "lines": "village.npcs.brummbart.default" }
       ]
     },
@@ -133,10 +119,7 @@
           "when": { "quest": "leuchtmoos", "status": "accepted" },
           "lines": "village.npcs.wurzel.questAccepted"
         },
-        {
-          "when": { "quest": "leuchtmoos", "status": "done" },
-          "lines": "village.npcs.wurzel.questDone"
-        },
+        { "when": { "quest": "leuchtmoos", "status": "done" }, "lines": "village.npcs.wurzel.questDone" },
         { "lines": "village.npcs.wurzel.default" }
       ],
       "sprite": "mushroom"
@@ -147,9 +130,7 @@
       "y": 17,
       "facing": "right",
       "sprite": "kappa",
-      "dialogs": [
-        { "lines": "village.npcs.kiesel.default" }
-      ]
+      "dialogs": [{ "lines": "village.npcs.kiesel.default" }]
     }
   ],
   "examine": [
@@ -158,23 +139,18 @@
     { "x": 19, "y": 18, "text": "village.examine.ruinDoor" }
   ],
   "quests": [
-    {
-      "id": "verirrt",
-      "reward": {
-        "minValue": 80
-      }
-    },
-    {
-      "id": "leuchtmoos",
-      "board": true,
-      "reward": {
-        "minValue": 60
-      }
-    }
+    { "id": "verirrt", "reward": { "minValue": 80 } },
+    { "id": "leuchtmoos", "board": true, "reward": { "minValue": 60 } }
   ],
   "gateExit": { "x": 15, "y": 1, "facing": "down" },
   "gatePartner": { "x": 16, "y": 1 },
-  "props": [
-    { "x": 28, "y": 13, "style": "fishNet" }
-  ]
+  "props": [{ "x": 28, "y": 13, "style": "fishNet" }],
+  "garden": {
+    "description": "Oma Wurzels Beerenfeld. plots = Beete auf der Karte (Zeichen p), growRuns = Ausflüge bis zur Ernte, harvest = Beeren pro Pflanze, seeds = was man pflanzen kann, unlock = ab diesem Auftragsstand gehört das Feld dem Spieler.",
+    "plots": [{ "x": 3, "y": 16 }, { "x": 4, "y": 16 }, { "x": 5, "y": 16 }],
+    "growRuns": 4,
+    "harvest": 3,
+    "seeds": ["heilbeere", "sternbeere", "kraftbeere"],
+    "unlock": { "quest": "leuchtmoos", "status": "done" }
+  }
 }

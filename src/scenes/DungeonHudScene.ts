@@ -275,7 +275,7 @@ export class DungeonHudScene extends HudScene<Mode> {
     const def = bagEntryDef(item);
     this.drawPanel(bagEntryName(item), (b) => {
       b.text(bagEntryInfo(item, s.bonuses.healing));
-      if (def.use === 'heal' || def.use === 'pp') {
+      if (def.use === 'heal' || def.use === 'pp' || def.use === 'power') {
         b.button(t('dungeon.ui.useSelf'), () => this.act({ type: 'item', index, target: 'player' }), { fontSize: this.m.small });
         b.button(t('dungeon.ui.usePartner', { partner: this.names.partner ?? '' }), () => this.act({ type: 'item', index, target: 'partner' }), { fontSize: this.m.small });
       } else if (def.use === 'throw') {

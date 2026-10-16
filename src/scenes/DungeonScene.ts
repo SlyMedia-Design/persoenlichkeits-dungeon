@@ -3,6 +3,7 @@ import { archetypeById, dungeonContent as content, t, village } from '../content
 import { act, senses, teamSees, unitById } from '../core/dungeon/engine';
 import { isFloorTile } from '../core/dungeon/generate';
 import { settleRun } from '../core/dungeon/settle';
+import { growAfterRun } from '../core/garden';
 import type { Action, DungeonState, GameEvent, Unit } from '../core/dungeon/types';
 import { combineDirs, dirTo, findPath, horizontalOf, samePos, type Dir, type Pos } from '../core/grid';
 import { getSave, updateSave } from '../state';
@@ -547,7 +548,7 @@ export class DungeonScene extends Phaser.Scene {
         return;
       case 'status': {
         const view = this.views.get(e.id);
-        if (view && (e.status === 'guard' || e.status === 'focus')) this.fx(e.status === 'guard' ? 'shield' : 'boost', { x: view.body.x, y: view.body.y - 4 });
+        if (view && (e.status === 'guard' || e.status === 'focus' || e.status === 'power')) this.fx(e.status === 'guard' ? 'shield' : 'boost', { x: view.body.x, y: view.body.y - 4 });
         this.hud.addLog(t(`dungeon.log.statusOn.${e.status}`, { name: this.nameOf(e.id) }));
         await this.wait(100);
         return;
@@ -718,6 +719,8 @@ export class DungeonScene extends Phaser.Scene {
       questBag: result.questBag,
       quests: result.quests,
       dungeonCleared: save.dungeonCleared || result.cleared,
+      // Das Beerenfeld wächst mit jedem Ausflug, egal wie er ausging
+      garden: save.garden && growAfterRun(village.def.garden, save.garden),
       village: { player: { ...village.def.gateExit }, partner: { ...village.def.gatePartner } },
     });
     const extra = result.moss > 0 ? [t('village.afterDungeon.mossMissing', { n: result.moss, needed: content.dungeon.quests.leuchtmoos.needed })] : [];

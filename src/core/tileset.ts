@@ -30,6 +30,17 @@ export interface TilesetDef {
     /** Stimmungen der Räume, damit man sich besser zurechtfindet: Boden (Erdweg oder Wiese) und flache Deko */
     rooms: { id: string; ground: 'path' | 'grass'; density: number; decor: TileRef[] }[];
   };
+  /** Oma Wurzels Beerenfeld */
+  garden: GardenTiles;
+}
+
+export interface GardenTiles {
+  /** Linke obere Ecke des 3×3-Beet-Blocks */
+  bed: TileRef;
+  /** Wachstumsstufen zwischen Samen und reifer Pflanze */
+  sprouts: TileRef[];
+  /** Samen-Bild (items) je Beere */
+  seeds: Record<string, string>;
 }
 
 export interface ActorDef {

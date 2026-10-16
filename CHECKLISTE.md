@@ -163,9 +163,10 @@ Kurzbild: Test 5/5 und 5/5, Länge „genau richtig“ (2×), Wesen passt 3/5 un
 - [x] Wesen passt 3/5 und 4/5: Zwei Antworten reichen nicht als Auswertung, erst mehr Feedback sammeln
 
 ## Neu: Beerenfeld (aus dem Feedback, entschieden am 16.10.2026)
-- [ ] Beerenfeld im Dorf, Oma Wurzel ist dafür zuständig
-- [ ] Wird nach dem Leuchtmoos-Auftrag freigeschaltet
-- [ ] Die Samen gibt es von Oma Wurzel
-- [ ] Anbau von Beeren für Heilung (Heilbeere), Energie (Sternbeere) und Schaden (neue Beere)
-- [ ] Nach 4 Dungeon-Ausflügen sind die Pflanzen ausgewachsen und können geerntet werden
-- [ ] Neue Schadens-Beere: Erhöht für eine Etage den Schaden der Fähigkeiten im eigenen Element des Wesens, auch im Bosskampf. Fähigkeiten anderer Elemente (z. B. per Stein gelernt) werden nicht verstärkt.
+- [x] Beerenfeld im Dorf, Oma Wurzel ist dafür zuständig
+- [x] Wird nach dem Leuchtmoos-Auftrag freigeschaltet
+- [x] Die Samen gibt es von Oma Wurzel
+- [x] Anbau von Beeren für Heilung (Heilbeere), Energie (Sternbeere) und Schaden (neue Kraftbeere, Platzhalter-Name)
+- [x] Nach 4 Dungeon-Ausflügen sind die Pflanzen ausgewachsen und können geerntet werden
+- [x] Neue Schadens-Beere: Erhöht für eine Etage den Schaden der Fähigkeiten im eigenen Element des Wesens, auch im Bosskampf. Fähigkeiten anderer Elemente (z. B. per Stein gelernt) werden nicht verstärkt.
+- [x] Umsetzung: 3 Beete links unter dem Kräuterladen, jede Pflanze trägt 3 Beeren (passt nicht alles in den Beutel, bleibt der Rest an der Pflanze). Als Ausflug zählt jede Rückkehr aus dem Flüsterwald, auch nach einer Niederlage. Die Kraftbeere stärkt um 30 % (einstellbar in data/dungeon.json).

@@ -237,6 +237,8 @@ function damageTo(content: Content, state: DungeonState, user: Unit, target: Uni
     const player = unitById(state, 'player');
     if (player && chebyshev(player.pos, user.pos) <= 1) dmg *= 1 + b.teamPower;
   }
+  // Kraftbeere: nur Fähigkeiten im eigenen Element werden stärker (nicht der neutrale Angriff, keine fremden Elemente)
+  if (hasStatus(user, 'power') && def.element && def.element === elementOf(content, user)) dmg *= 1 + powerBoost(content) / 100;
   dmg *= elementFactor(content.elements, def.element, elementOf(content, target));
   if (hasStatus(target, 'guard')) dmg *= 0.6;
   if (target.id === 'player') dmg *= 1 - b.toughness;
@@ -244,6 +246,14 @@ function damageTo(content: Content, state: DungeonState, user: Unit, target: Uni
   if (crit) dmg *= 1.5;
   return { amount: Math.max(1, Math.round(dmg)), crit };
 }
+
+/** Verstärkung der Kraftbeere in Prozent (data/dungeon.json) */
+function powerBoost(content: Content): number {
+  return Object.values(content.dungeon.items).find((i) => i.use === 'power')?.amount ?? 0;
+}
+
+/** Hält bis zum Etagenwechsel (dort enden alle Zustände) */
+const UNTIL_NEXT_FLOOR = 9999;
 
 function hitChance(state: DungeonState, user: Unit, def: MoveDef): number {
   let acc = def.accuracy;
@@ -389,6 +399,8 @@ function useItem(content: Content, state: DungeonState, player: Unit, index: num
     const amount = Math.min(Math.round((def.amount ?? 0) * (1 + state.bonuses.healing)), target.maxHp - target.hp);
     target.hp += amount;
     events.push({ type: 'heal', id: target.id, amount });
+  } else if (def.use === 'power') {
+    addStatus(target, 'power', UNTIL_NEXT_FLOOR, events);
   } else if (def.use === 'pp') {
     for (const m of target.moves) m.pp = Math.min(m.maxPp, m.pp + (def.amount ?? 0));
     events.push({ type: 'heal', id: target.id, amount: 0 });

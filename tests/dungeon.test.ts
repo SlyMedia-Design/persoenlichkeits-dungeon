@@ -216,6 +216,50 @@ describe('Züge und Kampf', () => {
     expect(hit).toBe(true);
   });
 
+  it('die Kraftbeere stärkt nur Fähigkeiten im eigenen Element, bis zur nächsten Etage', () => {
+    /** Schaden des ersten Treffers von moveId (null = Angriff) gegen einen Gegner, mit oder ohne Kraftbeere */
+    const firstHit = (seed: number, moveId: string | null, power: boolean) => {
+      const s = run({ seed, bag: ['kraftbeere'] });
+      const player = unitById(s, 'player')!;
+      const partner = unitById(s, 'partner')!;
+      carve(s, [{ x: 5, y: 5 }, { x: 6, y: 5 }, { x: 4, y: 5 }]);
+      player.pos = { x: 5, y: 5 };
+      partner.pos = { x: 4, y: 5 };
+      player.facing = 'right';
+      const enemy = makeUnit(content, { id: 'e1', side: 'enemy', species: 'larve', level: 5, xp: 0, pos: { x: 6, y: 5 } });
+      Object.assign(enemy, { hp: 999, maxHp: 999 });
+      s.units.push(enemy);
+      if (power) act(content, s, { type: 'item', index: 0, target: 'player' });
+      player.moves = moveId ? [{ id: moveId, pp: 10, maxPp: 10 }] : [];
+      // gleicher Zufall für beide Varianten
+      s.rng = seed;
+      const hit = act(content, s, moveId ? { type: 'skill', index: 0 } : { type: 'attack' }).find((e) => e.type === 'hit' && e.id === 'e1');
+      return hit && hit.type === 'hit' ? hit.amount : 0;
+    };
+    let own = [0, 0];
+    let other = [0, 0];
+    let attack = [0, 0];
+    for (let seed = 1; seed <= 30; seed++) {
+      own = [own[0] + firstHit(seed, 'glutkralle', false), own[1] + firstHit(seed, 'glutkralle', true)];
+      other = [other[0] + firstHit(seed, 'kopfnuss', false), other[1] + firstHit(seed, 'kopfnuss', true)];
+      attack = [attack[0] + firstHit(seed, null, false), attack[1] + firstHit(seed, null, true)];
+    }
+    expect(own[1] / own[0]).toBeGreaterThan(1.2);
+    expect(own[1] / own[0]).toBeLessThan(1.4);
+    expect(other[1]).toBe(other[0]);
+    expect(attack[1]).toBe(attack[0]);
+  });
+
+  it('die Stärkung der Kraftbeere endet an der Treppe', () => {
+    const s = run({ bag: ['kraftbeere'] });
+    const player = unitById(s, 'player')!;
+    act(content, s, { type: 'item', index: 0, target: 'player' });
+    expect(player.status.some((x) => x.kind === 'power')).toBe(true);
+    player.pos = { ...s.floor.stairs! };
+    act(content, s, { type: 'stairs' });
+    expect(player.status.some((x) => x.kind === 'power')).toBe(false);
+  });
+
   it('Spielzüge sind reproduzierbar (gleicher Startwert, gleiche Eingaben)', () => {
     const actions: Action[] = ['up', 'left', 'down', 'right', 'up-left', 'down-right'].map((dir) => ({ type: 'move', dir }) as Action);
     const a = run();

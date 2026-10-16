@@ -1,4 +1,5 @@
 /** Dorf-Logik ohne Phaser: Karte aus Textraster, Begehbarkeit, Interaktionen, Aufträge. */
+import { plotIndexAt, type GardenDef } from './garden';
 import { step, type Dir, type Pos } from './grid';
 
 /** Was ein Zeichen der Textkarte bedeutet */
@@ -14,6 +15,8 @@ export interface TileDef {
   board?: boolean;
   /** Eingang zu diesem Dungeon */
   dungeon?: string;
+  /** Beet des Beerenfelds (siehe VillageDef.garden) */
+  plot?: boolean;
 }
 
 /** accepted = angenommen, ready = erfüllt (Belohnung beim Auftraggeber abholen), done = abgeschlossen */
@@ -69,6 +72,8 @@ export interface VillageDef {
   /** Wo das Team nach der Rückkehr aus dem Dungeon steht */
   gateExit: Placement;
   gatePartner: Pos;
+  /** Oma Wurzels Beerenfeld */
+  garden: GardenDef;
 }
 
 export interface VillageMap {
@@ -83,6 +88,7 @@ export type Interaction =
   | { kind: 'npc'; npc: NpcDef }
   | { kind: 'board' }
   | { kind: 'dungeon'; id: string }
+  | { kind: 'plot'; index: number }
   | { kind: 'examine'; text: string };
 
 /** Prüft die Textkarte und gibt sie zurück; Fehler in den Daten werfen sofort. */
@@ -125,6 +131,10 @@ export function interactionAt(map: VillageMap, p: Pos): Interaction | null {
   if (!tile) return null;
   if (tile.board) return { kind: 'board' };
   if (tile.dungeon) return { kind: 'dungeon', id: tile.dungeon };
+  if (tile.plot) {
+    const index = plotIndexAt(map.def.garden, p);
+    if (index >= 0) return { kind: 'plot', index };
+  }
   const special = map.def.examine.find((e) => e.x === p.x && e.y === p.y);
   if (special) return { kind: 'examine', text: special.text };
   return tile.examine ? { kind: 'examine', text: tile.examine } : null;

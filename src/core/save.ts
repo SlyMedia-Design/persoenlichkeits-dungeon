@@ -1,4 +1,5 @@
 import type { DungeonState } from './dungeon/types';
+import type { Garden } from './garden';
 import type { Pos } from './grid';
 import { DIMENSIONS, type Answers, type Profile, type ScoreResult } from './types';
 import type { Placement, QuestLog } from './village';
@@ -45,6 +46,8 @@ export interface SaveData {
   dungeon?: DungeonState;
   /** Der Waldgeist wurde besänftigt */
   dungeonCleared?: boolean;
+  /** Oma Wurzels Beerenfeld: ein Eintrag je Beet */
+  garden?: Garden;
   /** Hinweis „Ende des Prototyps“ mit Feedback-Knopf schon gesehen */
   prototypeEndSeen?: boolean;
 }

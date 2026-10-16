@@ -177,6 +177,18 @@
       "back": "Zurück",
       "bagFull": "Der Beutel ist voll. Im Flüsterwald kannst du Gegenstände ablegen, um Platz zu schaffen."
     },
+    "garden": {
+      "fallow": "Ein brachliegendes Beet neben dem Kräuterladen. Die Erde ist weich und dunkel.",
+      "choose": "Was möchtest du pflanzen? Die Samen hat dir Oma Wurzel geschenkt.",
+      "seed": "{berry}",
+      "cancel": "Nichts pflanzen",
+      "planted": "{berry} ist gepflanzt. Nach {n} Ausflügen in den Flüsterwald kannst du ernten.",
+      "growing": "Hier wächst {berry}. Noch {n} Ausflüge bis zur Ernte.",
+      "growingOne": "Hier wächst {berry}. Nach dem nächsten Ausflug ist sie reif!",
+      "harvested": "Du erntest {n}× {berry}.",
+      "partial": "Der Beutel ist voll, {left} Stück hängen noch an der Pflanze.",
+      "bagFull": "Der Beutel ist voll. Die Beeren können noch warten."
+    },
     "examine": {
       "pond": "Im See flitzen kleine silberne Fische davon.",
       "door": "Die Tür ist verschlossen.",
@@ -262,10 +274,13 @@
         "questReady": [
           "Oh! Ist das … Leuchtmoos? Drei ganze Büschel!",
           "Jetzt werden meine Laternen wieder leuchten. Hier, nimm das als kleines Dankeschön.",
-          "Du bist ein Schatz, {player}."
+          "Und noch etwas: Das Beet neben meinem Laden liegt seit Jahren brach. Ab heute gehört es dir!",
+          "Samen bekommst du von mir, so viele du willst. Heilbeeren, Sternbeeren und meine Kraftbeeren.",
+          "Nach vier Ausflügen in den Wald sind die Beeren reif. Du bist ein Schatz, {player}."
         ],
         "questDone": [
           "Siehst du die Laternen? Sie leuchten so schön wie lange nicht mehr.",
+          "Wie wächst dein Beet? Samen habe ich immer für dich. Pflanz einfach, was du brauchst.",
           "Komm jederzeit auf einen Tee vorbei, {player}."
         ]
       },
@@ -480,6 +495,10 @@
         "name": "Sternbeere",
         "info": "Gibt jeder Fähigkeit {amount} Energie zurück."
       },
+      "kraftbeere": {
+        "name": "Kraftbeere",
+        "info": "Stärkt bis zur nächsten Etage alle Fähigkeiten im eigenen Element um {amount} %, auch im Bosskampf. Der Angriff und Fähigkeiten anderer Elemente bleiben gleich."
+      },
       "wurfstein": {
         "name": "Wurfstein",
         "info": "Wird geradeaus geworfen (bis {range} Felder weit) und richtet beim ersten Gegner {amount} Schaden an."
@@ -510,7 +529,8 @@
       "sleep": "schläft",
       "root": "festgehalten",
       "guard": "geschützt",
-      "focus": "konzentriert"
+      "focus": "konzentriert",
+      "power": "gestärkt"
     },
     "ui": {
       "skills": "Fähigkeiten",
@@ -566,14 +586,16 @@
         "sleep": "{name} schläft ein!",
         "root": "{name} ist festgehalten!",
         "guard": "{name} schützt sich!",
-        "focus": "{name} konzentriert sich!"
+        "focus": "{name} konzentriert sich!",
+        "power": "{name} ist gestärkt!"
       },
       "statusOff": {
         "blind": "{name} sieht wieder klar.",
         "sleep": "{name} wacht auf.",
         "root": "{name} kann sich wieder bewegen.",
         "guard": "Der Schutz von {name} lässt nach.",
-        "focus": "{name} ist nicht mehr konzentriert."
+        "focus": "{name} ist nicht mehr konzentriert.",
+        "power": "Die Stärkung von {name} lässt nach."
       },
       "asleep": "{name} schläft tief und fest.",
       "noPp": "Für diese Fähigkeit fehlt die Energie.",
