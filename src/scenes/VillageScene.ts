@@ -66,7 +66,8 @@ export class VillageScene extends Phaser.Scene {
   /** Seit wann eine Richtungstaste gehalten wird (0 = keine) */
   private heldSince = 0;
   /** Kamerafahrt über das Dorf beim ersten Besuch (überspringbar) */
-  private intro?: Phaser.Tweens.Tween;
+  /** Der Einführungsfilm läuft (Eingaben ruhen) */
+  private intro = false;
 
   constructor() {
     super('Village');
@@ -83,6 +84,7 @@ export class VillageScene extends Phaser.Scene {
       return;
     }
     this.leaving = false;
+    this.intro = false;
     this.moving = false;
     this.path = [];
     this.pendingTarget = undefined;
@@ -129,6 +131,7 @@ export class VillageScene extends Phaser.Scene {
       this.scene.stop('VillageHud');
     });
 
+    if (!save.villageIntroSeen && save.partnerId) this.filmStart();
     cam.fadeIn(500, 26, 24, 48);
     // Die HUD-Szene ist erst im nächsten Bild bereit
     this.time.delayedCall(450, () => this.greet());
@@ -151,46 +154,61 @@ export class VillageScene extends Phaser.Scene {
       return;
     }
     const portrait = creatureTexture(this, archetypeById(save.partnerId));
-    this.hud.say(save.partnerName, t.list('village.arrival'), () =>
-      this.introPan(() => {
-        updateSave({ villageIntroSeen: true });
-        this.hud.say(save.partnerName, t.list('village.arrivalAfter'), undefined, portrait);
-        this.hud.showHint();
-      }),
-    portrait);
+    this.introFilm(() => {
+      updateSave({ villageIntroSeen: true });
+      this.hud.say(save.partnerName, [...t.list('village.arrival'), ...t.list('village.arrivalAfter')], undefined, portrait);
+      this.hud.showHint();
+    });
   }
 
-  private introPan(onDone: () => void) {
+  /** Bildausschnitt des Films: linker Rand der Karte (die Kamera klemmt an den Kartengrenzen) */
+  private filmStart() {
     const cam = this.cameras.main;
     cam.stopFollow();
+    cam.centerOn(-BORDER * TILE, (village.height * TILE) / 2);
+  }
+
+  /**
+   * Erster Besuch: ein kleiner Film vor dem Betreten. Die Kamera zieht wie in einem Sidescroller einmal
+   * von links nach rechts über das Dorf, danach blendet sie zum Team über.
+   */
+  private introFilm(onDone: () => void) {
+    const cam = this.cameras.main;
+    this.filmStart();
+    const b = BORDER * TILE;
+    const viewW = cam.width / cam.zoom;
+    const from = -b + viewW / 2;
+    const to = village.width * TILE + b - viewW / 2;
     const y = (village.height * TILE) / 2;
-    const glide = { x: 0 };
+    const glide = { x: from };
     let done = false;
     const finish = () => {
       if (done) return;
       done = true;
-      this.intro?.stop();
-      this.input.off('pointerup', finish);
-      this.input.keyboard?.off('keydown', finish);
-      this.hud.showBanner(undefined);
-      cam.startFollow(this.player.body, true, 0.18, 0.18);
-      // Erst im nächsten Moment freigeben, damit der Tipp zum Überspringen nicht gleich als Laufziel zählt
-      this.time.delayedCall(80, () => (this.intro = undefined));
-      onDone();
+      film.stop();
+      cam.fadeOut(400, 26, 24, 48);
+      cam.once('camerafadeoutcomplete', () => {
+        this.hud.close();
+        cam.startFollow(this.player.body, true, 1, 1);
+        cam.fadeIn(500, 26, 24, 48);
+        this.time.delayedCall(100, () => cam.startFollow(this.player.body, true, 0.18, 0.18));
+        this.time.delayedCall(450, () => {
+          this.intro = false;
+          onDone();
+        });
+      });
     };
-    this.intro = this.tweens.add({
+    this.hud.cinematic(finish);
+    // Etwa 45 Pixel pro Sekunde, wie ein gemächlicher Sidescroller
+    this.intro = true;
+    const film = this.tweens.add({
       targets: glide,
-      x: village.width * TILE,
-      duration: 7000,
+      x: to,
+      delay: 600,
+      duration: Math.max(4000, ((to - from) / 45) * 1000),
       ease: 'Sine.easeInOut',
       onUpdate: () => cam.centerOn(glide.x, y),
       onComplete: finish,
-    });
-    this.hud.showBanner(t('village.intro.skip'));
-    // Antippen oder eine Taste überspringt die Fahrt
-    this.time.delayedCall(200, () => {
-      this.input.once('pointerup', finish);
-      this.input.keyboard?.once('keydown', finish);
     });
   }
 

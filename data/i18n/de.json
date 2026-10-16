@@ -348,7 +348,7 @@
       "mossMissing": "Leuchtmoos in der Quest-Tasche: {n} von {needed}."
     },
     "intro": {
-      "skip": "Antippen oder Taste: überspringen"
+      "skip": "Überspringen ▸"
     },
     "arrivalAfter": [
       "„Das Haus mit dem hellen Dach ist meins. Und das alte daneben … das steht schon lange leer. Vielleicht wird es ja mal deins?“",
@@ -552,8 +552,8 @@
       "stairsPrompt": "Hier führt ein Pfad tiefer in den Wald. Weitergehen?",
       "stairsGo": "Weitergehen",
       "stairsStay": "Noch nicht",
-      "hintTouch": "Tippe neben dich, um zu laufen oder anzugreifen. Unten findest du Fähigkeiten und Beutel, oben rechts Shift zum Vorspulen.",
-      "hintKeys": "WASD/Pfeiltasten: laufen und angreifen · Leertaste: Angriff · 1–4: Fähigkeiten · B: Beutel · Q: warten · Shift: vorspulen",
+      "hintTouch": "Tippe neben dich, um zu laufen oder anzugreifen. Unten findest du Fähigkeiten und Beutel, oben rechts die Karte (antippen zum Vergrößern) und Shift zum Vorspulen.",
+      "hintKeys": "WASD/Pfeiltasten: laufen und angreifen · Leertaste: Angriff · 1–4: Fähigkeiten · B: Beutel · Q: warten · M: Karte · Shift: vorspulen",
       "profile": "Mein Profil",
       "stoneName": "{stone}: {move}",
       "learnSelf": "Selbst lernen",
@@ -570,7 +570,8 @@
       "bagFullHint": "Der Beutel ist voll. Lege etwas ab, um Platz zu schaffen.",
       "drop": "Ablegen",
       "swap": "Gegen {item} tauschen",
-      "full": "Voll!"
+      "full": "Voll!",
+      "mapClose": "Antippen oder M: Karte schließen"
     },
     "log": {
       "attack": "{name} greift an!",

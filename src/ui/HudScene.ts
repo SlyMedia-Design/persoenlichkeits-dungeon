@@ -26,7 +26,9 @@ export interface Choice {
 type BaseMode =
   | { kind: 'none' }
   | { kind: 'dialog'; dialog: Dialog }
-  | { kind: 'choice'; prompt: string; options: Choice[]; cancel?: () => void };
+  | { kind: 'choice'; prompt: string; options: Choice[]; cancel?: () => void }
+  /** Kurzer Film (z. B. Kamerafahrt über das Dorf): schwarze Balken oben und unten, nur ein Knopf zum Überspringen */
+  | { kind: 'cinematic'; onSkip: () => void };
 
 /** Baukasten für ein Panel in der Bildschirmmitte */
 export interface PanelBuilder {
@@ -101,6 +103,11 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
     this.setMode({ kind: 'none' });
   }
 
+  /** Film-Ansicht; überspringen nur mit dem Knopf oder Escape, damit kein Tipp aus Versehen abbricht */
+  cinematic(onSkip: () => void) {
+    this.setMode({ kind: 'cinematic', onSkip });
+  }
+
   /** Hinweis am unteren Rand zeigen (undefined = ausblenden) */
   showBanner(text?: string) {
     this.bannerText = text;
@@ -140,6 +147,7 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
   private escape() {
     const mode = this.mode;
     if (mode.kind === 'dialog') this.endDialog((mode as { dialog: Dialog }).dialog);
+    else if (mode.kind === 'cinematic') (mode as { onSkip: () => void }).onSkip();
     else if (mode.kind === 'choice') {
       const cancel = (mode as { cancel?: () => void }).cancel;
       this.close();
@@ -175,6 +183,7 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
     this.layer?.destroy(true);
     this.m = metrics(this);
     this.layer = this.add.container();
+    if (this.mode.kind === 'cinematic') return this.drawCinematic((this.mode as { onSkip: () => void }).onSkip);
     this.drawTop();
     const sound = addSoundToggle(this, this.m, () => this.consume());
     this.layer.add(sound);
@@ -222,6 +231,17 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
 
   private drawHint() {
     this.drawBanner(this.hintText(this.sys.game.device.input.touch));
+  }
+
+  private drawCinematic(onSkip: () => void) {
+    const { width, height, small } = this.m;
+    const bar = Math.round(height * 0.1);
+    const g = this.add.graphics();
+    g.fillStyle(0x000000, 1).fillRect(0, 0, width, bar).fillRect(0, height - bar, width, bar);
+    const w = Math.round(small * 9);
+    const h = Math.round(small * 2.2);
+    const skip = this.button(width - w / 2 - 12, height - bar / 2, t('village.intro.skip'), { width: w, height: Math.min(h, bar - 8), fontSize: small }, onSkip);
+    this.layer!.add([g, skip]);
   }
 
   private drawBanner(text: string) {

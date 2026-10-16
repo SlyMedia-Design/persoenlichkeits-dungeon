@@ -20,6 +20,8 @@ export class DungeonHudScene extends HudScene<Mode> {
   private state?: DungeonState;
   private names: Record<string, string> = {};
   private log: { text: string; at: number }[] = [];
+  /** Übersichtskarte groß in der Mitte */
+  private bigMap = false;
   /** Wird von der Dungeon-Szene gesetzt */
   onAction?: (action: Action) => void;
   onGiveUp?: () => void;
@@ -30,7 +32,11 @@ export class DungeonHudScene extends HudScene<Mode> {
 
   create() {
     this.log = [];
+    this.bigMap = false;
     super.create();
+    this.input.keyboard?.on('keydown', (e: KeyboardEvent) => {
+      if (e.code === 'KeyM' && !this.busy) this.toggleMap();
+    });
   }
 
   /** Neuer Stand nach einem Zug (während eines Dialogs wird erst danach neu gezeichnet) */
@@ -161,32 +167,77 @@ export class DungeonHudScene extends HudScene<Mode> {
     });
   }
 
-  /** Übersichtskarte oben rechts: erkundete Felder, Treppe, Team und sichtbare Gegner */
+  /**
+   * Übersichtskarte: klein oben rechts, per Antippen (oder Taste M) groß in der Mitte.
+   * Erkundete Felder, Treppe, Gegenstände, Team und sichtbare Gegner.
+   */
   private drawMinimap(s: DungeonState) {
-    const { width, small } = this.m;
+    const { width, height, small } = this.m;
     const f = s.floor;
-    const cell = Math.max(2, Math.floor(Math.min(width * 0.32, 170) / f.width));
-    const x0 = width - f.width * cell - 12;
-    const y0 = 10 + small * 2.4;
-    const g = this.add.graphics().setAlpha(0.85);
-    g.fillStyle(0x120f22, 0.55).fillRect(x0 - 3, y0 - 3, f.width * cell + 6, f.height * cell + 6);
-    g.fillStyle(0xcbe6b0, 0.75);
+    const big = this.bigMap;
+    const cell = big
+      ? Math.max(4, Math.floor(Math.min((width - 32) / f.width, (height * 0.62) / f.height)))
+      : Math.max(3, Math.floor(Math.min(width * 0.44, 250) / f.width));
+    const w = f.width * cell;
+    const h = f.height * cell;
+    const x0 = big ? Math.round((width - w) / 2) : width - w - 12;
+    const y0 = big ? Math.round((height - h) / 2) : Math.round(10 + small * 2.4);
+    const g = this.add.graphics();
+    g.fillStyle(0x0b0916, 0.82).fillRoundedRect(x0 - 5, y0 - 5, w + 10, h + 10, 6);
+    g.lineStyle(2, COLORS.cream, 0.6).strokeRoundedRect(x0 - 5, y0 - 5, w + 10, h + 10, 6);
     for (let y = 0; y < f.height; y++) {
-      for (let x = 0; x < f.width; x++) if (f.explored[y][x] === '1' && f.tiles[y][x] === '.') g.fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
+      for (let x = 0; x < f.width; x++) {
+        if (f.explored[y][x] !== '1' || f.tiles[y][x] !== '.') continue;
+        g.fillStyle(teamSees(dungeonContent, s, { x, y }) ? 0xe3f2cf : 0x9fbf8a, 1).fillRect(x0 + x * cell, y0 + y * cell, cell, cell);
+      }
     }
-    const dot = (p: { x: number; y: number }, color: number) => g.fillStyle(color, 1).fillRect(x0 + p.x * cell - 1, y0 + p.y * cell - 1, cell + 2, cell + 2);
-    if (f.stairs && f.explored[f.stairs.y][f.stairs.x] === '1') dot(f.stairs, 0xffd27a);
-    for (const it of f.items) if (f.explored[it.pos.y][it.pos.x] === '1') dot(it.pos, 0x7fb8ff);
-    for (const trap of f.traps) if (trap.revealed) dot(trap.pos, 0xb07ad0);
+    // Punkte etwas größer als ein Feld, mit dunklem Rand, damit sie auf der hellen Karte auffallen
+    const dot = (p: { x: number; y: number }, color: number, grow = 1) => {
+      const r = Math.max(2, Math.round(cell * 0.5)) + grow;
+      const cx = x0 + p.x * cell + cell / 2;
+      const cy = y0 + p.y * cell + cell / 2;
+      g.fillStyle(0x120f22, 1).fillCircle(cx, cy, r + 1);
+      g.fillStyle(color, 1).fillCircle(cx, cy, r);
+    };
+    for (const it of f.items) if (f.explored[it.pos.y][it.pos.x] === '1') dot(it.pos, 0x4f9dff, 0);
+    for (const trap of f.traps) if (trap.revealed) dot(trap.pos, 0xb07ad0, 0);
+    if (f.stairs && f.explored[f.stairs.y][f.stairs.x] === '1') {
+      const sx = x0 + f.stairs.x * cell;
+      const sy = y0 + f.stairs.y * cell;
+      const pad = Math.max(1, Math.round(cell * 0.4));
+      g.fillStyle(0x120f22, 1).fillRect(sx - pad - 1, sy - pad - 1, cell + 2 * pad + 2, cell + 2 * pad + 2);
+      g.fillStyle(0xffd27a, 1).fillRect(sx - pad, sy - pad, cell + 2 * pad, cell + 2 * pad);
+    }
     for (const u of s.units) {
       if (u.hp <= 0) continue;
       if (u.side === 'enemy') {
-        if (teamSees(dungeonContent, s, u.pos)) dot(u.pos, 0xe0605a);
+        if (teamSees(dungeonContent, s, u.pos)) dot(u.pos, 0xe0402a);
         else if (senses(s, u.pos)) dot(u.pos, 0xf0a0b0);
       } else if (u.side === 'escort') dot(u.pos, 0xffffff);
-      else dot(u.pos, u.id === 'player' ? 0xfff8ea : 0x8fd0ff);
+      else if (u.id === 'partner') dot(u.pos, 0x5fb8ff);
     }
-    this.layer!.add(g);
+    const player = s.units.find((u) => u.id === 'player');
+    if (player) dot(player.pos, 0xffffff, 2);
+    const zone = this.add.zone(x0 - 5, y0 - 5, w + 10, h + 10).setOrigin(0).setInteractive({ useHandCursor: true });
+    zone.on('pointerup', () => {
+      this.consume();
+      this.toggleMap();
+    });
+    if (big) {
+      const shade = this.add.rectangle(0, 0, width, height, 0x000000, 0.45).setOrigin(0).setInteractive();
+      shade.on('pointerup', () => {
+        this.consume();
+        this.toggleMap();
+      });
+      const hint = this.add.text(width / 2, y0 + h + 12, t('dungeon.ui.mapClose'), textStyle(small, COLORS.textDim)).setOrigin(0.5, 0);
+      this.layer!.add([shade, g, zone, hint]);
+    } else this.layer!.add([g, zone]);
+  }
+
+  /** Große Karte auf- oder zuklappen */
+  toggleMap() {
+    this.bigMap = !this.bigMap;
+    if (this.mode.kind === 'none') this.render();
   }
 
   protected drawMode(mode: Mode) {
