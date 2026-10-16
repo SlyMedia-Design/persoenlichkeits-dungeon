@@ -174,7 +174,7 @@ Kurzbild: Test 5/5 und 5/5, Länge „genau richtig“ (2×), Wesen passt 3/5 un
 ## Persönliches Feedback von Julian (16.10.2026)
 - [x] Die Einführung ins Dorf wurde nicht abgespielt (ein Tipp oder eine Taste direkt nach dem Dialog hat sie sofort übersprungen). Jetzt: kleiner Film vor dem Betreten mit Kinobalken, die Kamera zieht wie ein Sidescroller von links nach rechts über das Dorf. Überspringen nur mit dem Knopf oder Escape.
 - [x] Minimap im Dungeon zu klein: deutlich größer, kräftigere Farben, Punkte mit Rand; Antippen oder M zeigt die Karte groß in der Mitte
-- [x] Gegner zu schwach: Gegner-Stufen angehoben, von Julian festgelegt: Etage 1: 3–4, Etage 2: 5–6, Etage 3: 7–8 (vorher 2–3, 3–5, 5–6)
+- [x] Gegner zu schwach: Gegner-Stufen angehoben, von Julian festgelegt (zweiter Stand): Etage 1: 3–4, Etage 2: 4–5, Etage 3: 5–6 (ursprünglich 2–3, 3–5, 5–6)
 - [x] Boss: 50 Lebenspunkte mehr (Grundwert 56 → 106, auf Stufe 10 jetzt 133 statt 83 KP)
 - [x] Testläufe mit `npm run balance`: zwei Bots, je 200 Kampagnen (ganzes Spiel bis zum Sieg) – Ergebnisse siehe Chat vom 16.10.2026
 

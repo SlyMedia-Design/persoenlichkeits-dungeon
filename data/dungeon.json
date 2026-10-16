@@ -16,14 +16,14 @@
       "traps": 1
     },
     {
-      "enemyLevel": [5, 6],
+      "enemyLevel": [4, 5],
       "enemies": [["larve", 2], ["schlange", 3], ["falter", 2], ["schleim", 2]],
       "enemyCount": [4, 5],
       "items": 3,
       "traps": 2
     },
     {
-      "enemyLevel": [7, 8],
+      "enemyLevel": [5, 6],
       "enemies": [["schlange", 2], ["spinne", 3], ["bambus", 2]],
       "enemyCount": [5, 6],
       "items": 3,

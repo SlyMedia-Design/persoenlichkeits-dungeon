@@ -121,8 +121,14 @@ interface Trip {
   bag: string[];
 }
 
-/** Ein Ausflug; gibt den Endstand zurück */
-function playTrip(i: number, trip: Trip, style: Style, z: Record<string, number>): DungeonState {
+/** Zustand des Teams beim Betreten der Boss-Lichtung */
+interface BossEntry {
+  hp: number;
+  berries: number;
+}
+
+/** Ein Ausflug; gibt den Endstand zurück (und onBoss beim Betreten der Boss-Lichtung) */
+function playTrip(i: number, trip: Trip, style: Style, z: Record<string, number>, onBoss?: (entry: BossEntry) => void): DungeonState {
   const rng = createRandom(9000 + i);
   const s = startRun(content, {
     seed: 5000 + i,
@@ -135,7 +141,15 @@ function playTrip(i: number, trip: Trip, style: Style, z: Record<string, number>
     moss: true,
   });
   let guard = 0;
-  while (!s.outcome && guard++ < 3000) act(content, s, chooseAction(s, rng, style));
+  let atBoss = false;
+  while (!s.outcome && guard++ < 3000) {
+    act(content, s, chooseAction(s, rng, style));
+    if (!atBoss && s.floor.boss) {
+      atBoss = true;
+      const team = s.units.filter((u) => u.side === 'team');
+      onBoss?.({ hp: team.reduce((a, u) => a + u.hp / u.maxHp, 0) / team.length, berries: s.bag.filter((b) => b === 'heilbeere').length });
+    }
+  }
   return s;
 }
 
@@ -166,13 +180,27 @@ function campaigns(style: Style) {
   let defeats = 0;
   let bossDefeats = 0;
   let finalLevel = 0;
+  /** Bei Niederlagen gegen den Boss: seine restlichen KP (Anteil), wer zuerst fiel, ob die Irrlichter schon da waren */
+  let bossHpLeft = 0;
+  let partnerFirst = 0;
+  let summoned = 0;
+  const bossBuckets = [0, 0, 0, 0];
+  let arrivals = 0;
+  let arrivalHp = 0;
+  let arrivalBerries = 0;
+  let noBerries = 0;
   for (let c = 0; c < CAMPAIGNS; c++) {
     const z = randomProfile(2000 + c);
     const start = { level: battleJson.startLevel, xp: 0 };
     let trip: Trip = { player: start, partner: start, bag: ['heilbeere', 'heilbeere'] };
     let done = false;
     for (let n = 1; n <= MAX_TRIPS; n++) {
-      const s = playTrip(c * 31 + n, trip, style, z);
+      const s = playTrip(c * 31 + n, trip, style, z, (e) => {
+        arrivals++;
+        arrivalHp += e.hp;
+        arrivalBerries += e.berries;
+        if (e.berries === 0) noBerries++;
+      });
       const result = settleRun(content, s, {});
       if (result.cleared) {
         tries.push(n);
@@ -181,7 +209,15 @@ function campaigns(style: Style) {
         break;
       }
       defeats++;
-      if (s.floor.boss) bossDefeats++;
+      if (s.floor.boss) {
+        bossDefeats++;
+        const boss = unitById(s, 'boss');
+        const left = boss ? boss.hp / boss.maxHp : 0;
+        bossHpLeft += left;
+        bossBuckets[Math.min(3, Math.floor(left * 4))]++;
+        if (unitById(s, 'partner')!.hp <= 0 && unitById(s, 'player')!.hp > 0) partnerFirst++;
+        if (s.bossSummoned) summoned++;
+      }
       // Wie im Spiel: Stufen bleiben, der Beutel ist wieder wie vor dem Aufbruch; Oma Wurzel gibt nichts nach
       trip = { player: result.team.player, partner: result.team.partner, bag: result.bag.length > 0 ? result.bag : ['heilbeere'] };
     }
@@ -195,6 +231,11 @@ function campaigns(style: Style) {
   console.log(`  Beim 1. Ausflug geschafft: ${first} (${percent(first, CAMPAIGNS)}) · Ø Ausflüge bis zum Sieg ${avg.toFixed(1)}`);
   console.log(`  Verteilung: ${dist} · später ${tries.filter((x) => x > 5).length}`);
   console.log(`  Niederlagen insgesamt ${defeats}, davon beim Boss ${bossDefeats} · Ø Spielerstufe beim Sieg ${won ? (finalLevel / won).toFixed(1) : '-'}`);
+  if (bossDefeats > 0) {
+    console.log(`  Niederlagen beim Boss: Waldgeist hatte noch Ø ${percent(bossHpLeft, bossDefeats)} KP (unter 25 %: ${bossBuckets[0]}, 25–50 %: ${bossBuckets[1]}, 50–75 %: ${bossBuckets[2]}, über 75 %: ${bossBuckets[3]})`);
+    console.log(`  Ankunft beim Boss (${arrivals}×): Team im Schnitt mit ${percent(arrivalHp, arrivals)} KP, ${(arrivalBerries / arrivals).toFixed(1)} Heilbeeren, ohne Heilbeere: ${percent(noBerries, arrivals)}`);
+    console.log(`  Irrlichter schon gerufen: ${percent(summoned, bossDefeats)} · Partner fiel zuerst: ${percent(partnerFirst, bossDefeats)}`);
+  }
 }
 
 console.log(`Flüsterwald: Dungeon-Stufe ${content.dungeon.level}, Boss Stufe ${content.dungeon.boss.level}, Startstufe ${battleJson.startLevel}`);
