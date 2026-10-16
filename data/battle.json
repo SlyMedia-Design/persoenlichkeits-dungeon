@@ -93,7 +93,7 @@
     "waldgeist": {
       "element": "glut",
       "sprite": "forestSpirit",
-      "base": { "hp": 106, "atk": 5, "def": 3 },
+      "base": { "hp": 56, "atk": 3, "def": 3 },
       "growth": { "hp": 3, "atk": 0.5, "def": 0.3 },
       "xp": 40,
       "moves": ["irrlichtfeuer", "fluesterwind"],
