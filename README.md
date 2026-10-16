@@ -25,7 +25,7 @@ npm run build      # Typprüfung + Produktions-Build nach dist/
 | `src/core/` | Reine Logik ohne Phaser: Scoring, Zuordnung, Partnervorschlag, Simulation, Spielstand, Rasterbewegung und Wegsuche, Dorf (Karte, Interaktionen, Aufträge) |
 | `src/scenes/` | Phaser-Szenen |
 | `src/ui/` | Darstellung: Knöpfe, Hintergrund, Sprites, Musik (prozedural per WebAudio) |
-| `scripts/` | Werkzeuge: Item-Extraktion, Normberechnung, Verteilungssimulation, Schrift- und Porträt-Generator |
+| `scripts/` | Werkzeuge: Item-Extraktion, Normberechnung, Verteilungssimulation, Porträt-Generator |
 | `tests/` | Unit-Tests der Logik und Datenprüfungen |
 
 ## Der Test
@@ -78,7 +78,7 @@ Jeder Push auf `main` testet, baut und veröffentlicht über `.github/workflows/
 - Grafik in Dorf und Dungeon: [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) von Pixel-boy und AAA (CC0). Die Wesen sind eigene Pixel-Sprites aus `data/archetypes.json`: 16×16 fürs Spielfeld, 32×32-Porträts für Menüs (erzeugt mit `scripts/draw-creatures.ts`)
 - Musik und Geräusche: Boss-Musik „Tension“ und Warnton „Alert“ aus dem [Ninja Adventure Asset Pack](https://pixel-boy.itch.io/ninja-adventure-asset-pack) (CC0), eingetragen in `data/audio.json`; die ruhige Hintergrundmusik wird im Spiel erzeugt (`src/ui/ambient.ts`)
 - Eigene Pixel-Grafiken: Element-Icons und Fähigkeitssteine (`data/elements.json`), Quest-Zeichen (`src/ui/markers.ts`)
-- Schrift: „Dorfschrift“, abgeleitet von [Pixelify Sans](https://fonts.google.com/specimen/Pixelify+Sans) (SIL Open Font License) – kräftiger, höhere Kleinbuchstaben, mehr Buchstabenabstand. Erzeugt mit `scripts/build-font.ts`, Dateien und Lizenz in `src/ui/fonts/`
+- Schrift: [DotGothic16](https://fonts.google.com/specimen/DotGothic16) von Fontworks (SIL Open Font License), gebündelt über `@fontsource/dotgothic16`, Datei und Lizenz in `src/ui/fonts/` (im Code heißt sie weiter „Dorfschrift“)
 - Engine: [Phaser 3](https://phaser.io/)
 
 ## Rechte
@@ -87,4 +87,4 @@ Jeder Push auf `main` testet, baut und veröffentlicht über `.github/workflows/
 
 Der Quelltext ist öffentlich einsehbar, damit das Spiel über GitHub Pages laufen kann. Das ist **keine** Erlaubnis zur Weiterverwendung: Code, Spielkonzept, Texte, Wesen und eigene Grafiken dürfen ohne ausdrückliche schriftliche Erlaubnis nicht kopiert, verändert, veröffentlicht oder anderweitig genutzt werden.
 
-Ausgenommen sind die oben unter „Credits“ genannten Inhalte Dritter; für sie gelten weiterhin ihre eigenen Lizenzen (IPIP-Items: Public Domain, Ninja Adventure Asset Pack: CC0, Pixelify Sans/Dorfschrift: SIL Open Font License, Phaser: MIT).
+Ausgenommen sind die oben unter „Credits“ genannten Inhalte Dritter; für sie gelten weiterhin ihre eigenen Lizenzen (IPIP-Items: Public Domain, Ninja Adventure Asset Pack: CC0, DotGothic16: SIL Open Font License, Phaser: MIT).

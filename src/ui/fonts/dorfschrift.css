@@ -1,14 +1,15 @@
-/* Dorfschrift: abgeleitet von Pixelify Sans, siehe scripts/build-font.ts und OFL.txt */
+/* Spielschrift: DotGothic16 (SIL Open Font License 1.1, siehe OFL.txt), nur die lateinischen Zeichen.
+   Die Schrift hat nur einen Schnitt; auch „fett“ nutzt ihn, damit der Browser keine verwaschene Fettschrift erzeugt. */
 @font-face {
   font-family: 'Dorfschrift';
-  src: url('./dorfschrift-regular.otf') format('opentype');
+  src: url('./dotgothic16.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: block;
 }
 @font-face {
   font-family: 'Dorfschrift';
-  src: url('./dorfschrift-bold.otf') format('opentype');
+  src: url('./dotgothic16.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: block;

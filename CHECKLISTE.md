@@ -135,7 +135,7 @@ Kurzbild: Test 5/5 und 5/5, Länge „genau richtig“ (2×), Wesen passt 3/5 un
 ## 1. Das möchte ich ändern
 
 ### Lesbarkeit
-- [ ] Schrift ist schwer zu lesen, besonders die Zahlen sind kaum zu unterscheiden → lesbarere Schrift, zumindest für Zahlen
+- [x] Schrift ist schwer zu lesen, besonders die Zahlen sind kaum zu unterscheiden → neue Pixelschrift DotGothic16 (16.10.2026)
 
 ### Dorf-Bewohner erkennbar machen
 - [ ] Nicht alle Bewohner sind als Personen zu erkennen
