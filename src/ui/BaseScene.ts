@@ -53,9 +53,16 @@ export abstract class BaseScene extends Phaser.Scene {
   }
 }
 
-/** Musik-Schalter oben rechts; gibt den Text zurück, damit Szenen ihn als Bedienelement erkennen. */
-export function addSoundToggle(scene: Phaser.Scene, m: Metrics): Phaser.GameObjects.Text {
-  const label = () => (ambient.muted ? t('common.soundOff') : t('common.soundOn'));
+/** Ist der Lautstärkeregler gerade aufgeklappt? (bleibt beim Neuaufbau der Oberfläche erhalten) */
+let sliderOpen = false;
+
+/**
+ * Lautstärke oben rechts: Antippen klappt einen Regler auf. Gibt den Text zurück, damit Szenen ihn
+ * als Bedienelement erkennen; onUse meldet jede Berührung (die HUD-Szenen verbrauchen sie damit).
+ */
+export function addSoundToggle(scene: Phaser.Scene, m: Metrics, onUse?: () => void): Phaser.GameObjects.Text {
+  const label = () => (ambient.muted ? t('common.soundOff') : t('common.soundLevel', { percent: Math.round(ambient.volume * 100) }));
+  scene.sound.volume = ambient.volume;
   const text = scene.add
     .text(m.width - 12, 10, label(), textStyle(m.small, COLORS.textDim))
     .setOrigin(1, 0)
@@ -63,12 +70,49 @@ export function addSoundToggle(scene: Phaser.Scene, m: Metrics): Phaser.GameObje
     .setDepth(100)
     .setPadding(8, 6, 8, 6)
     .setInteractive({ useHandCursor: true });
-  text.on('pointerup', (_p: Phaser.Input.Pointer, _x: number, _y: number, event: Phaser.Types.Input.EventData) => {
-    event.stopPropagation();
-    ambient.toggle();
-    // Musik und Geräusche aus Dateien (z. B. Boss) folgen dem Schalter
-    scene.sound.mute = ambient.muted;
+
+  // Regler: Leiste mit Knopf unter dem Text
+  const trackW = Math.round(m.small * 7);
+  const padX = Math.round(m.small * 0.8);
+  const panelW = trackW + padX * 2;
+  const panelH = Math.round(m.small * 2.4);
+  const panel = scene.add.container(m.width - 12 - panelW, 10 + text.height + 4).setScrollFactor(0).setDepth(101);
+  const bg = scene.add.graphics();
+  bg.fillStyle(COLORS.panel, 0.95).fillRoundedRect(0, 0, panelW, panelH, 8);
+  bg.lineStyle(2, COLORS.cream, 0.5).strokeRoundedRect(0, 0, panelW, panelH, 8);
+  const bar = scene.add.graphics();
+  const knob = scene.add.circle(0, panelH / 2, Math.round(m.small * 0.45), COLORS.gold).setStrokeStyle(2, 0x120f22);
+  const zone = scene.add.zone(0, 0, panelW, panelH).setOrigin(0).setInteractive({ useHandCursor: true });
+  panel.add([bg, bar, knob, zone]);
+  const draw = () => {
+    const x = padX + trackW * ambient.volume;
+    bar.clear();
+    bar.fillStyle(0x120f22, 0.8).fillRoundedRect(padX, panelH / 2 - 3, trackW, 6, 3);
+    bar.fillStyle(COLORS.gold, 1).fillRoundedRect(padX, panelH / 2 - 3, Math.max(6, x - padX), 6, 3);
+    knob.x = x;
     text.setText(label());
-  });
+  };
+  const setFrom = (pointer: Phaser.Input.Pointer) => {
+    ambient.setVolume((pointer.x - panel.x - padX) / trackW);
+    scene.sound.volume = ambient.volume;
+    draw();
+  };
+  const show = (open: boolean) => {
+    sliderOpen = open;
+    panel.setVisible(open);
+    draw();
+  };
+  type Handler = (pointer: Phaser.Input.Pointer, x: number, y: number, event: Phaser.Types.Input.EventData) => void;
+  const swallow = (fn?: (pointer: Phaser.Input.Pointer) => void): Handler => (pointer, _x, _y, event) => {
+    event.stopPropagation();
+    onUse?.();
+    fn?.(pointer);
+  };
+  text.on('pointerup', swallow(() => show(!sliderOpen)));
+  zone.on('pointerdown', swallow(setFrom));
+  zone.on('pointermove', (pointer: Phaser.Input.Pointer) => pointer.isDown && setFrom(pointer));
+  zone.on('pointerup', swallow());
+  text.once('destroy', () => panel.destroy());
+  show(sliderOpen);
   return text;
 }

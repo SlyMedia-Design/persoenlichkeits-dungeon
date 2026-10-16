@@ -9,7 +9,7 @@
     "back": "Zurück",
     "confirm": "Bestätigen",
     "cancel": "Abbrechen",
-    "soundOn": "♪ an",
+    "soundLevel": "♪ {percent} %",
     "soundOff": "♪ aus",
     "fastForward": "Shift"
   },

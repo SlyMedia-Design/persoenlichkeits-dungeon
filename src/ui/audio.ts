@@ -20,11 +20,11 @@ export function preloadBossAudio(scene: Phaser.Scene) {
 
 /**
  * Boss-Musik: Die leise Hintergrundmusik weicht, ein kurzer Warnton erklingt (beim ersten Erscheinen),
- * danach läuft das bedrohliche Stück in Schleife. Der Musik-Schalter gilt auch hier.
+ * danach läuft das bedrohliche Stück in Schleife. Der Lautstärkeregler gilt auch hier.
  */
 export function startBossMusic(scene: Phaser.Scene, warning: boolean) {
   ambient.duck(true);
-  scene.sound.mute = ambient.muted;
+  scene.sound.volume = ambient.volume;
   if (warning && scene.cache.audio.exists(WARNING)) scene.sound.play(WARNING, { volume: audio.boss.warning.volume });
   if (!scene.cache.audio.exists(MUSIC) || scene.sound.get(MUSIC)?.isPlaying) return;
   const music = scene.sound.add(MUSIC, { loop: true, volume: 0 });

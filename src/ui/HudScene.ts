@@ -176,7 +176,7 @@ export abstract class HudScene<Extra extends { kind: string }> extends Phaser.Sc
     this.m = metrics(this);
     this.layer = this.add.container();
     this.drawTop();
-    const sound = addSoundToggle(this, this.m).on('pointerup', () => this.consume());
+    const sound = addSoundToggle(this, this.m, () => this.consume());
     this.layer.add(sound);
     if (this.sys.game.device.input.touch) this.drawFastForward(sound);
     const mode = this.mode;

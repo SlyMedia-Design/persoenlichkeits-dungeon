@@ -4,6 +4,9 @@
  * Nutzeraktion, weil Browser vorher keinen Ton erlauben.
  */
 const MUTE_KEY = 'persoenlichkeits-dungeon.muted';
+const VOLUME_KEY = 'persoenlichkeits-dungeon.volume';
+/** Lautstärke der Hintergrundmusik bei vollem Regler */
+const FULL = 0.2;
 
 // Fmaj7 – Cmaj7/E – Dm9 – Am7 (Frequenzen in Hz)
 const CHORDS = [
@@ -25,34 +28,43 @@ class Ambient {
   private timers: number[] = [];
   private chordIndex = 0;
   private brightness = 0.3;
-  muted = readMuted();
+  /** Gesamtlautstärke 0–1 (0 = aus), gilt auch für Boss-Musik und Warnton */
+  volume = readVolume();
   /** Ausgeblendet, solange eigene Musik läuft (z. B. beim Boss) */
   private ducked = false;
 
   /** Muss aus einem Klick-/Touch-Handler aufgerufen werden. */
+  get muted() {
+    return this.volume === 0;
+  }
+
   unlock() {
     if (this.muted) return;
     if (!this.ctx) this.build();
     void this.ctx?.resume();
   }
 
-  toggle(): boolean {
-    this.muted = !this.muted;
-    writeMuted(this.muted);
+  setVolume(value: number) {
+    const wasMuted = this.muted;
+    this.volume = Math.min(1, Math.max(0, Math.round(value * 20) / 20));
+    writeVolume(this.volume);
     if (this.muted) {
-      this.fadeTo(0, 0.6);
-      window.setTimeout(() => this.muted && void this.ctx?.suspend(), 700);
+      this.fadeTo(0, 0.4);
+      window.setTimeout(() => this.muted && void this.ctx?.suspend(), 500);
     } else {
       this.unlock();
-      if (!this.ducked) this.fadeTo(0.16, 1.5);
+      if (!this.ducked) this.fadeTo(this.level(), wasMuted ? 1.2 : 0.15);
     }
-    return this.muted;
+  }
+
+  private level() {
+    return FULL * this.volume;
   }
 
   /** Hintergrundmusik aus- bzw. wieder einblenden, z. B. für die Boss-Musik. */
   duck(on: boolean) {
     this.ducked = on;
-    if (!this.muted) this.fadeTo(on ? 0 : 0.16, on ? 1 : 2.5);
+    if (!this.muted) this.fadeTo(on ? 0 : this.level(), on ? 1 : 2.5);
   }
 
   /** 0 = gedämpft und dunkel, 1 = hell und offen. */
@@ -87,7 +99,7 @@ class Ambient {
     feedback.connect(this.echo);
     this.echo.connect(this.filter);
 
-    if (!this.ducked) this.fadeTo(0.16, 3);
+    if (!this.ducked) this.fadeTo(this.level(), 3);
     this.playChord();
     this.timers.push(window.setInterval(() => this.playChord(), CHORD_SECONDS * 1000));
     this.scheduleBell();
@@ -156,17 +168,20 @@ class Ambient {
   }
 }
 
-function readMuted(): boolean {
+/** Gespeicherte Lautstärke; ältere Spielstände kannten nur „Ton aus“ */
+function readVolume(): number {
   try {
-    return localStorage.getItem(MUTE_KEY) === '1';
+    const stored = localStorage.getItem(VOLUME_KEY);
+    if (stored !== null && !Number.isNaN(Number(stored))) return Math.min(1, Math.max(0, Number(stored)));
+    return localStorage.getItem(MUTE_KEY) === '1' ? 0 : 0.8;
   } catch {
-    return false;
+    return 0.8;
   }
 }
 
-function writeMuted(muted: boolean) {
+function writeVolume(volume: number) {
   try {
-    localStorage.setItem(MUTE_KEY, muted ? '1' : '0');
+    localStorage.setItem(VOLUME_KEY, String(volume));
   } catch {
     // Speicher blockiert: Einstellung gilt nur für diese Sitzung
   }

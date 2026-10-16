@@ -150,7 +150,7 @@ Kurzbild: Test 5/5 und 5/5, Länge „genau richtig“ (2×), Wesen passt 3/5 un
 ## 2. Das brauche ich
 
 ### Sound
-- [ ] Lautstärkeregler (statt nur Ton an/aus), getrennt für Musik und Effekte?
+- [x] Lautstärkeregler statt nur Ton an/aus: ♪ antippen klappt einen Regler auf (gilt für Musik und Warnton, es gibt sonst keine Effekte)
 
 ## 3. Das ist nötig (Fehler)
 
