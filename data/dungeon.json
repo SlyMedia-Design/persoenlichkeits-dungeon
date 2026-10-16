@@ -9,14 +9,14 @@
   "regenEvery": 5,
   "floors": [
     {
-      "enemyLevel": [4, 5],
+      "enemyLevel": [3, 4],
       "enemies": [["schleim", 3], ["larve", 3], ["falter", 1]],
       "enemyCount": [3, 4],
       "items": 3,
       "traps": 1
     },
     {
-      "enemyLevel": [5, 7],
+      "enemyLevel": [5, 6],
       "enemies": [["larve", 2], ["schlange", 3], ["falter", 2], ["schleim", 2]],
       "enemyCount": [4, 5],
       "items": 3,
