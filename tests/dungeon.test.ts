@@ -33,6 +33,16 @@ function run(overrides: Partial<RunOptions> = {}): DungeonState {
   });
 }
 
+
+/** Ersetzt die Etage durch Wände, nur die angegebenen Felder sind begehbar (ohne Gegner, Gegenstände, Fallen) */
+function carve(s: DungeonState, cells: Pos[]) {
+  const f = s.floor;
+  f.tiles = f.tiles.map((row, y) => [...row].map((_, x) => (cells.some((c) => c.x === x && c.y === y) ? '.' : '#')).join(''));
+  f.items = [];
+  f.traps = [];
+  s.units = s.units.filter((u) => u.side !== 'enemy');
+}
+
 describe('Etagen', () => {
   it('jede Etage ist zusammenhängend: alle Räume und die Treppe sind vom Start erreichbar', () => {
     for (let seed = 1; seed <= 40; seed++) {
@@ -189,6 +199,23 @@ describe('Züge und Kampf', () => {
     expect(strong / weak).toBeLessThan(1.3);
   });
 
+  it('Rundum-Angriffe treffen auch schräg um eine Ecke herum', () => {
+    const s = run();
+    const player = unitById(s, 'player')!;
+    const partner = unitById(s, 'partner')!;
+    // Spieler (5,5), Wand rechts (6,5) und oben (5,4), Gegner schräg rechts oben (6,4)
+    carve(s, [{ x: 5, y: 5 }, { x: 4, y: 5 }, { x: 6, y: 4 }, { x: 7, y: 4 }]);
+    player.pos = { x: 5, y: 5 };
+    partner.pos = { x: 4, y: 5 };
+    const enemy = makeUnit(content, { id: 'e1', side: 'enemy', species: 'schleim', level: 5, xp: 0, pos: { x: 6, y: 4 } });
+    Object.assign(enemy, { hp: 999, maxHp: 999 });
+    s.units.push(enemy);
+    player.moves = [{ id: 'glutstoss', pp: 10, maxPp: 10 }];
+    let hit = false;
+    for (let i = 0; i < 5 && !hit; i++) hit = act(content, s, { type: 'skill', index: 0 }).some((e) => e.type === 'hit' && e.id === 'e1');
+    expect(hit).toBe(true);
+  });
+
   it('Spielzüge sind reproduzierbar (gleicher Startwert, gleiche Eingaben)', () => {
     const actions: Action[] = ['up', 'left', 'down', 'right', 'up-left', 'down-right'].map((dir) => ({ type: 'move', dir }) as Action);
     const a = run();
@@ -335,6 +362,24 @@ describe('Fähigkeiten und Fähigkeitssteine', () => {
 });
 
 describe('Stups', () => {
+  it('folgt im engen Gang auch dann, wenn der Partner zwischen ihm und dem Spieler läuft', () => {
+    const s = run({ escort: true });
+    const player = unitById(s, 'player')!;
+    player.pos = { ...s.floor.stairs! };
+    act(content, s, { type: 'stairs' });
+    const stups = unitById(s, 'stups')!;
+    const partner = unitById(s, 'partner')!;
+    carve(s, Array.from({ length: 30 }, (_, i) => ({ x: i + 2, y: 5 })));
+    s.units = s.units.filter((u) => u.side !== 'enemy');
+    player.pos = { x: 10, y: 5 };
+    partner.pos = { x: 9, y: 5 };
+    stups.pos = { x: 8, y: 5 };
+    s.escort = 'following';
+    for (let i = 0; i < 12; i++) act(content, s, { type: 'move', dir: 'right' });
+    expect(player.pos.x).toBe(22);
+    expect(player.pos.x - stups.pos.x).toBeLessThanOrEqual(3);
+  });
+
   it('wartet unbehelligt und schließt sich an, wenn man zu ihm läuft', () => {
     const s = run({ escort: true });
     const player = unitById(s, 'player')!;

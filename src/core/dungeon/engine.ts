@@ -185,8 +185,9 @@ function targetsOf(state: DungeonState, user: Unit, def: MoveDef, dir: Dir): { u
   if (def.target === 'team') {
     return { units: state.units.filter((u) => u.hp > 0 && !isFoe(u, user) && chebyshev(u.pos, user.pos) <= 1), end: user.pos };
   }
+  // Rundum-Angriffe treffen das ganze 1-Feld-Umfeld, auch schräg um Ecken herum
   if (def.target === 'around') {
-    return { units: neighbors(user.pos).map((p) => unitAt(state, p)).filter((u): u is Unit => !!u && isFoe(u, user) && reachable(state, user.pos, u.pos)), end: user.pos };
+    return { units: neighbors(user.pos).map((p) => unitAt(state, p)).filter((u): u is Unit => !!u && isFoe(u, user)), end: user.pos };
   }
   if (def.target === 'front') {
     const p = step(user.pos, dir);
@@ -455,13 +456,27 @@ function partnerTurn(content: Content, state: DungeonState, partner: Unit, rng: 
     const target = foes.sort((a, b) => chebyshev(a.pos, partner.pos) - chebyshev(b.pos, partner.pos))[0];
     if (stepToward(state, partner, attackSpots(state, target.pos), events)) return;
   }
-  if (chebyshev(partner.pos, player.pos) > 1) stepToward(state, partner, neighbors(player.pos), events);
+  follow(state, partner, [player], events);
 }
 
 function escortTurn(state: DungeonState, escort: Unit, events: GameEvent[]) {
   if (state.escort !== 'following') return;
-  const player = unitById(state, 'player')!;
-  if (chebyshev(escort.pos, player.pos) > 1) stepToward(state, escort, neighbors(player.pos), events);
+  follow(state, escort, [unitById(state, 'player')!, unitById(state, 'partner')!], events);
+}
+
+/**
+ * Hinterherlaufen: neben einen der Anführer. Ist der Weg dorthin besetzt (z. B. steht im Gang der
+ * Partner dazwischen), geht es trotzdem einen Schritt in die Richtung, statt stehen zu bleiben.
+ */
+function follow(state: DungeonState, unit: Unit, leaders: Unit[], events: GameEvent[]) {
+  const alive = leaders.filter((l) => l.hp > 0);
+  if (alive.some((l) => chebyshev(unit.pos, l.pos) <= 1)) return;
+  if (stepToward(state, unit, alive.flatMap((l) => neighbors(l.pos)), events)) return;
+  if (hasStatus(unit, 'root')) return;
+  const path = findPath(unit.pos, alive.map((l) => l.pos), tileFree(state), 2500);
+  if (!path || path.length < 2) return;
+  const next = step(unit.pos, path[0]);
+  if (freeOfUnits(state, unit)(next)) moveUnit(unit, next, events);
 }
 
 function enemyTurn(content: Content, state: DungeonState, enemy: Unit, rng: Random, events: GameEvent[]) {

@@ -125,3 +125,47 @@
 
 ### Offene Rückfragen an mich selbst
 - [x] Formular-Link für den Button (als Konfigurationswert hinterlegen): https://docs.google.com/forms/d/e/1FAIpQLSdiEITpgJ0Kpi2pSUYsX-BbkqurzSu1Fa1wnujg4jVbAys_qA/viewform
+
+---
+
+# Runde 2 – Spielerfeedback (2 Antworten, 15.10.2026)
+
+Kurzbild: Test 5/5 und 5/5, Länge „genau richtig“ (2×), Wesen passt 3/5 und 4/5, Dorf 4/5 und 3/5, Partnervorschlag „hat gut gepasst“ (2×), Prototyp insgesamt 4/5 und 4/5, beide würden weiterspielen. Beide auf dem PC.
+
+## 1. Das möchte ich ändern
+
+### Lesbarkeit
+- [ ] Schrift ist schwer zu lesen, besonders die Zahlen sind kaum zu unterscheiden → lesbarere Schrift, zumindest für Zahlen
+
+### Dorf-Bewohner erkennbar machen
+- [ ] Nicht alle Bewohner sind als Personen zu erkennen
+- [ ] Käpt’n Kiesel auf dem Steg ist von hinten nicht als Person zu erkennen
+- [ ] Oma Wurzel (Pilz) wirkt nicht lebendig
+- [ ] Idee: Namensschild oder kleines Symbol über NPCs, leichte Idle-Animation, Blickrichtung zum Spieler
+
+### Dungeon
+- [ ] Alles sieht sehr ähnlich aus, man verläuft sich leicht → mehr Orientierung (abwechslungsreichere Räume, Deko, deutlichere Minikarte)
+- [ ] Die Treppe sieht nicht wie eine Treppe aus → deutlicheres Treppen-Symbol
+
+## 2. Das brauche ich
+
+### Sound
+- [ ] Lautstärkeregler (statt nur Ton an/aus), getrennt für Musik und Effekte?
+
+## 3. Das ist nötig (Fehler)
+
+- [x] Gerettete Figur (Stups) bleibt mitten im Wald stehen, statt dem Team zu folgen
+- [x] Glutstoß geht nicht an Ecken: Angriffe auf alle Nachbarfelder (Glutstoß, Planschwelle usw.) treffen immer das ganze 1-Feld-Umfeld, auch schräg um Ecken und Wände herum
+
+## Entschieden (16.10.2026)
+- [x] Angriffe auf alle Nachbarfelder treffen jeden Gegner im 1-Feld-Radius, auch wenn eine Wand dazwischen an der Ecke steht
+- [x] „Besseres Haus“: Das Haus des Spielers bleibt kaputt
+- [x] Wesen passt 3/5 und 4/5: Zwei Antworten reichen nicht als Auswertung, erst mehr Feedback sammeln
+
+## Neu: Beerenfeld (aus dem Feedback, entschieden am 16.10.2026)
+- [ ] Beerenfeld im Dorf, Oma Wurzel ist dafür zuständig
+- [ ] Wird nach dem Leuchtmoos-Auftrag freigeschaltet
+- [ ] Die Samen gibt es von Oma Wurzel
+- [ ] Anbau von Beeren für Heilung (Heilbeere), Energie (Sternbeere) und Schaden (neue Beere)
+- [ ] Nach 4 Dungeon-Ausflügen sind die Pflanzen ausgewachsen und können geerntet werden
+- [ ] Neue Schadens-Beere: Erhöht für eine Etage den Schaden der Fähigkeiten im eigenen Element des Wesens, auch im Bosskampf. Fähigkeiten anderer Elemente (z. B. per Stein gelernt) werden nicht verstärkt.
